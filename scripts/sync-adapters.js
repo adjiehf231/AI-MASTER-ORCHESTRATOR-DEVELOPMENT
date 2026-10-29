@@ -175,7 +175,52 @@ const clineContent = buildCorePrompt('Cline / Roo-Code / OpenCode');
 fs.writeFileSync(path.join(__dirname, '..', '.clinerules'), clineContent, 'utf8');
 console.log('✓ Generated .clinerules');
 
-// 9. Generate Universal Prompt Bundle (for ChatGPT, Codex, DeepSeek, Ollama)
+// 9. Generate CONVENTIONS.md (for Aider & General AI Coding tools)
+const conventionsContent = buildCorePrompt('Aider & Polyglot Coding Agents (CONVENTIONS.md)');
+fs.writeFileSync(path.join(__dirname, '..', 'CONVENTIONS.md'), conventionsContent, 'utf8');
+console.log('✓ Generated CONVENTIONS.md (Aider auto-read standard)');
+
+// 10. Generate .aider.conf.yml (for Aider CLI)
+const aiderConfig = `# Aider configuration for Universal AI Master Orchestrator
+read: CONVENTIONS.md
+auto-commits: false
+attribute-author: false
+`;
+fs.writeFileSync(path.join(__dirname, '..', '.aider.conf.yml'), aiderConfig, 'utf8');
+console.log('✓ Generated .aider.conf.yml');
+
+// 11. Generate Continue.dev Rules
+const continueDir = path.join(__dirname, '..', '.continue', 'rules');
+if (!fs.existsSync(continueDir)) {
+  fs.mkdirSync(continueDir, { recursive: true });
+}
+const continueContent = buildCorePrompt('Continue.dev IDE Assistant');
+fs.writeFileSync(path.join(continueDir, 'universal-orchestrator.md'), continueContent, 'utf8');
+console.log('✓ Generated .continue/rules/universal-orchestrator.md');
+
+// 12. Generate OpenRouter, 9router, OneRouter, and Gateway Adapters
+const openrouterDir = path.join(__dirname, '..', 'adapters', 'openrouter');
+if (!fs.existsSync(openrouterDir)) {
+  fs.mkdirSync(openrouterDir, { recursive: true });
+}
+const openrouterPrompt = buildCorePrompt('OpenRouter / 9router / OneRouter / Gateway Models (Claude Sonnet, DeepSeek R1/V3, Qwen 2.5, Llama 3.3)');
+fs.writeFileSync(path.join(openrouterDir, 'system-prompt.txt'), openrouterPrompt, 'utf8');
+
+const openrouterPayload = {
+  model: "anthropic/claude-3.5-sonnet",
+  messages: [
+    {
+      role: "system",
+      content: openrouterPrompt
+    }
+  ],
+  temperature: 0.2,
+  top_p: 0.95
+};
+fs.writeFileSync(path.join(openrouterDir, 'payload.json'), JSON.stringify(openrouterPayload, null, 2), 'utf8');
+console.log('✓ Generated adapters/openrouter/system-prompt.txt & payload.json');
+
+// 13. Generate Universal Prompt Bundle (for ChatGPT, Codex, DeepSeek, Ollama)
 const bundleDir = path.join(__dirname, '..', 'adapters', 'bundle');
 if (!fs.existsSync(bundleDir)) {
   fs.mkdirSync(bundleDir, { recursive: true });
@@ -184,7 +229,7 @@ const bundleContent = buildCorePrompt('Universal Prompt Bundle (OpenAI Codex, Ch
 fs.writeFileSync(path.join(bundleDir, 'universal-system-prompt.md'), bundleContent, 'utf8');
 console.log('✓ Generated adapters/bundle/universal-system-prompt.md');
 
-// 10. Generate Antigravity / Gemini Plugin Config
+// 14. Generate Antigravity / Gemini Plugin Config
 const antigravityDir = path.join(__dirname, '..', 'adapters', 'antigravity');
 if (!fs.existsSync(antigravityDir)) {
   fs.mkdirSync(antigravityDir, { recursive: true });

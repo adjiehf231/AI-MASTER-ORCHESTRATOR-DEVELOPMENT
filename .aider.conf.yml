@@ -1,0 +1,4 @@
+# Aider configuration for Universal AI Master Orchestrator
+read: CONVENTIONS.md
+auto-commits: false
+attribute-author: false

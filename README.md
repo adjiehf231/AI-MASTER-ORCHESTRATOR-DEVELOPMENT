@@ -101,11 +101,53 @@ This automatically updates:
 - `.cursorrules` (for Cursor IDE)
 - `.windsurfrules` (for Windsurf IDE)
 - `.clinerules` (for Cline / Roo-Code / OpenCode)
+- `CONVENTIONS.md` & `.aider.conf.yml` (for Aider CLI)
+- `.continue/rules/universal-orchestrator.md` (for Continue.dev)
+- `adapters/openrouter/system-prompt.txt` & `payload.json` (for OpenRouter, 9router, OneRouter, LiteLLM)
 - `adapters/bundle/universal-system-prompt.md` (for ChatGPT, OpenAI Codex, DeepSeek, Ollama)
 - `adapters/antigravity/plugin.json` (for Google Antigravity & Gemini)
 
-### 3. Start Pair-Programming
-Open your IDE or CLI assistant of choice. The orchestrator will autonomously classify tasks, activate the relevant specialist agents, and enforce verification gates!
+### 3. Using with OpenRouter, 9router, Aider, and Other AI Gateways
+
+#### A. OpenRouter, 9router, OneRouter, and LiteLLM
+- **Direct API / Playground:** Copy the full system prompt from `adapters/openrouter/system-prompt.txt` into your router's System Prompt field.
+- **REST API Call:**
+  ```python
+  import json, requests
+
+  with open("adapters/openrouter/system-prompt.txt") as f:
+      system_prompt = f.read()
+
+  res = requests.post(
+      "https://openrouter.ai/api/v1/chat/completions", # or your 9router / onerouter endpoint
+      headers={"Authorization": f"Bearer {API_KEY}"},
+      json={
+          "model": "deepseek/deepseek-r1", # or anthropic/claude-3.5-sonnet, qwen/qwen-2.5-coder-32b
+          "messages": [
+              {"role": "system", "content": system_prompt},
+              {"role": "user", "content": "Terapkan feature payment gateway"}
+          ]
+      }
+  )
+  ```
+
+#### B. Aider CLI
+Aider automatically reads `CONVENTIONS.md` upon launch:
+```bash
+aider --model openrouter/anthropic/claude-3.5-sonnet
+# or with DeepSeek via OpenRouter:
+aider --model openrouter/deepseek/deepseek-r1
+```
+
+#### C. Cline / Roo-Code / OpenCode
+1. Select **OpenRouter** (or custom OpenAI-compatible endpoint like 9router) as the API Provider in extension settings.
+2. The extension automatically loads `.clinerules`.
+
+#### D. Continue.dev
+Continue automatically reads `.continue/rules/universal-orchestrator.md` for all configured models.
+
+### 4. Start Pair-Programming
+Open your IDE or CLI assistant of choice. The orchestrator will autonomously ingest living memory (`docs/memory/`), classify tasks, activate the relevant specialist agents, and enforce verification gates!
 
 ---
 
