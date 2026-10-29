@@ -1,7 +1,7 @@
 {
   "name": "universal-ai-orchestrator",
   "version": "1.0.0",
-  "description": "Universal Autonomous Technical Director & 23 Specialist Agents with Anti-AI-Slop UI/UX Engineering and 31 Enterprise SDLC Skills.",
+  "description": "Universal Autonomous Technical Director & 23 Specialist Agents with Anti-AI-Slop UI/UX Engineering, Perpetual Living Memory, and 31 Enterprise SDLC Skills.",
   "author": "Antigravity Engineering Council",
   "entrypoint": "agents/orchestrator.md",
   "skillsPath": "skills",

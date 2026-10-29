@@ -83,7 +83,32 @@ Target Platform: **${targetPlatform}**
 
 ---
 
-## 3. The Anti-AI-Slop & UI/UX Craft Standard (Mandatory for Frontend & Design)
+## 3. Perpetual Living Memory & Continuous Learning System (MANDATORY)
+
+You are equipped with a **2-Way Living Memory Flywheel** to eliminate inter-session amnesia and ensure continuous improvement from every development cycle:
+
+### Phase 0: Pre-Flight Memory Ingestion (BEFORE writing any code)
+Before planning or authoring a single line of code, you MUST inspect:
+1. \`docs/memory/PROJECT_STATE.md\` — Current runtime reality, active milestones, and architectural state.
+2. \`docs/memory/DECISIONS.md\` — Binding Architectural Decision Records (ADRs). *Never contradict approved decisions without explicit user escalation.*
+3. \`docs/memory/HEURISTICS.md\` — Battle-tested rules-of-thumb discovered from past executions in this codebase.
+4. \`docs/memory/ANTI_PATTERNS.md\` — Prohibited coding traps and alluring failure modes.
+5. \`docs/memory/TECHNICAL_DEBT.md\` — Active technical debt register and known trade-offs.
+6. \`docs/memory/LESSONS_LEARNED.md\` — Retrospectives and forensic breakthroughs from prior sprints.
+
+### Phase 5: Continuous Learning & Knowledge Distillation (AFTER verification passes)
+Upon passing all verification and review gates, you MUST execute the 4-step reflection protocol:
+1. **Expectation vs Reality:** What domain or technical surprise was uncovered during implementation?
+2. **Hidden Friction:** What unexpected edge case, race condition, or quirk emerged?
+3. **True Root Cause:** What architectural mechanism solved the core problem cleanly?
+4. **Permanent Invariant:** What lint rule, test case, or heuristic prevents this from recurring?
+- **Append new rules-of-thumb** to \`docs/memory/HEURISTICS.md\` using format \`[HEUR-<AREA>-NNN]\`.
+- **Append newly uncovered traps** to \`docs/memory/ANTI_PATTERNS.md\` using format \`[ANTI-<AREA>-NNN]\`.
+- **Update active state & handoff** in \`docs/memory/PROJECT_STATE.md\` and \`docs/memory/SESSION_HANDOFF.md\`.
+
+---
+
+## 4. The Anti-AI-Slop & UI/UX Craft Standard (Mandatory for Frontend & Design)
 All user interfaces must be engineered with intentional visual craft, semantic tokens, and high-quality design principles. Generic, low-effort "AI Slop" is strictly prohibited:
 
 - ❌ **No Emoji UI Icons:** Never use emojis (📁, 🚀, ⚡, 🔍, 💼) for UI controls, navigation, or status badges. Always use curated SVG icons (Lucide, Radix, Heroicons).
@@ -102,21 +127,21 @@ All user interfaces must be engineered with intentional visual craft, semantic t
 
 ---
 
-## 4. Master Specialist Agent Directory (${agents.length} Roles)
+## 5. Master Specialist Agent Directory (${agents.length} Roles)
 You can embody or dispatch any of the following 23 specialist roles:
 
 ${agents.map(a => `- **\`${a.id}\`** — ${a.title}\n  *Mandate:* ${a.description}`).join('\n')}
 
 ---
 
-## 5. Enterprise Skill Directory (${skills.length} Skills)
+## 6. Enterprise Skill Directory (${skills.length} Skills)
 Invoke or reference these specialized skill playbooks:
 
 ${skills.map(s => `- **\`skills/${s.id}/SKILL.md\`** (${s.name}): ${s.description}`).join('\n')}
 
 ---
 
-## 6. Tiered Verification Ladder (Before Marking Any Task Complete)
+## 7. Tiered Verification Ladder (Before Marking Any Task Complete)
 Execute the verification protocol in strict tiered order:
 1. **Tier 0: Static Hygiene & Type Safety:** \`npm run lint\` (0 errors, 0 warnings), \`npm run typecheck\` (0 errors).
 2. **Tier 1: Fast-Path Air-Gapped Unit Tests (<10s):** Colocated unit tests validating core algorithmic invariants.
@@ -125,9 +150,8 @@ Execute the verification protocol in strict tiered order:
 
 ---
 
-## 7. Closed-Loop Self-Healing & Continuous Learning
-- When tests fail or code reviewers report defects: intercept the failure, formulate a root-cause hypothesis, apply a surgical fix, and re-verify (up to 3 autonomous retries).
-- Once passed: codify newly discovered heuristics into \`docs/memory/HEURISTICS.md\` and traps into \`docs/memory/ANTI_PATTERNS.md\`.
+## 8. Closed-Loop Self-Healing
+- When tests fail or code reviewers report defects: intercept the failure, formulate a root-cause hypothesis, apply a surgical fix, and re-verify (up to 3 autonomous retries). If unresolved after 3 cycles, halt and report an isolated blocker with reproduction logs.
 `;
 }
 
@@ -168,7 +192,7 @@ if (!fs.existsSync(antigravityDir)) {
 const antigravityPlugin = {
   name: "universal-ai-orchestrator",
   version: "1.0.0",
-  description: "Universal Autonomous Technical Director & 23 Specialist Agents with Anti-AI-Slop UI/UX Engineering and 31 Enterprise SDLC Skills.",
+  description: "Universal Autonomous Technical Director & 23 Specialist Agents with Anti-AI-Slop UI/UX Engineering, Perpetual Living Memory, and 31 Enterprise SDLC Skills.",
   author: "Antigravity Engineering Council",
   entrypoint: "agents/orchestrator.md",
   skillsPath: "skills",
