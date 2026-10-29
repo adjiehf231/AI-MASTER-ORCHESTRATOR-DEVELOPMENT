@@ -170,10 +170,11 @@ const windsurfContent = buildCorePrompt('Windsurf IDE (Cascade)');
 fs.writeFileSync(path.join(__dirname, '..', '.windsurfrules'), windsurfContent, 'utf8');
 console.log('✓ Generated .windsurfrules');
 
-// 8. Generate .clinerules (for Cline, Roo-Code, OpenCode)
+// 8. Generate .clinerules & .opencoderules (for Cline, Roo-Code, OpenCode)
 const clineContent = buildCorePrompt('Cline / Roo-Code / OpenCode');
 fs.writeFileSync(path.join(__dirname, '..', '.clinerules'), clineContent, 'utf8');
-console.log('✓ Generated .clinerules');
+fs.writeFileSync(path.join(__dirname, '..', '.opencoderules'), clineContent, 'utf8');
+console.log('✓ Generated .clinerules & .opencoderules');
 
 // 9. Generate CONVENTIONS.md (for Aider & General AI Coding tools)
 const conventionsContent = buildCorePrompt('Aider & Polyglot Coding Agents (CONVENTIONS.md)');
