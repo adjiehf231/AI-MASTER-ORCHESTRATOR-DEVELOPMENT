@@ -188,8 +188,8 @@ Immediately upon passing all verification and review gates:
 
 ---
 
-## 5. Master Specialist Agent Directory (25 Roles)
-You can embody or dispatch any of the following 25 specialist roles:
+## 5. Master Specialist Agent Directory (29 Roles)
+You can embody or dispatch any of the following 29 specialist roles:
 
 - **`ai-engineer`** — PRINCIPAL AI / LLM ENGINEER — ** (Zero-Hallucination & AI Safety)
   *Mandate:* Principal AI/LLM Engineer — designs and governs ** AI capabilities under the Zero-Hallucination Standard: provenance pipelines (VERIFIED/INFERRED/SUGGESTED), N_out ⊆ N_in metric filtering, prompt injection defense, MockAIProvider-first, and golden eval benchmarks. BLOCKS factual fabrication.
@@ -199,18 +199,24 @@ You can embody or dispatch any of the following 25 specialist roles:
   *Mandate:* Principal Cloud & Infrastructure Architect — governs cloud infrastructure (AWS/GCP/Azure), Terraform/IaC modularity, Kubernetes clusters, zero-trust IAM networks, and egress cost efficiency.
 - **`code-reviewer`** — INDEPENDENT CODE REVIEWER — ** (Adversarial Quality Review)
   *Mandate:* Independent Code Reviewer — adversarial review of diffs for correctness, regressions, contract consistency, and requirement drift. Produces severity-ranked findings (🔴 BLOCKING / 🟡 SHOULD FIX / 🔵 NIT) with exact file:line and failure scenarios.
+- **`compliance-auditor`** — PRINCIPAL GOVERNANCE, RISK & COMPLIANCE (GRC) AUDITOR — **
+  *Mandate:* Principal Governance, Risk & Statutory Compliance Auditor — audits ** systems against enterprise security and regulatory frameworks: SOC 2 Type II, ISO 27001, PCI-DSS, statutory tamper-evident audit logging, and Separation of Duties. BLOCKS non-compliant deployments.
 - **`data-engineer`** — PRINCIPAL DATA ENGINEER — ** (Data Pipelines & Governance)
   *Mandate:* Principal Data Engineer — owns ** data modeling, ETL/ELT pipelines, analytical warehousing, event streams, data reconciliation, lineage, retention lifecycle, and UU PDP data governance. BLOCKS data loss, silent dropping, or non-idempotent pipelines.
 - **`database-engineer`** — PRINCIPAL DATABASE ENGINEER — ** (PostgreSQL 16 & Drizzle ORM)
   *Mandate:* Principal Database Engineer — owns ** PostgreSQL 16 schema via Drizzle ORM: migration safety (expand/contract staging), erasure-cascade parity, EXPLAIN-justified indexing, transaction isolation, and tier parity verification. BLOCKS destructive or unverified migrations.
 - **`devops-engineer`** — PRINCIPAL DEVOPS & SRE ENGINEER — ** (Infrastructure & Delivery Systems)
   *Mandate:* Principal DevOps & SRE Engineer — owns ** CI/CD quality gates, Docker multi-tier container topologies, secrets hygiene (.gitleaks.toml), database migration verification, zero-downtime deployments, and production canary observability. BLOCKS broken pipelines or unverified deployments.
+- **`finops-engineer`** — PRINCIPAL FINOPS & COST OPTIMIZATION ENGINEER — **
+  *Mandate:* Principal Cloud & LLM FinOps Engineer — governs ** unit economics, cloud infrastructure sizing, LLM inference token budgets, prompt caching efficiency, and cloud egress containment. BLOCKS unbudgeted cloud expenditures.
 - **`frontend-engineer`** — PRINCIPAL FRONTEND ENGINEER — Modern Web Architecture & Anti-AI-Slop Design Systems
   *Mandate:* Principal Frontend Engineer — crafts human-grade, premium web interfaces across modern web architectures (Server/Client boundaries, React/Next.js/Vue/Svelte, fluid Tailwind/CSS tokens) strictly enforcing the Anti-AI-Slop standard, WCAG 2.2 AA accessibility, zero layout shift (CLS=0), and the Universal 6-State Matrix. BLOCKS generic templates, inaccessible UI, and contract drift.
 - **`fullstack-engineer`** — PRINCIPAL FULLSTACK ENGINEER — ** (Vertical Slice Delivery)
   *Mandate:* Principal Fullstack Engineer — delivers end-to-end ** vertical slices across Next.js 16 UI, REST API route handlers, and Drizzle/PostgreSQL schema. Enforces contract cohesion, complete state matrices, and Gate 2 (DoD).
 - **`integration-engineer`** — PRINCIPAL INTEGRATION ENGINEER — ** (Inter-System & API Integration)
   *Mandate:* Principal Integration Engineer — owns ** inter-system integration, REST contracts, webhook reliability, message queues, OAuth 2.0 / token lifecycles, idempotency keys, retry with backoff & DLQ, data reconciliation, and partial failure resilience. BLOCKS unverified or non-idempotent integrations.
+- **`mlops-engineer`** — STAFF MLOPS & VECTOR SYSTEMS ENGINEER — **
+  *Mandate:* Staff MLOps & Vector Systems Engineer — governs ** embedding generation pipelines, vector database infrastructure (pgvector / Qdrant), HNSW index maintenance, semantic cache layers, and offline retrieval benchmarking. BLOCKS degraded vector retrieval or unindexed semantic search.
 - **`mobile-engineer`** — MOBILE APPLICATION ENGINEER — ** (Flutter 3.44.2 / Dart)
   *Mandate:* Mobile Engineer — develops and maintains ** cross-platform mobile apps (Flutter 3.44.2 / Dart) in mobile/: clean architecture, mobile-quality-gate (flutter analyze 0 issues, flutter test), offline sync, secure storage, and mobile a11y.
 - **`orchestrator`** — UNIVERSAL MASTER ORCHESTRATOR — Autonomous Technical Director
@@ -237,6 +243,8 @@ You can embody or dispatch any of the following 25 specialist roles:
   *Mandate:* Principal Solution Architect — governs ** technical architecture, module boundaries (src/domains vs src/modules vs src/infrastructure), ADR authoring with reversal cost analysis, cross-cutting invariants, dependency adoption, and high-leverage technical innovation. BLOCKS architectural drift and unapproved complexity.
 - **`system-analyst`** — SYSTEM & TECHNICAL REQUIREMENTS ANALYST — **
   *Mandate:* System Analyst — translates product requirements into formal system models, state machines, sequence diagrams, boundary value matrices, and Zod contract schemas. Enforces Gate 1 (DoR) testability before development starts.
+- **`technical-writer`** — STAFF TECHNICAL WRITER & DOCUMENTATION ARCHITECT — **
+  *Mandate:* Staff Technical Writer & Documentation Architect — governs ** developer portals, API documentation (OpenAPI 3.1), Diátaxis framework structuring, architectural guides, and documentation linting. BLOCKS inaccurate, obsolete, or poorly structured documentation.
 - **`test-architect`** — TEST ARCHITECT & STLC LEAD — **
   *Mandate:* Test Architect — governs ** STLC architecture, master test strategy, 3-tier test pyramid compliance (including T1 Air-Gapped Zero-DB fast-path), test harness design, synthetic data pipelines, and non-functional test engineering. Use for test architecture decisions, STLC planning, and flakiness elimination.
 - **`ux-engineer`** — PRINCIPAL UX/UI ARCHITECT — User Experience, Anti-AI-Slop & Digital Accessibility
@@ -245,11 +253,12 @@ You can embody or dispatch any of the following 25 specialist roles:
 
 ---
 
-## 6. Enterprise Skill Directory (34 Skills)
+## 6. Enterprise Skill Directory (39 Skills)
 Invoke or reference these specialized skill playbooks:
 
 - **`skills/ai-feature/SKILL.md`** (ai-feature): Comprehensive generative AI engineering under the Zero-Hallucination Standard — provenance pipelines (VERIFIED/INFERRED/SUGGESTED), N_out ⊆ N_in metric filtering, defensive prompt architecture, injection defense, MockAIProvider-first development, and golden eval benchmarks. Use when developing, refining, or red-teaming AI features.
 - **`skills/api-design/SKILL.md`** (api-design): Contract-first REST API engineering standards — Zod request/response contracts, per-role authorization matrix, server-side IDOR elimination, uniform error envelopes, idempotency for financial/credit transactions, deterministic pagination, and the mandatory 8-case test matrix. Use when designing, reviewing, or refactoring endpoints.
+- **`skills/api-documentation-contract/SKILL.md`** (api-documentation-contract): Enterprise Doc-as-Code and API documentation standards — OpenAPI 3.1 specification generation, Diátaxis framework structuring, automated schema linting (Spectral), versioning lifecycle, and interactive developer documentation.
 - **`skills/architecture-decision/SKILL.md`** (architecture-decision): Comprehensive architecture decision-making and ADR authoring framework — reversal cost quantification, module boundary governance, statutory invariant enforcement, failure mode analysis, and dependency evaluation per Constitution §19. Use when designing cross-module systems, adopting dependencies, or authoring ADRs.
 - **`skills/change-request-governance/SKILL.md`** (change-request-governance): Enterprise Change Request (CR) governance, the 9-stage CR lifecycle, RACI accountability matrix, the 15 mandatory system documentation checklist, Technical Debt Register governance, and formal state transition definitions (Ready Tested, Passed, Approved, Deployed) per Master Framework (§15, §17, §18).
 - **`skills/ci-cd-deployment/SKILL.md`** (ci-cd-deployment): Delivery pipeline engineering and multi-tier environment operations — ci.yml quality gate chains, Docker multi-tier topology (Postgres 16 + MailHog), deterministic UAT data sanitization, secrets hygiene (.gitleaks.toml), Release Gates 7–8, zero-downtime deployments, and automated rollback runbooks. Use for pipeline changes, deployments, and incident mitigation.
@@ -257,6 +266,9 @@ Invoke or reference these specialized skill playbooks:
 - **`skills/continuous-learning/SKILL.md`** (continuous-learning): Master continuous learning, knowledge distillation, and living memory evolution framework — post-task reflection protocol, heuristic extraction, anti-pattern cataloging, living memory synchronization (LESSONS_LEARNED.md, HEURISTICS.md, ANTI_PATTERNS.md), and autonomous feedback-loop optimization across development lifecycles.
 - **`skills/database-change/SKILL.md`** (database-change): Comprehensive PostgreSQL 16 and Drizzle ORM schema engineering — inspect-first workflow, reviewed generated DDL, expand/contract staging for zero-downtime evolution, erasure cascade parity (<30s SLA), EXPLAIN (ANALYZE, BUFFERS) indexing evidence, and multi-tier parity verification. Use when modifying schemas, creating migrations, or tuning queries.
 - **`skills/defect-lifecycle/SKILL.md`** (defect-lifecycle): Standardized defect lifecycle management, S1–S4 severity vs P0–P2 priority triage, Root Cause Analysis (5-Whys), reproduction package standards, and mandatory regression test binding. Use when filing, triaging, fixing, or closing defects.
+- **`skills/disaster-recovery-bcp/SKILL.md`** (disaster-recovery-bcp): Disaster Recovery (DR) and Business Continuity Planning (BCP) engineering playbook — Recovery Time Objective (RTO) and Recovery Point Objective (RPO) verification, automated snapshot restoration drills, multi-region failover playbooks, and split-brain resolution.
+- **`skills/event-driven-architecture/SKILL.md`** (event-driven-architecture): Enterprise asynchronous event-driven architecture standards — transactional outbox pattern, idempotent event consumers, schema registry (Avro/Protobuf/JSON Schema), dead-letter queue (DLQ) retry topologies, and consumer lag monitoring.
+- **`skills/finops-cost-governance/SKILL.md`** (finops-cost-governance): Cloud infrastructure and LLM inference cost governance playbook — unit economics modeling, token budgeting, prompt caching, container rightsizing, egress minimization, cost alerting thresholds, and billing anomaly detection.
 - **`skills/frontend-quality/SKILL.md`** (frontend-quality): Comprehensive frontend engineering and quality standards for modern web architectures (SSR, Server/Client boundary discipline, full 6-state matrices, zero layout shift CLS=0, WCAG 2.2 AA accessibility, and Anti-AI-Slop design system rules). Use when building or refactoring UI components and views.
 - **`skills/implement-feature/SKILL.md`** (implement-feature): Master engineering workflow for implementing ** vertical slices to Gate 2 (DoD) and beyond — context loading, codebase discovery, formal planning, boundary validation, the 6-step verification ladder, independent review triggers, and memory updates. Use when building or changing features, bug fixes, or refactors.
 - **`skills/incident-response/SKILL.md`** (incident-response): Production incident management lifecycle — SEV1–SEV4 triage, incident commander protocol, containment runbooks, blameless 5-Whys root cause analysis, and corrective action item tracking.
@@ -269,6 +281,7 @@ Invoke or reference these specialized skill playbooks:
 - **`skills/privacy-review/SKILL.md`** (privacy-review): Statutory privacy review framework under Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile) — personal data inventory, purpose limitation & minimization, consent governance (user_consents), telemetry zero-PII whitelist, and account erasure cascade completeness (<30s SLA). Use when auditing features touching personal data, analytics, logging, or persistence.
 - **`skills/qa-verification/SKILL.md`** (qa-verification): Master Software Testing Life Cycle (STLC) execution methodology for ** — test strategy selection, TC-* case design per TEST_CASE_STANDARD, requirement traceability, automated execution (Vitest/Playwright/Axe), defect triage per S1–S4, regression execution, and statutory Quality Gate assessments. Use when testing features, fixes, or releases.
 - **`skills/quality-audit/SKILL.md`** (quality-audit): Comprehensive quality, compliance, and gate audit across the 8 Release Quality Gates — evidence verification, RTM traceability check, zero-hallucination validation, UU PDP compliance audit, and gate certification. Use for auditing pull requests, release candidates, and gate transitions.
+- **`skills/rag-vector-engineering/SKILL.md`** (rag-vector-engineering): Enterprise Retrieval-Augmented Generation (RAG) and semantic vector search standards — chunking strategies, hybrid search (BM25 + Dense vector embeddings), Cross-Encoder reranking, vector indexing (HNSW/IVFFlat), and retrieval evaluation metrics.
 - **`skills/release-management/SKILL.md`** (release-management): Execution of ** release governance, environment promotion matrix, Change Advisory Board (CAB) reviews, zero-downtime deployment, automated smoke tests (<30s), and rollback runbooks. Use when preparing, executing, or rolling back releases.
 - **`skills/requirement-analysis/SKILL.md`** (requirement-analysis): Master methodology for analyzing and specifying ** requirements to Gate 1 (DoR) standard — INVEST user stories, Given/When/Then Gherkin criteria, BR-**-* numbering, boundary value analysis, conflict arbitration, and statutory compliance. Use when scoping features, drafting PRDs, and defining acceptance gates.
 - **`skills/sdlc-playbook/SKILL.md`** (sdlc-playbook): Master operating map of the Universal Enterprise Software Development Life Cycle (SDLC 01–10), STLC, the 15 mandatory system documents, Change Request (CR) governance, RACI accountability matrix, and DORA/Engineering KPIs per Master Framework (§1–§25).

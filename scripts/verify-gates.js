@@ -75,3 +75,4 @@ if (failedGates.length === 0) {
   console.error(`❌ VERDICT: ${failedGates.length} GATES FAILED. PROMOTION BLOCKED.`);
   process.exit(1);
 }
+

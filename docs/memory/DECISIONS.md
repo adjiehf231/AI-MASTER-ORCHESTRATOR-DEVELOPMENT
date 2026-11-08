@@ -36,3 +36,26 @@
 - **Consequences:**
   - The engineering team becomes cumulatively smarter with every completed task.
   - Past bug fixes and architectural rules persist permanently on disk.
+
+---
+
+## [ADR-004] Formal Release Quality Gates (Gates 0–8) Enforcement
+- **Status:** APPROVED
+- **Date:** 2026-11-08
+- **Context:** Delivering code without strict gates leads to silent defects, unvalidated inputs, and deployment regressions.
+- **Decision:** Formally codify Gates 0 through 8 in `docs/qa/RELEASE_QUALITY_GATES.md` with an automated CLI enforcement script (`scripts/verify-gates.js`).
+- **Consequences:**
+  - Automated Gate 0 (Hygiene), Gate 1 (DoR), and Gate 2 (DoD) checks run before code merging.
+  - S1/S2 defects immediately block deployment until verified root-cause remediation occurs.
+
+---
+
+## [ADR-005] Universal Extension Lifecycle CLI & Multi-Tier Enterprise Expansion (Waves 1–3)
+- **Status:** APPROVED
+- **Date:** 2026-11-08
+- **Context:** Teams need to rapidly create, customize, or import specialized domain agents and skills (FinOps, MLOps, GRC, RAG, Event-Driven) without manual boilerplate or vendor lock-in.
+- **Decision:** Build automated CLI lifecycle tools (`manage-orchestrator.js` and `import-extension.js`) and scale out the core organization with 6 new specialist roles and 8 enterprise skill playbooks across FinOps, RAG, DocOps, Event-Driven, and Disaster Recovery.
+- **Consequences:**
+  - Standardized agent and skill scaffolding with auto-injected Statutory Hard Gates.
+  - Single-command multi-platform synchronization and live Antigravity plugin deployment.
+  - Zero-effort ingestion of trusted external tools with automatic sanitization and decoupling.

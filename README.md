@@ -1,14 +1,14 @@
 # Universal AI Master Orchestrator & Enterprise Engineering Team
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Specialist Agents](https://img.shields.io/badge/Specialist%20Agents-23%20Roles-indigo.svg)](agents/)
-[![Enterprise Skills](https://img.shields.io/badge/Enterprise%20Skills-31%20Playbooks-emerald.svg)](skills/)
+[![Specialist Agents](https://img.shields.io/badge/Specialist%20Agents-29%20Roles-indigo.svg)](agents/)
+[![Enterprise Skills](https://img.shields.io/badge/Enterprise%20Skills-39%20Playbooks-emerald.svg)](skills/)
 [![Frontend Standard](https://img.shields.io/badge/UI%2FUX-Anti--AI--Slop%20Craft-rose.svg)](skills/ui-ux-design-system/)
 [![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.2%20AA-purple.svg)](skills/frontend-quality/)
 [![Compatibility](https://img.shields.io/badge/Platforms-Antigravity%20%7C%20Claude%20%7C%20Cursor%20%7C%20Cline%20%7C%20Codex%20%7C%20DeepSeek-cyan.svg)](adapters/)
 
 > **A project-agnostic, enterprise-grade AI software engineering organization.**
-> Embodying 23 specialized engineering roles and 31 SDLC skill playbooks operating at the technical judgment standard of a **Principal Software Engineer & Autonomous Technical Director (25+ years experience)**.
+> Embodying 29 specialized engineering roles and 39 SDLC skill playbooks operating at the technical judgment standard of a **Principal Software Engineer & Autonomous Technical Director (25+ years experience)**.
 > Engineered for cross-platform interoperability (**Antigravity, Claude Code, OpenAI Codex, OpenCode, Cline, DeepSeek, Cursor, Windsurf**) with an uncompromising **Anti-AI-Slop UI/UX design standard**.
 
 ---
@@ -91,23 +91,51 @@ cp PROJECT_CONTEXT.template.md PROJECT_CONTEXT.md
 ```
 Open `PROJECT_CONTEXT.md` and define your project name, tech stack, source directories, and change governance prefixes.
 
-### 2. Generate Multi-Platform Adapters
+### 2. Generate Multi-Platform Adapters & Verification
 Run the synchronization script to compile native instruction files:
 ```bash
-node scripts/sync-adapters.js
+npm run sync
 ```
 This automatically updates:
-- `CLAUDE.md` (for Claude Code CLI & Desktop)
+- `CLAUDE.md` & `.claude/agents/*.md` (for Claude Code CLI & Desktop)
 - `.cursorrules` (for Cursor IDE)
 - `.windsurfrules` (for Windsurf IDE)
-- `.clinerules` (for Cline / Roo-Code / OpenCode)
+- `.clinerules`, `.opencoderules`, and `.opencode/agents/*.md` (for Cline & OpenCode)
 - `CONVENTIONS.md` & `.aider.conf.yml` (for Aider CLI)
 - `.continue/rules/universal-orchestrator.md` (for Continue.dev)
 - `adapters/openrouter/system-prompt.txt` & `payload.json` (for OpenRouter, 9router, OneRouter, LiteLLM)
 - `adapters/bundle/universal-system-prompt.md` (for ChatGPT, OpenAI Codex, DeepSeek, Ollama)
-- `adapters/antigravity/plugin.json` (for Google Antigravity & Gemini)
+- `adapters/antigravity/plugin.json` & `rules/AGENTS.md` (for Google Antigravity & Gemini)
 
-### 3. Using with OpenRouter, 9router, Aider, and Other AI Gateways
+### 3. Agent & Skill Automation CLI
+
+Manage the organization lifecycle directly from the command line:
+
+```bash
+# Add or update a Specialist Agent with automatic statutory hard gates:
+npm run agent:add -- <agent-name> --title="Principal Title" --desc="Agent role mandate..."
+
+# Add or update an Enterprise Skill playbook:
+npm run skill:add -- <skill-name> --title="Skill Title" --desc="Playbook guidance..."
+
+# Import an external agent or skill from a trusted GitHub repository or local file:
+npm run import:extension -- --type=agent --name=<name> --url="https://raw.githubusercontent.com/.../agent.md"
+npm run import:extension -- --type=skill --name=<name> --file="./templates/skill.md"
+
+# List all 29 registered agents and 39 enterprise skills:
+npm run orchestrator:list
+
+# Enforce Release Quality Gates (Gates 0, 1, 2):
+npm run verify:gates
+
+# Run Audit 360 integrity suite (10/10 compliance checks):
+npm run audit
+
+# Execute T1 Air-Gapped Zero-DB Unit Test fast-path (<10s):
+npm run test:t1
+```
+
+### 4. Using with OpenRouter, 9router, Aider, and Other AI Gateways
 
 #### A. OpenRouter, 9router, OneRouter, and LiteLLM
 - **Direct API / Playground:** Copy the full system prompt from `adapters/openrouter/system-prompt.txt` into your router's System Prompt field.
@@ -151,7 +179,7 @@ Open your IDE or CLI assistant of choice. The orchestrator will autonomously ing
 
 ---
 
-## 👥 The 23 Specialist Agents
+## 👥 The 29 Specialist Agents
 
 | Agent ID | Role | Mandate & Capabilities |
 | :--- | :--- | :--- |
@@ -165,7 +193,13 @@ Open your IDE or CLI assistant of choice. The orchestrator will autonomously ing
 | **`fullstack-engineer`** | Principal Fullstack Engineer | End-to-end vertical slice delivery across frontend, API, and database layers. |
 | **`database-engineer`** | Principal Database Engineer | Schema design, zero-downtime expand/contract migrations, indexing, concurrency controls. |
 | **`devops-engineer`** | Principal DevOps & SRE | Multi-tier environments, zero-cost-first dev stack, Docker, CI/CD gates, canary releases. |
-| **`security-engineer`** | Principal Security Engineer | OWASP Top 10 defense, threat modeling (STRIDE), auth flows, cryptographic hygiene. |
+| **`cloud-architect`** | Principal Cloud Architect | Multi-region cloud topologies, Terraform/IaC modularity, Kubernetes clusters, zero-trust VPC. |
+| **`secops-engineer`** | Principal DevSecOps Engineer | Automated SAST/DAST/SCA gates, STRIDE threat modeling, secret zero-leakage, CVE triage. |
+| **`security-engineer`** | Principal Security Engineer | OWASP Top 10 defense, AppSec reviews, auth/session integrity, prompt injection defense. |
+| **`finops-engineer`** | Principal FinOps Engineer | Unit economics, LLM token budget ceilings, prompt caching efficiency, egress containment. |
+| **`technical-writer`** | Staff Technical Writer | OpenAPI 3.1 contracts, Diátaxis framework documentation, developer onboarding, doc linting. |
+| **`mlops-engineer`** | Staff MLOps & Vector Engineer | Embedding pipelines, vector databases (pgvector/Qdrant), HNSW tuning, semantic cache, recall audits. |
+| **`compliance-auditor`**| Principal Compliance Auditor | SOC 2 Type II, ISO 27001, PCI-DSS, immutable WORM audit trails, Separation of Duties (SoD). |
 | **`privacy-reviewer`** | Regulatory Privacy Officer | Data minimization, GDPR / CCPA / statutory privacy, PII scrubbing, audit trails. |
 | **`integration-engineer`**| Principal Integration Engineer | Webhooks, message queues, idempotency keys, exponential backoff with DLQ. |
 | **`data-engineer`** | Principal Data Engineer | ETL/ELT pipelines, analytical warehousing, stream processing, data reconciliation. |
@@ -181,17 +215,17 @@ Open your IDE or CLI assistant of choice. The orchestrator will autonomously ing
 
 ---
 
-## 📚 The 31 Enterprise Skills
+## 📚 The 39 Enterprise Skills
 
 | Category | Skills |
 | :--- | :--- |
-| **Architecture & SDLC** | `sdlc-playbook`, `architecture-decision`, `requirement-analysis`, `system-modeling`, `change-request-governance`, `technical-innovation` |
+| **Architecture & SDLC** | `sdlc-playbook`, `architecture-decision`, `requirement-analysis`, `system-modeling`, `change-request-governance`, `technical-innovation`, `api-documentation-contract` |
 | **Frontend & UI/UX** | `ui-ux-design-system`, `frontend-quality`, `uiux-review`, `mobile-quality` |
-| **Backend & Data** | `api-design`, `database-change`, `system-integration`, `observability-resilience`, `nfr-governance` |
-| **AI & Intelligence** | `ai-feature`, `continuous-learning` |
+| **Backend & Data** | `api-design`, `database-change`, `system-integration`, `observability-resilience`, `nfr-governance`, `event-driven-architecture`, `zero-downtime-database` |
+| **AI & Intelligence** | `ai-feature`, `continuous-learning`, `rag-vector-engineering` |
 | **Testing & Quality** | `offline-unit-harness`, `qa-verification`, `manual-testing`, `defect-lifecycle`, `system-debugging-rca`, `performance-testing`, `test-architecture-design` |
-| **Security & Privacy** | `security-review`, `privacy-review`, `code-review`, `quality-audit` |
-| **Delivery & SRE** | `ci-cd-deployment`, `release-management`, `implement-feature` |
+| **Security, GRC & Privacy** | `security-review`, `privacy-review`, `threat-modeling`, `code-review`, `quality-audit` |
+| **Delivery, Cloud & SRE** | `ci-cd-deployment`, `release-management`, `implement-feature`, `finops-cost-governance`, `disaster-recovery-bcp`, `incident-response` |
 
 ---
 

@@ -52,3 +52,4 @@ ON users (tenant_id, created_at DESC);
 - [ ] Rollback down-migration script authored and verified.
 - [ ] `EXPLAIN (ANALYZE, BUFFERS)` evidence captured for new queries to prove index adoption.
 - [ ] Account erasure cascade parity verified (hard-delete cascade completes in $< 30\text{s}$).
+

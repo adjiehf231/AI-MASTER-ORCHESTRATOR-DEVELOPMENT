@@ -52,3 +52,4 @@ Within 48 hours of resolving any SEV1 or SEV2 incident, the team must conduct a 
 3. **Corrective Action Items (CAPA):** Every post-mortem must generate at least 2 immutable preventative actions:
    - An automated regression test reproducing the failure.
    - An architectural heuristic logged in `docs/memory/HEURISTICS.md` or prohibited trap in `docs/memory/ANTI_PATTERNS.md`.
+

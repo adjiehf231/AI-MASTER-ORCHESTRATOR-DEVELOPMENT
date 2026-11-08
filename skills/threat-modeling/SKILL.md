@@ -43,3 +43,4 @@ $$\text{Risk Score} = \frac{\text{Damage} + \text{Reproducibility} + \text{Explo
 2. **Step 2 — STRIDE Analysis:** Interrogate each boundary crossing against the STRIDE table.
 3. **Step 3 — Abuse Case Authoring:** Write testable Gherkin scenarios representing hostile attacks (e.g. attempting to submit oversized payloads, expired tokens, or foreign tenant IDs).
 4. **Step 4 — Automated Regression Verification:** Bind abuse cases directly into integration test suites (`TC-${PROJECT_ID}-SEC-*`).
+
