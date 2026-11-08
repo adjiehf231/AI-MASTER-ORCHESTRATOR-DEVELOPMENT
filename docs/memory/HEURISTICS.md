@@ -57,3 +57,31 @@
 - **Observed Behavior:** Reading balance in memory before writing causes race conditions and negative balances during concurrent requests.
 - **Expert Heuristic:** Always execute balance checks, mutations, and ledger appends within an explicit ACID transaction using database-level row locking (`SELECT ... FOR UPDATE`) accompanied by a database `CHECK balance >= 0`.
 - **Evidence / Origin:** Concurrency & Transactional Integrity Gate.
+
+---
+
+## 4. Automation, Tooling & AI Systems Heuristics
+
+### [HEUR-CLI-001] ANSI Escape Code Sanitization in CLI Automated Assertions
+- **Context:** Writing automated integration tests against CLI tool output formatted with terminal colors.
+- **Observed Behavior:** Literal string matching on `res.stdout` fails unexpectedly because invisible ANSI color codes (`\x1b[36m...`) are embedded between characters and delimiters.
+- **Expert Heuristic:** Always strip ANSI escape codes (`res.stdout.replace(/\x1b\[[0-9;]*m/g, '')`) before performing substring or boundary assertions on terminal command output.
+- **Evidence / Origin:** Unit test stabilization for `scripts/manage-orchestrator.js`.
+
+### [HEUR-YAML-001] Folded Scalar & Escaped Quote Resilience in Frontmatter Parsers
+- **Context:** Reading multi-line descriptions or quoted strings in agent and skill frontmatter.
+- **Observed Behavior:** Simple regex parsers break when frontmatter uses PyYAML 6.0.3 folded scalars (`>-`) or colons inside quoted strings (`description: "Role: ..."`).
+- **Expert Heuristic:** Custom frontmatter parsers must support multiline folded scalar blocks (`>-`, `|`) and clean unescaping of surrounding double-quotes to guarantee cross-parser compatibility without external dependencies.
+- **Evidence / Origin:** Audit 360 Finding F05 resolution.
+
+### [HEUR-RAG-001] Reciprocal Rank Fusion (RRF) for Technical Domain Retrieval
+- **Context:** Building semantic retrieval for codebases, technical documentation, and error codes.
+- **Observed Behavior:** Pure vector embeddings fail on exact error codes, variable names, or acronyms, while pure keyword search fails on conceptual synonyms.
+- **Expert Heuristic:** Always fuse sparse lexical search (BM25 / PostgreSQL full-text) with dense vector embeddings using Reciprocal Rank Fusion ($1 / (60 + r_{\text{dense}}) + 1 / (60 + r_{\text{sparse}})$) before passing to re-rankers.
+- **Evidence / Origin:** `skills/rag-vector-engineering/SKILL.md`.
+
+### [HEUR-FINOPS-001] Prompt Prefix Stability for Maximum LLM Cache Discounts
+- **Context:** Designing system prompts and few-shot examples for Anthropic, Gemini, and OpenAI APIs.
+- **Observed Behavior:** Putting dynamic timestamps or session IDs at the head of system prompts invalidates the entire prefix cache, multiplying token inference costs.
+- **Expert Heuristic:** Maintain an immutable, static prefix (identity, static rules, tool schemas) at the top of prompts exceeding 1,024 tokens. Always append dynamic session state and user queries at the end to achieve 60–80% prompt caching cost savings.
+- **Evidence / Origin:** `skills/finops-cost-governance/SKILL.md`.

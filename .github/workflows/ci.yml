@@ -23,6 +23,8 @@ jobs:
       - name: Package Self-Audit & Adapter Sync Verification
         run: |
           npm test
+          npm run audit
+          npm run verify:gates
           npm run sync
           git diff --exit-code
 
@@ -37,5 +39,5 @@ jobs:
         with:
           node-version: 22
       - name: Execute Fast-Path Verification
-        run: npm test
+        run: npm run test:t1
 

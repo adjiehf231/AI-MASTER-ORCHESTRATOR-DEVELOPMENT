@@ -57,3 +57,32 @@
   }
   ```
 - **Approved Solution:** Catch specific errors, log actionable diagnostic context without leaking secrets, and either propagate the error or return a structured user-facing recovery response.
+
+---
+
+## 3. Data & Distributed Systems Anti-Patterns
+
+### [ANTI-DATA-001] Dual-Writing Without Transactional Outbox
+- **Alluring Trap:** Updating a database table and directly calling `kafka.send()` or `broker.publish()` in application code.
+- **Catastrophic Failure Mode:** If the broker call fails or the process crashes between the database commit and the broker call, downstream services never receive the event, causing permanent, silent data inconsistency.
+- **Prohibited Code Example:**
+  ```typescript
+  // Prohibited: Dual-Write hazard
+  await db.insert(orders).values(order);
+  await messageBroker.publish('order.created', order); // If this fails, state is out of sync!
+  ```
+- **Approved Solution:** Use the Transactional Outbox Pattern: atomically insert the business record and outbox event in the same relational transaction, then relay asynchronously.
+
+---
+
+## 4. AI, Vector & Testing Anti-Patterns
+
+### [ANTI-AI-001] Full-Table Scans on High-Dimensional Vector Embeddings
+- **Alluring Trap:** Storing embedding vectors in PostgreSQL `pgvector` and querying `<->` or `<=>` without an index during prototyping.
+- **Catastrophic Failure Mode:** Queries slow down from 5ms to 5,000ms as table grows, pegging CPU at 100% and exhausting database IOPS.
+- **Approved Solution:** Always create concurrent HNSW indexes (`CREATE INDEX CONCURRENTLY ... USING hnsw (embedding vector_cosine_ops)`) and set `hnsw.ef_search = 40`.
+
+### [ANTI-TEST-001] Hardcoded Escape-Code Dependent CLI Output Assertions
+- **Alluring Trap:** Asserting `stdout.includes('some-string:')` directly on terminal output that contains ANSI color sequences (`\x1b[36m`).
+- **Catastrophic Failure Mode:** Tests fail mysteriously in headless CI or when terminal color support is active because non-printable escape bytes sit between characters.
+- **Approved Solution:** Always sanitize ANSI escape codes (`output.replace(/\x1b\[[0-9;]*m/g, '')`) before making exact string assertions in CLI test harnesses.
