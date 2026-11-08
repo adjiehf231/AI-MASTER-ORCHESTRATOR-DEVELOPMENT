@@ -28,25 +28,35 @@ Key Integration Surfaces in **:
 3. **Synchronous Integration Inside Database Transaction Locks:** Invoking third-party HTTP endpoints inside an active PostgreSQL transaction block (which causes pool starvation under network latency) = **ARCHITECTURAL DEFECT (ANTI-DB-001)**.
 4. **Missing Timeout Budgets & Retry Storms:** Calling external APIs without strict timeouts ($< 5\text{s}$ for web requests) or using naive un-jittered retries that hammer failing providers = **REJECTED**.
 5. **PII Leakage in Integration Payloads (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile)):** Transmitting unnecessary personal data (raw document/input text, national ID, full residential address) to third-party endpoints without justification and encryption in transit = **STATUTORY VIOLATION**.
+6. **Idempotency Payload Mismatch Blind Acceptance:** Processing a request matching an existing `Idempotency-Key` without cryptographically verifying that the SHA-256 request payload hash matches the original request = **CRITICAL S1 INTEGRITY DEFECT**.
+7. **Unbounded Downstream Concurrency (Missing Bulkhead):** Executing outbound calls to third-party APIs without a concurrency ceiling / Bulkhead, risking worker starvation = **RESILIENCE DEFECT -> REJECTED**.
 
 ---
 
 ## 3. Core Enterprise Integration Standards (Framework §10)
 
-### 3.1 Idempotency Key & Deduplication Pattern
+### 3.1 Idempotency Key Engine & Payload Fingerprinting (Stripe Benchmark)
 Every mutating webhook and external integration request must be processed via the Idempotency Engine:
 1. Ingress request arrives with `Idempotency-Key: <UUID>` (or derived unique webhook event ID).
-2. Look up key in `idempotency_records` table with a pessimistic lock.
-3. If `COMPLETED`: Return cached response immediately without re-executing business logic.
-4. If `IN_PROGRESS`: Return `409 Conflict` or wait with timeout to prevent duplicate concurrent processing.
-5. If `NOT_FOUND`: Insert record with state `IN_PROGRESS`, execute transaction, update to `COMPLETED` with response hash.
+2. Compute cryptographic payload fingerprint: `payloadHash = sha256(rawRequestBody)`.
+3. Look up key in `idempotency_records` table with a pessimistic lock (`FOR UPDATE`).
+4. **Mismatch Guard:** If record exists and `record.payloadHash !== payloadHash`:
+   - Immediately reject with `422 Unprocessable Entity` (`code: "IDEMPOTENCY_KEY_PAYLOAD_MISMATCH"`).
+5. **Cache Hit:** If `status === 'COMPLETED'`:
+   - Return cached response immediately with HTTP header `Idempotent-Replayed: true` in $< 50\text{ms}$.
+6. **Concurrent Duplicate:** If `status === 'IN_PROGRESS'`:
+   - Return `409 Conflict` or wait up to 2500ms with polling before raising concurrent lock error.
+7. **Cache Miss:** If `NOT_FOUND`:
+   - Insert record with `IN_PROGRESS` and `payloadHash`, execute transaction, update to `COMPLETED` with serialized response.
 
-### 3.2 Webhook Security & Verification Protocol
+### 3.2 Webhook Security, Dual-Secret Rollover & Verification Protocol
 - **Signature Verification:** Compute HMAC SHA-256 on raw incoming byte body using shared secret; verify using `crypto.timingSafeEqual()`.
+- **Zero-Downtime Dual-Secret Rollover:** During secret rotation, attempt verification against the primary active secret; if invalid, attempt fallback verification against the retiring secondary secret before rejecting.
 - **Replay Protection:** Reject webhook events with timestamps older than 5 minutes (`|t_current - t_event| > 300s`).
 - **Immediate Ack & Asynchronous Processing:** Acknowledge receipt (`200 OK`) in $< 500\text{ms}$ after signature check; offload heavy processing to asynchronous job queues or background workers.
 
-### 3.3 Resilience, Retries & Dead-Letter Queue (DLQ)
+### 3.3 Resilience, Retries, Bulkheads & Dead-Letter Queue (DLQ)
+- **Bulkhead Isolation:** Restrict maximum concurrent outbound requests per upstream provider (e.g. max 10 concurrent requests to AI provider, max 20 to payment gateway) to isolate cascading thread pool exhaustion.
 - **Exponential Backoff with Full Jitter:**
   $$t_{wait} = \text{random}(0, \; \min(t_{max}, \; t_{base} \times 2^{\text{attempt}}))$$
 - **Dead-Letter Queue:** When maximum retries (e.g. 5 attempts) are exhausted, route the message to the DLQ (`failed_integration_events`) with complete payload, error stack, and correlation ID for manual operational replay.

@@ -24,6 +24,7 @@ Before writing code, you consult `docs/memory/HEURISTICS.md` and `docs/memory/AN
 4. **Leaking Internal Stack Traces or Secrets:** Any error response returning raw database errors, SQL fragments, stack traces, internal IP addresses, or secrets = **CRITICAL VULNERABILITY**.
 5. **PII in Telemetry / Logs (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile)):** Logging passwords, session tokens, raw document/input text, names, emails, or phone numbers in application logs or analytics payloads = **STATUTORY PRIVACY VIOLATION**.
 6. **Unexecuted Test Claims:** Reporting backend implementation as complete without executed Vitest test runs against the isolated test database (`tests/setup-test-db.ts`) producing real terminal output = **CONSTITUTION §13 VIOLATION**.
+7. **Abrupt Process Termination (Missing Graceful Shutdown):** Exiting server processes on `SIGTERM` or `SIGINT` without an active in-flight request drain (15–30s grace period) and explicit database connection pool termination = **RELIABILITY DEFECT -> REJECTED**.
 
 ---
 
@@ -72,25 +73,29 @@ Before writing code, you consult `docs/memory/HEURISTICS.md` and `docs/memory/AN
 - Session Management: Cryptographically secure random session tokens (minimum 256-bit entropy); strict cookie flags: `HttpOnly; Secure; SameSite=Strict`.
 - Timing-Safe Comparisons: Use `crypto.timingSafeEqual()` for token and HMAC validations to prevent timing attacks.
 
-### 3.4 Canonical Error Envelopes & HTTP Status Codes
-All route errors must conform to the uniform envelope:
+### 3.4 Canonical Error Envelopes (RFC 7807 Problem Details Alignment)
+All route errors must conform to the uniform envelope compatible with RFC 7807 Problem Details:
 ```json
 {
-  "error": {
-    "code": "ENTITY_NOT_FOUND",
-    "message": "Data yang diminta tidak ditemukan.",
-    "details": {}
-  }
+  "type": "https://api.${PROJECT_NAME}.com/errors/ENTITY_NOT_FOUND",
+  "title": "Resource Not Found",
+  "status": 404,
+  "detail": "Data yang diminta tidak ditemukan.",
+  "instance": "/api/v1/documents/doc_123",
+  "code": "ENTITY_NOT_FOUND",
+  "message": "Data yang diminta tidak ditemukan.",
+  "details": {},
+  "requestId": "req_01h8x..."
 }
 ```
 Status Code Discipline:
-- `400`: Zod validation failures, malformed JSON body.
-- `401`: Missing, invalid, or expired session cookie.
-- `403`: Authenticated user lacks required permission.
-- `404`: Resource does not exist or access is denied to prevent existence oracles.
-- `422`: Business rule violations (e.g. BR-${PROJECT_ID}-006 NIK input, insufficient credits).
-- `429`: Rate limit exceeded.
-- `500`: Sanitized internal error; detailed diagnostic log written to server logs.
+- `400`: Zod validation failures, malformed JSON body (`INVALID_PAYLOAD`).
+- `401`: Missing, invalid, or expired session cookie (`UNAUTHORIZED`).
+- `403`: Authenticated user lacks required permission (`FORBIDDEN`).
+- `404`: Resource does not exist or access is denied to prevent existence oracles (`ENTITY_NOT_FOUND`).
+- `422`: Business rule violations or idempotency payload mismatch (`UNPROCESSABLE_ENTITY`).
+- `429`: Rate limit exceeded with `Retry-After` header (`RATE_LIMIT_EXCEEDED`).
+- `500`: Sanitized internal error; detailed diagnostic log written to server logs (`INTERNAL_SERVER_ERROR`).
 
 ### 3.5 Provider Abstraction & Zero-Cost Development
 - Third-party services (AI, email, payment, object storage) must implement interface abstractions in `src/infrastructure/`.
@@ -98,6 +103,18 @@ Status Code Discipline:
   - `AI_PROVIDER=mock`: Deterministic MockAIProvider returning schema-valid JSON.
   - Email: MailHog on `localhost:1025` (SMTP) and `localhost:8025` (UI).
   - Database: Local Docker PostgreSQL 16 container (`${DB_NAME}_test`, `${DB_NAME}_dev`).
+
+### 3.6 Graceful Shutdown & Connection Pool Draining (`nodebestpractices` §1.17)
+To ensure zero dropped requests during rolling deployments:
+- Intercept OS process signals: `process.on('SIGTERM', shutdown)` and `process.on('SIGINT', shutdown)`.
+- **Step 1 (Stop Ingress):** Immediately call `server.close()` to stop accepting new HTTP connections.
+- **Step 2 (In-Flight Drain):** Allow active requests to finish processing within a bounded timeout window (15–30s).
+- **Step 3 (Pool Draining):** Cleanly drain and terminate database pools (`await db.$client.end()` or `pool.end()`).
+- **Step 4 (Process Exit):** Exit process cleanly with code `0`. If timeout expires, force exit with code `1`.
+
+### 3.7 Health & Readiness Probe Architecture
+- **Liveness Probe (`GET /api/health/live`):** Process responsiveness check ($<50\text{ms}$ SLA, no DB I/O).
+- **Readiness Probe (`GET /api/health/ready`):** Verifies DB pool health (`SELECT 1`) and active migration parity before routing live traffic.
 
 ---
 

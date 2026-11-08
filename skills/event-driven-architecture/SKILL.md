@@ -74,10 +74,12 @@ async function handleEventWithDeduplication(event: DomainEvent): Promise<void> {
 
 ---
 
-## 5. Retry, Backoff & Dead-Letter Queue (DLQ) Topologies
+## 5. Retry, Backoff, Poison-Pill Quarantine & Dead-Letter Queue (DLQ) Topologies
 
 ```
 [Event Broker] ──► [Consumer Worker] ──► Successful Processing (ACK)
+                         │
+                         ├─► (Fatal Schema / Malformed JSON) ──► [Poison-Pill Quarantine]
                          │
                          ▼ (Transient Error)
                    [Retry Queue with Exponential Backoff + Jitter]
@@ -91,7 +93,8 @@ async function handleEventWithDeduplication(event: DomainEvent): Promise<void> {
 
 - **Retry Limit:** Maximum 3 to 5 retries.
 - **Backoff Formula:** $T_{\text{backoff}} = \min(T_{\text{max}}, T_{\text{base}} \times 2^{\text{attempt}}) + \text{jitter}$.
-- **DLQ Alarm:** Any message routed to DLQ must trigger high-priority alerts to the on-call engineer.
+- **Poison-Pill Quarantine Protocol:** If an incoming event cannot be parsed (malformed JSON or corrupted bytes), immediately divert it to `poison_pill_quarantine` with error metadata (`x-death-reason: "MALFORMED_PAYLOAD"`) and ACK the partition. Never retry a deterministic parsing failure in a loop that blocks partition progress.
+- **DLQ Alarm:** Any message routed to DLQ or quarantine must trigger a high-priority operational alert.
 
 ---
 
@@ -100,4 +103,17 @@ async function handleEventWithDeduplication(event: DomainEvent): Promise<void> {
 1. **Additive Changes Only:** New fields must always be optional or have defaults.
 2. **Deprecation Policy:** Never delete an existing field in an event schema until all downstream consumers have upgraded (minimum 2 minor release cycles).
 3. **Payload Typing:** All events must validate against formal Zod, JSON Schema, or Protobuf definitions.
+
+---
+
+## 7. Consumer Lag Monitoring & Partition Health
+
+Maintain real-time observability over message processing queues:
+- **Consumer Lag Metric:**
+  $$\Delta_{\text{lag}} = \text{Latest Produced Offset} - \text{Committed Consumer Offset}$$
+- **Thresholds & Alerting:**
+  - Warning: $\Delta_{\text{lag}} > 500$ messages or processing delay $> 30\text{s}$.
+  - Critical S1: $\Delta_{\text{lag}} > 2000$ messages or processing delay $> 120\text{s}$.
+- **Backpressure & Recovery:**
+  - Autoscale consumer worker concurrency or trigger message throttling at the ingestion gateway when lag exceeds critical thresholds.
 

@@ -102,35 +102,56 @@ When a user attempts to access a resource ID they do not own, return `404 Not Fo
 
 ---
 
-## 5. Canonical Error Envelope Standard
+## 5. Canonical Error Envelope Standard (RFC 7807 Problem Details Alignment)
 
-All non-2xx responses must return the standard JSON envelope:
+All non-2xx responses must return the standard JSON envelope aligned with IETF RFC 7807 Problem Details:
 
 ```json
 {
-  "error": {
-    "code": "INSUFFICIENT_CREDITS",
-    "message": "Saldo kredit tidak mencukupi untuk melakukan pemrosesan dokumen.",
-    "details": {
-      "requiredCredits": 1,
-      "currentBalance": 0
-    }
-  }
+  "type": "https://api.${PROJECT_NAME}.com/errors/INSUFFICIENT_CREDITS",
+  "title": "Insufficient Credits",
+  "status": 422,
+  "detail": "Saldo kredit tidak mencukupi untuk melakukan pemrosesan dokumen.",
+  "instance": "/api/v1/documents/doc_9921/process",
+  "code": "INSUFFICIENT_CREDITS",
+  "message": "Saldo kredit tidak mencukupi untuk melakukan pemrosesan dokumen.",
+  "details": {
+    "requiredCredits": 1,
+    "currentBalance": 0
+  },
+  "requestId": "req_01h8x..."
 }
 ```
 
 ### HTTP Status Code Catalog:
-- `400 BAD_REQUEST`: Zod parsing failure or malformed JSON syntax.
-- `401 UNAUTHORIZED`: Missing, expired, or invalid session cookie.
-- `403 FORBIDDEN`: Authenticated user lacks required role permissions.
-- `404 NOT_FOUND`: Resource does not exist or access is denied to prevent existence enumeration.
-- `422 UNPROCESSABLE_ENTITY`: Business rule violations (e.g. BR-${PROJECT_ID}-006 NIK input, insufficient credit balance, invalid state transition).
-- `429 TOO_MANY_REQUESTS`: Rate limit exceeded. Include `Retry-After` header.
-- `500 INTERNAL_SERVER_ERROR`: Sanitized generic error. Log diagnostic stack trace exclusively to internal server logs.
+- `400 BAD_REQUEST`: Zod parsing failure, malformed JSON syntax, or invalid query parameters (`INVALID_PAYLOAD`).
+- `401 UNAUTHORIZED`: Missing, expired, or invalid session cookie (`UNAUTHORIZED`).
+- `403 FORBIDDEN`: Authenticated user lacks required role permissions (`FORBIDDEN`).
+- `404 NOT_FOUND`: Resource does not exist or access is denied to prevent existence enumeration (`ENTITY_NOT_FOUND`).
+- `422 UNPROCESSABLE_ENTITY`: Business rule violations (e.g. BR-${PROJECT_ID}-006 NIK input, insufficient credit balance, invalid state transition, or `IDEMPOTENCY_KEY_PAYLOAD_MISMATCH`).
+- `429 TOO_MANY_REQUESTS`: Rate limit exceeded. Include `Retry-After: <seconds>` header (`RATE_LIMIT_EXCEEDED`).
+- `500 INTERNAL_SERVER_ERROR`: Sanitized generic error. Log diagnostic stack trace exclusively to internal server logs (`INTERNAL_SERVER_ERROR`).
 
 ---
 
-## 6. List Endpoints & Deterministic Pagination
+## 6. Idempotency Key Protocol (Stripe Benchmark)
+
+All state-mutating requests (`POST`, `PUT`, `PATCH`) on financial, credit-deducting, or provisioning routes must support and enforce idempotency:
+
+1. **Client Header:** Client sends `Idempotency-Key: <UUIDv4>`.
+2. **Payload Fingerprint Verification:**
+   - Server computes `requestPayloadHash = sha256(rawBody)`.
+   - If an idempotency record exists with the same key but different `requestPayloadHash`:
+     - Reject immediately with `422 Unprocessable Entity` (`code: "IDEMPOTENCY_KEY_PAYLOAD_MISMATCH"`).
+3. **Replay Header:**
+   - When serving a previously executed cached response:
+     - Return original response payload and status code.
+     - Include HTTP response header: `Idempotent-Replayed: true`.
+4. **Time-To-Live (TTL):** Idempotency records expire after 24 hours.
+
+---
+
+## 7. List Endpoints & Deterministic Pagination
 
 All list endpoints (`GET /api/v1/items`) must enforce pagination:
 - **Cursor-Based Pagination (Preferred for High-Volume Feeds):**
@@ -142,9 +163,9 @@ All list endpoints (`GET /api/v1/items`) must enforce pagination:
 
 ---
 
-## 7. Mandatory 8-Case Test Matrix (per Endpoint)
+## 8. Mandatory 9-Case Test Matrix (per Endpoint)
 
-Every endpoint implementation must be accompanied by automated Vitest tests executing these 8 test scenarios:
+Every endpoint implementation must be accompanied by automated Vitest tests executing these 9 test scenarios:
 
 | # | Test Scenario | Input Condition | Expected Status Code & Body Contract |
 |:---:|---|---|---|
@@ -154,8 +175,9 @@ Every endpoint implementation must be accompanied by automated Vitest tests exec
 | **4** | **Unauthorized Role** | Authenticated user possessing wrong role (e.g. Jobseeker accessing Admin) | `403 Forbidden` |
 | **5** | **IDOR Probe (Foreign ID)** | Authenticated user passing an entity ID owned by another user | `404 Not Found` (Zero data leakage, zero existence oracle) |
 | **6** | **Boundary & Extremes** | Maximum length strings, empty arrays, multi-byte Unicode characters | Handled cleanly per schema without truncation or crash |
-| **7** | **Concurrent Idempotency** | Simultaneous duplicate requests on credit-consuming routes | Single atomic debit; duplicate returns cached response or 422 |
-| **8** | **Rate Limit Trigger** | Exceeding allowed threshold within sliding time window | `429 Too Many Requests` + `Retry-After` header |
+| **7** | **Concurrent Idempotency** | Simultaneous duplicate requests on credit-consuming routes | Single atomic debit; duplicate returns cached response (`Idempotent-Replayed: true`) |
+| **8** | **Idempotency Payload Mismatch** | Reusing key with altered request body payload | `422 Unprocessable Entity` (`IDEMPOTENCY_KEY_PAYLOAD_MISMATCH`) |
+| **9** | **Rate Limit Trigger** | Exceeding allowed threshold within sliding time window | `429 Too Many Requests` + `Retry-After` header |
 
 ---
 
@@ -165,6 +187,7 @@ STATUS: APPROVED / SPECIFICATION_INCOMPLETE / BLOCKED
 - **API ROUTE IDENTIFIER:** Method, path, and owning module.
 - **ZOD CONTRACTS DEFINED:** Request and response schema exports.
 - **AUTHZ MATRIX & IDOR GUARDS:** Documented role permissions and ownership checks.
-- **ERROR CATALOG:** Documented error codes and messages.
-- **TEST MATRIX COVERAGE:** Vitest execution evidence across the 8 test scenarios.
+- **RFC 7807 ERROR CATALOG:** Documented error codes, types, and messages.
+- **IDEMPOTENCY PROTOCOL:** Schema, payload hashing, and locking behavior.
+- **TEST MATRIX COVERAGE:** Vitest execution evidence across the 9 test scenarios.
 - **NEXT ACTIONS:** Frontend contract consumption or QA test automation.

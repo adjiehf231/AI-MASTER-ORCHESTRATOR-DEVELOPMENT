@@ -29,17 +29,21 @@ flowchart LR
 
 ---
 
-## 2. Protocol 1: Idempotency Key Architecture & Deduplication
+## 2. Protocol 1: Idempotency Key Engine & Payload Fingerprinting (Stripe Standard)
 
 Every mutating endpoint accepting webhooks, payments, or third-party actions must implement the Idempotency Engine:
 
 ```typescript
-// Canonical Idempotent Transaction Pattern
+// Canonical Idempotent Transaction Pattern with Cryptographic Fingerprinting
 export async function processIdempotentEvent<T>(
   idempotencyKey: string,
+  rawPayload: string | Buffer,
   actionName: string,
   execute: () => Promise<T>
-): Promise<T> {
+): Promise<{ result: T; replayed: boolean }> {
+  const crypto = await import('crypto');
+  const payloadHash = crypto.createHash('sha256').update(rawPayload).digest('hex');
+
   return await db.transaction(async (tx) => {
     // 1. Pessimistic lock on idempotency record
     const existing = await tx
@@ -49,26 +53,38 @@ export async function processIdempotentEvent<T>(
       .for('update');
 
     if (existing.length > 0) {
+      // 2. Cryptographic Mismatch Guard
+      if (existing[0].payloadHash !== payloadHash) {
+        throw new UnprocessableEntityError(
+          'IDEMPOTENCY_KEY_PAYLOAD_MISMATCH',
+          'Idempotency key telah digunakan dengan payload yang berbeda.'
+        );
+      }
+
       if (existing[0].status === 'COMPLETED') {
-        return JSON.parse(existing[0].responsePayload) as T;
+        return {
+          result: JSON.parse(existing[0].responsePayload) as T,
+          replayed: true, // Signals HTTP layer to set header Idempotent-Replayed: true
+        };
       }
       if (existing[0].status === 'IN_PROGRESS') {
         throw new ConflictError('Permintaan serupa sedang diproses secara bersamaan.');
       }
     }
 
-    // 2. Mark IN_PROGRESS
+    // 3. Mark IN_PROGRESS with payload hash
     await tx.insert(idempotencyRecords).values({
       key: idempotencyKey,
       action: actionName,
+      payloadHash: payloadHash,
       status: 'IN_PROGRESS',
       createdAt: new Date(),
     });
 
-    // 3. Execute payload
+    // 4. Execute domain mutation
     const result = await execute();
 
-    // 4. Mark COMPLETED with serialized response
+    // 5. Mark COMPLETED with serialized response
     await tx
       .update(idempotencyRecords)
       .set({
@@ -78,35 +94,40 @@ export async function processIdempotentEvent<T>(
       })
       .where(eq(idempotencyRecords.key, idempotencyKey));
 
-    return result;
+    return { result, replayed: false };
   });
 }
 ```
 
 ---
 
-## 3. Protocol 2: Webhook Reliability & Security Standards
+## 3. Protocol 2: Webhook Reliability & Zero-Downtime Secret Rollover
 
 1. **HMAC SHA-256 Signature Verification:**
    - Raw request byte body must be used to compute signature.
    - Use `crypto.timingSafeEqual()` to prevent timing attacks.
    - Reject missing or mismatched signatures with `401 Unauthorized`.
-2. **Replay Window Enforcement:**
+2. **Dual-Secret Key Rollover (Zero-Downtime Rotation):**
+   - Webhook verifier checks signature against `WEBHOOK_SECRET_PRIMARY`.
+   - If invalid and `WEBHOOK_SECRET_SECONDARY` is configured, attempt fallback check before rejecting.
+3. **Replay Window Enforcement:**
    - Reject incoming requests with timestamp drift $> 300\text{s}$ (5 minutes).
-3. **Sub-500ms Acknowledgment:**
+4. **Sub-500ms Acknowledgment:**
    - Always return `200 OK` or `202 Accepted` immediately after signature verification.
    - Offload heavy processing to background workers. Never hold open external webhook HTTP connections during heavy operations.
 
 ---
 
-## 4. Protocol 3: Resilient Outbound Calls & Dead-Letter Queue (DLQ)
+## 4. Protocol 3: Resilient Outbound Calls, Bulkhead Isolation & Dead-Letter Queue (DLQ)
 
 When calling third-party services (LLMs, Payment Gateway (Stripe/Midtrans/PayPal), SMTP, recruiters):
-1. **Timeout Budget:** Set explicit timeouts on all HTTP requests (default: $5000\text{ms}$).
-2. **Exponential Backoff with Full Jitter:**
+1. **Bulkhead Pattern (Concurrency Throttling):**
+   - Isolate downstream connection pools via semaphores (e.g. max 10 concurrent requests to AI provider, max 20 to payment gateway) so slow upstream services cannot exhaust the application server thread pool.
+2. **Timeout Budget:** Set explicit timeouts on all HTTP requests (default: $5000\text{ms}$).
+3. **Exponential Backoff with Full Jitter:**
    $$t_{wait} = \text{random}(0, \; \min(t_{max}, \; t_{base} \times 2^{\text{attempt}}))$$
    - $t_{base} = 500\text{ms}$, $t_{max} = 10000\text{ms}$, max attempts = 5.
-3. **Dead-Letter Queue:**
+4. **Dead-Letter Queue:**
    - When 5 attempts fail, persist the event into `integration_dead_letters` table.
    - Store: `id`, `provider`, `endpoint`, `requestPayload`, `lastError`, `attemptCount`, `status='FAILED'`.
    - Provide an operational CLI/dashboard command to replay dead-letter messages.
