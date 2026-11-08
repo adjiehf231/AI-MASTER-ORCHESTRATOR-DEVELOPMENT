@@ -84,14 +84,32 @@ Every dynamic view and component must explicitly support:
 
 ## 🚀 Quick Start: Using in Any Project
 
-### 1. Configure Your Project Profile
+### 1. Clone & Repository Setup
+
+To clone the project directly into the official directory name:
+
+```bash
+# Explicit clone target into AI-MASTER-ORCHESTRATOR-DEVELOPMENT:
+git clone https://github.com/adjiehf231/AI-MASTER-ORCHESTRATOR-DEVELOPMENT.git AI-MASTER-ORCHESTRATOR-DEVELOPMENT
+cd AI-MASTER-ORCHESTRATOR-DEVELOPMENT
+
+# Or if you have already created the destination folder and are currently inside it:
+git clone https://github.com/adjiehf231/AI-MASTER-ORCHESTRATOR-DEVELOPMENT.git .
+```
+
+One-line setup command:
+```bash
+git clone https://github.com/adjiehf231/AI-MASTER-ORCHESTRATOR-DEVELOPMENT.git AI-MASTER-ORCHESTRATOR-DEVELOPMENT && cd AI-MASTER-ORCHESTRATOR-DEVELOPMENT && npm run sync && npm run verify:gates
+```
+
+### 2. Configure Your Project Profile
 Copy the template to your project root and update the parameters:
 ```bash
 cp PROJECT_CONTEXT.template.md PROJECT_CONTEXT.md
 ```
-Open `PROJECT_CONTEXT.md` and define your project name, tech stack, source directories, and change governance prefixes.
+Open `PROJECT_CONTEXT.md` and define your project name, tech stack, database names, source directories, and change governance prefixes.
 
-### 2. Generate Multi-Platform Adapters & Verification
+### 3. Generate Multi-Platform Adapters & Verification
 Run the synchronization script to compile native instruction files:
 ```bash
 npm run sync
@@ -107,7 +125,7 @@ This automatically updates:
 - `adapters/bundle/universal-system-prompt.md` (for ChatGPT, OpenAI Codex, DeepSeek, Ollama)
 - `adapters/antigravity/plugin.json` & `rules/AGENTS.md` (for Google Antigravity & Gemini)
 
-### 3. Agent & Skill Automation CLI
+### 4. Agent & Skill Automation CLI
 
 Manage the organization lifecycle directly from the command line:
 
@@ -135,7 +153,7 @@ npm run audit
 npm run test:t1
 ```
 
-### 4. Using with OpenRouter, 9router, Aider, and Other AI Gateways
+### 5. Using with OpenRouter, 9router, Aider, and Other AI Gateways
 
 #### A. OpenRouter, 9router, OneRouter, and LiteLLM
 - **Direct API / Playground:** Copy the full system prompt from `adapters/openrouter/system-prompt.txt` into your router's System Prompt field.
@@ -253,34 +271,57 @@ npm run test:e2e      # Automated Playwright + @axe-core scans (0 violations)
 ## 📂 Repository Structure
 
 ```
-ai-master-orchestrator/
+AI-MASTER-ORCHESTRATOR-DEVELOPMENT/
 ├── .github/                         # GitHub Actions CI/CD workflows
 ├── adapters/                        # Multi-platform adapters & bundles
-│   ├── antigravity/                 # Google Antigravity & Gemini config
+│   ├── antigravity/                 # Google Antigravity & Gemini config (rules/AGENTS.md, plugin.json)
+│   ├── opencode/                    # OpenCode V2 native adapter (AGENTS.md)
+│   ├── openrouter/                  # OpenRouter system prompt & request payload
 │   └── bundle/                      # Universal prompt bundle (Codex, DeepSeek, Ollama)
-├── agents/                          # 23 Generalized Specialist Agents (SSOT)
-│   ├── orchestrator.md              # Master SDLC Director
+├── agents/                          # 29 Generalized Specialist Agents (SSOT)
+│   ├── orchestrator.md              # Master SDLC Director & Dispatch Matrix
+│   ├── cloud-architect.md           # Multi-region cloud & IaC Architect
+│   ├── finops-engineer.md           # Unit economics & LLM token budget governor
+│   ├── mlops-engineer.md            # Vector search & embedding infrastructure
+│   ├── technical-writer.md          # OpenAPI 3.1 & Diátaxis documentation
+│   ├── compliance-auditor.md        # SOC 2 Type II, ISO 27001 & GRC auditor
+│   ├── secops-engineer.md           # DevSecOps & STRIDE threat modeling
 │   ├── frontend-engineer.md         # Anti-AI-Slop, Accessible Frontend Architect
 │   ├── backend-engineer.md          # Contract-first, ACID Backend Architect
 │   └── ...                          # 20 other specialist agents
-├── skills/                          # 31 Enterprise SDLC Skills (SSOT)
+├── skills/                          # 39 Enterprise SDLC Skills (SSOT)
+│   ├── rag-vector-engineering/      # Hybrid search, chunking & reranking
+│   ├── finops-cost-governance/      # Token budgets, model routing & prompt caching
+│   ├── event-driven-architecture/   # Transactional outbox, idempotency & DLQ
+│   ├── api-documentation-contract/  # OpenAPI 3.1 & Doc-as-Code standards
+│   ├── disaster-recovery-bcp/       # RTO/RPO verification & multi-region failover
 │   ├── ui-ux-design-system/         # Anti-AI-slop design token & craft rules
 │   ├── frontend-quality/            # 6-state matrix, zero CLS, WCAG 2.2 AA
 │   ├── sdlc-playbook/               # 10-stage SDLC & STLC master operating map
-│   └── ...                          # 28 other enterprise skills
+│   └── ...                          # 31 other enterprise skills
 ├── scripts/                         # Automation & synchronization scripts
-│   ├── refactor-core.js             # Core decoupling utility
-│   ├── sanitize-tiers.js            # Tier environment sanitizer
+│   ├── manage-orchestrator.js       # Agent & skill lifecycle management CLI
+│   ├── import-extension.js          # Trusted GitHub extension & importer engine
+│   ├── verify-gates.js              # Statutory Release Quality Gate enforcement (Gates 0-2)
+│   ├── qa-unit-offline.cjs          # T1 Air-Gapped Zero-DB fast-path runner (<10s)
+│   ├── audit-integrity.js           # 10-point Audit 360 integrity test suite
+│   ├── deploy-antigravity.js        # Live Antigravity plugin deployment
 │   └── sync-adapters.js             # Platform adapter compiler
+├── tests/                           # Automated Node test suites (13 suites)
+├── docs/                            # 15 Mandatory System Documents & Living Memory
+│   ├── memory/                      # PROJECT_STATE.md, DECISIONS.md, HEURISTICS.md
+│   ├── process/                     # SDLC.md, STLC.md, CHANGE_MANAGEMENT.md
+│   └── qa/                          # RELEASE_QUALITY_GATES.md, TEST_PYRAMID.md
 ├── CLAUDE.md                        # Generated adapter for Claude Code
 ├── .cursorrules                     # Generated adapter for Cursor IDE
 ├── .windsurfrules                   # Generated adapter for Windsurf IDE
 ├── .clinerules                      # Generated adapter for Cline & OpenCode
+├── .opencoderules                   # Generated adapter for OpenCode
+├── CONVENTIONS.md                   # Generated adapter for Aider CLI
 ├── PROJECT_CONTEXT.template.md      # Template configuration for user projects
 ├── PROJECT_CONTEXT.md               # Active workspace project context
 ├── LICENSE                          # MIT License
-└── README.md                        # World-class documentation
-```
+└── README.md                        # Authoritative documentation
 
 ---
 
