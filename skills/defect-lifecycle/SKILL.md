@@ -87,13 +87,35 @@ For all S1 and S2 defects, conduct a 5-Whys RCA to identify systemic root causes
 
 ---
 
-## 5. Mandatory Regression Test Binding (Constitution §13)
+## 5. Mandatory Regression Test Binding & SWE-Agent Reproduction Harness (Constitution §13)
 
-A bug fix is INCOMPLETE without a permanent automated regression test:
-1. **Red Test First:** Write a test that reproduces the defect and fails on the current codebase.
-2. **Apply Fix:** Implement the smallest clean fix.
-3. **Green Test:** Verify the test now passes.
-4. **Permanent Suite Inclusion:** Colocate the regression test in the appropriate test suite (`src/**/*.test.ts`, `tests/api/`, or `tests/e2e/`).
+A bug fix is INCOMPLETE without a permanent automated regression test and reproduction proof:
+
+### A. Minimal Standalone Reproduction Harness Standard (SWE-Agent Pattern)
+For all S1 and S2 defects, author a minimal reproduction script or isolated test case:
+```typescript
+// tests/reproduce/DEF_042_credit_race.test.ts
+import { test, expect } from 'vitest';
+import { processDeduction } from '@/domains/billing/service';
+
+test('reproduce DEF-042: concurrent balance deduction must not cause negative balance', async () => {
+  const initialBalance = 100;
+  // Fire concurrent debit requests
+  const [res1, res2] = await Promise.all([
+    processDeduction({ amount: 100, userId: 'test-user' }),
+    processDeduction({ amount: 100, userId: 'test-user' })
+  ]);
+  
+  // Invariant assertion: Exactly one must succeed, one must fail with InsufficientCreditsError
+  expect([res1.status, res2.status].sort()).toEqual([200, 402]);
+});
+```
+
+### B. The 4-Phase Red-to-Green Evidence Cycle:
+1. **Phase 1 (Red Reproduction):** Execute the reproduction harness against the unfixed codebase. Must fail explicitly with non-zero exit code (`exit != 0`) and capture the terminal error log.
+2. **Phase 2 (Root Cause Remediation):** Apply the surgical fix addressing the 5-Whys root cause.
+3. **Phase 3 (Green Verification):** Execute the reproduction harness again. Must pass cleanly (`exit == 0`).
+4. **Phase 4 (Permanent Suite Inclusion):** Permanently merge the test into the colocated domain unit suite (`src/**/*.test.ts`) or API regression suite (`tests/api/`). Never delete the reproduction test!
 
 ---
 

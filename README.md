@@ -2,13 +2,13 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Specialist Agents](https://img.shields.io/badge/Specialist%20Agents-29%20Roles-indigo.svg)](agents/)
-[![Enterprise Skills](https://img.shields.io/badge/Enterprise%20Skills-39%20Playbooks-emerald.svg)](skills/)
+[![Enterprise Skills](https://img.shields.io/badge/Enterprise%20Skills-40%20Playbooks-emerald.svg)](skills/)
 [![Frontend Standard](https://img.shields.io/badge/UI%2FUX-Anti--AI--Slop%20Craft-rose.svg)](skills/ui-ux-design-system/)
 [![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.2%20AA-purple.svg)](skills/frontend-quality/)
 [![Compatibility](https://img.shields.io/badge/Platforms-Antigravity%20%7C%20Claude%20%7C%20Cursor%20%7C%20Cline%20%7C%20Codex%20%7C%20DeepSeek-cyan.svg)](adapters/)
 
 > **A project-agnostic, enterprise-grade AI software engineering organization.**
-> Embodying 29 specialized engineering roles and 39 SDLC skill playbooks operating at the technical judgment standard of a **Principal Software Engineer & Autonomous Technical Director (25+ years experience)**.
+> Embodying 29 specialized engineering roles and 40 SDLC skill playbooks operating at the technical judgment standard of a **Principal Software Engineer & Autonomous Technical Director (25+ years experience)**.
 > Engineered for cross-platform interoperability (**Antigravity, Claude Code, OpenAI Codex, OpenCode, Cline, DeepSeek, Cursor, Windsurf**) with an uncompromising **Anti-AI-Slop UI/UX design standard**.
 
 ---
@@ -233,11 +233,11 @@ Open your IDE or CLI assistant of choice. The orchestrator will autonomously ing
 
 ---
 
-## 📚 The 39 Enterprise Skills
+## 📚 The 40 Enterprise Skills
 
 | Category | Skills |
 | :--- | :--- |
-| **Architecture & SDLC** | `sdlc-playbook`, `architecture-decision`, `requirement-analysis`, `system-modeling`, `change-request-governance`, `technical-innovation`, `api-documentation-contract` |
+| **Architecture & SDLC** | `sdlc-playbook`, `architecture-decision`, `requirement-analysis`, `system-modeling`, `change-request-governance`, `technical-innovation`, `api-documentation-contract`, `codebase-ast-map` |
 | **Frontend & UI/UX** | `ui-ux-design-system`, `frontend-quality`, `uiux-review`, `mobile-quality` |
 | **Backend & Data** | `api-design`, `database-change`, `system-integration`, `observability-resilience`, `nfr-governance`, `event-driven-architecture`, `zero-downtime-database` |
 | **AI & Intelligence** | `ai-feature`, `continuous-learning`, `rag-vector-engineering` |
@@ -289,7 +289,8 @@ AI-MASTER-ORCHESTRATOR-DEVELOPMENT/
 │   ├── frontend-engineer.md         # Anti-AI-Slop, Accessible Frontend Architect
 │   ├── backend-engineer.md          # Contract-first, ACID Backend Architect
 │   └── ...                          # 20 other specialist agents
-├── skills/                          # 39 Enterprise SDLC Skills (SSOT)
+├── skills/                          # 40 Enterprise SDLC Skills (SSOT)
+│   ├── codebase-ast-map/            # Automated AST symbol mapping & context synthesis
 │   ├── rag-vector-engineering/      # Hybrid search, chunking & reranking
 │   ├── finops-cost-governance/      # Token budgets, model routing & prompt caching
 │   ├── event-driven-architecture/   # Transactional outbox, idempotency & DLQ

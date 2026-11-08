@@ -26,6 +26,7 @@ test('manage-orchestrator.js list displays registered agents and skills', () => 
   assert.ok(cleanOutput.includes('rag-vector-engineering:'), 'Must list rag-vector-engineering');
   assert.ok(cleanOutput.includes('event-driven-architecture:'), 'Must list event-driven-architecture');
   assert.ok(cleanOutput.includes('disaster-recovery-bcp:'), 'Must list disaster-recovery-bcp');
+  assert.ok(cleanOutput.includes('codebase-ast-map:'), 'Must list codebase-ast-map');
 });
 
 test('manage-orchestrator.js rejects non-kebab-case agent names', () => {

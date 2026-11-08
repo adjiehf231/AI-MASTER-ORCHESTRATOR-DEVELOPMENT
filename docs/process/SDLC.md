@@ -65,3 +65,25 @@ Traceability is bidirectional and mandatory:
 $$\text{User Story} \iff \text{BR-\$\{PROJECT\_ID\}-*} \iff \text{ADR-*} \iff \text{Code Module} \iff \text{TC-\$\{PROJECT\_ID\}-*} \iff \text{CI Log}$$
 
 If a code change cannot be traced back to an approved `BR-${PROJECT_ID}-*` and forward to an executed `TC-${PROJECT_ID}-*`, it constitutes unauthorized scope drift and is rejected at Gate 2.
+
+---
+
+## 5. Formal Multi-Agent Artifact Pipeline Flow (MetaGPT & OpenHands Standard)
+
+To prevent prompt distortion and context degradation across multi-agent handoffs, all specialist agents communicate through structured artifact deliverables:
+
+```mermaid
+flowchart TD
+    A1["1. PRD Artifact (ART-01-PRD)<br/>Role: product-manager"] --> A2["2. Architecture & C4 Spec (ART-02-ARCH)<br/>Role: solution-architect"]
+    A2 --> A3["3. Contract Specification (ART-03-CONTRACT)<br/>Role: system-analyst / technical-writer"]
+    A3 --> A4["4. Surgical Code Diff (ART-04-DIFF)<br/>Role: fullstack / backend / frontend"]
+    A4 --> A5["5. Gate & Test Evidence (ART-05-VERIFY)<br/>Role: qa-engineer / quality-auditor"]
+```
+
+### Mandatory Artifact Metadata Standard:
+Each artifact handoff must include:
+- `artifact_id`: Deterministic ID format: `ART-<PHASE>-${PROJECT_ID}-<NNN>`.
+- `author_role`: The creating specialist agent.
+- `upstream_artifact`: Direct link to parent artifact (ensuring 100% provenance chain).
+- `invariants_validated`: Explicit assertion of preserved core invariants.
+- `downstream_role`: Designated consumer specialist role.

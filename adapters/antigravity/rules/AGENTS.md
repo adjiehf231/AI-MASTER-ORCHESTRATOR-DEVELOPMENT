@@ -260,7 +260,7 @@ You can embody or dispatch any of the following 29 specialist roles:
 
 ---
 
-## 6. Enterprise Skill Directory (39 Skills)
+## 6. Enterprise Skill Directory (40 Skills)
 Invoke or reference these specialized skill playbooks:
 
 - **`skills/ai-feature/SKILL.md`** (ai-feature): Comprehensive generative AI engineering under the Zero-Hallucination Standard — provenance pipelines (VERIFIED/INFERRED/SUGGESTED), N_out ⊆ N_in metric filtering, defensive prompt architecture, injection defense, MockAIProvider-first development, and golden eval benchmarks. Use when developing, refining, or red-teaming AI features.
@@ -270,6 +270,7 @@ Invoke or reference these specialized skill playbooks:
 - **`skills/change-request-governance/SKILL.md`** (change-request-governance): Enterprise Change Request (CR) governance, the 9-stage CR lifecycle, RACI accountability matrix, the 15 mandatory system documentation checklist, Technical Debt Register governance, and formal state transition definitions (Ready Tested, Passed, Approved, Deployed) per Master Framework (§15, §17, §18).
 - **`skills/ci-cd-deployment/SKILL.md`** (ci-cd-deployment): Delivery pipeline engineering and multi-tier environment operations — ci.yml quality gate chains, Docker multi-tier topology (Postgres 16 + MailHog), deterministic UAT data sanitization, secrets hygiene (.gitleaks.toml), Release Gates 7–8, zero-downtime deployments, and automated rollback runbooks. Use for pipeline changes, deployments, and incident mitigation.
 - **`skills/code-review/SKILL.md`** (code-review): Adversarial code review methodology to merge-gate standards — blast-radius mapping, mutation thinking on tests, contract-consistency checks, security/privacy regression sweeps, Next.js 16 App Router discipline, and severity-ranked findings (🔴 BLOCKING / 🟡 SHOULD FIX / 🔵 NIT). Use when reviewing pull requests or diffs.
+- **`skills/codebase-ast-map/SKILL.md`** (codebase-ast-map): Automated codebase Abstract Syntax Tree (AST) symbol mapping and architectural context synthesis — extracts classes, exported functions, type signatures, and dependency graphs without reading entire file bodies to minimize token consumption and eliminate context degradation.
 - **`skills/continuous-learning/SKILL.md`** (continuous-learning): Master continuous learning, knowledge distillation, and living memory evolution framework — post-task reflection protocol, heuristic extraction, anti-pattern cataloging, living memory synchronization (LESSONS_LEARNED.md, HEURISTICS.md, ANTI_PATTERNS.md), and autonomous feedback-loop optimization across development lifecycles.
 - **`skills/database-change/SKILL.md`** (database-change): Comprehensive PostgreSQL 16 and Drizzle ORM schema engineering — inspect-first workflow, reviewed generated DDL, expand/contract staging for zero-downtime evolution, erasure cascade parity (<30s SLA), EXPLAIN (ANALYZE, BUFFERS) indexing evidence, and multi-tier parity verification. Use when modifying schemas, creating migrations, or tuning queries.
 - **`skills/defect-lifecycle/SKILL.md`** (defect-lifecycle): Standardized defect lifecycle management, S1–S4 severity vs P0–P2 priority triage, Root Cause Analysis (5-Whys), reproduction package standards, and mandatory regression test binding. Use when filing, triaging, fixing, or closing defects.
