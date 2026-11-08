@@ -62,7 +62,7 @@ check('F04: Utility script fail-closed scope protection', () => {
 });
 
 // F05: YAML frontmatter validity
-check('F05: Valid YAML frontmatter across all 54 components', () => {
+check('F05: Valid YAML frontmatter across all components', () => {
   const targets = fs.readdirSync(path.join(repoRoot, 'agents')).map(f => path.join(repoRoot, 'agents', f))
     .concat(fs.readdirSync(path.join(repoRoot, 'skills')).map(d => path.join(repoRoot, 'skills', d, 'SKILL.md')));
   targets.forEach(f => {
@@ -108,3 +108,4 @@ check('F10: Sensitive environment file exclusion', () => {
 
 console.log(`\nVerification Complete: ${passCount} Passed, ${failCount} Failed.`);
 process.exit(failCount === 0 ? 0 : 1);
+

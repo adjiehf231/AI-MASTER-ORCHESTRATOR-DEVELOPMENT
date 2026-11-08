@@ -38,3 +38,4 @@ test('sync-adapters.js generates all platform adapters deterministically', () =>
   const bundleContent = fs.readFileSync(path.join(repoRoot, 'adapters', 'bundle', 'universal-system-prompt.md'), 'utf8');
   assert.ok(!bundleContent.includes('(ui-ux-design-system): >-'), 'Folded scalar >- must be resolved into full description');
 });
+

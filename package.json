@@ -6,10 +6,17 @@
   "scripts": {
     "test": "node --test tests/*.test.js",
     "test:t1": "node scripts/qa-unit-offline.cjs",
+    "verify:gates": "node scripts/verify-gates.js",
     "sync": "node scripts/sync-adapters.js",
     "sync:template": "node scripts/sync-adapters.js --template",
     "deploy:antigravity": "node scripts/deploy-antigravity.js",
-    "audit": "node scripts/audit-integrity.js"
+    "audit": "node scripts/audit-integrity.js",
+    "agent:add": "node scripts/manage-orchestrator.js agent:create",
+    "agent:update": "node scripts/manage-orchestrator.js agent:update",
+    "skill:add": "node scripts/manage-orchestrator.js skill:create",
+    "skill:update": "node scripts/manage-orchestrator.js skill:update",
+    "orchestrator:list": "node scripts/manage-orchestrator.js list",
+    "import:extension": "node scripts/import-extension.js"
   },
   "keywords": [
     "ai",
@@ -25,3 +32,4 @@
   "author": "Antigravity Engineering Council",
   "license": "MIT"
 }
+

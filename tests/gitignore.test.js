@@ -17,3 +17,4 @@ test('.gitignore covers sensitive environment variants and tracks .env.example (
   assert.ok(ignored.includes('.env.test'), '.env.test must be ignored');
   assert.ok(!ignored.includes('.env.example'), '.env.example must NOT be ignored');
 });
+

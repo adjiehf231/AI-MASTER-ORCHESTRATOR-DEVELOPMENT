@@ -28,3 +28,4 @@ const res = spawnSync('node', ['--test', 'tests/*.test.js'], {
 });
 
 process.exit(res.status || 0);
+

@@ -28,13 +28,13 @@ function copyRecursive(src, dest) {
 // 1. Deploy Agents
 const srcAgents = path.join(repoRoot, 'agents');
 const destAgents = path.join(targetDir, 'agents');
-console.log('-> Syncing 23 Specialist Agents...');
+console.log(`-> Syncing ${fs.readdirSync(srcAgents).filter(f => f.endsWith('.md')).length} Specialist Agents...`);
 copyRecursive(srcAgents, destAgents);
 
 // 2. Deploy Skills
 const srcSkills = path.join(repoRoot, 'skills');
 const destSkills = path.join(targetDir, 'skills');
-console.log('-> Syncing 31 Enterprise Skills...');
+console.log(`-> Syncing ${fs.readdirSync(srcSkills).filter(f => fs.statSync(path.join(srcSkills, f)).isDirectory()).length} Enterprise Skills...`);
 copyRecursive(srcSkills, destSkills);
 
 // 3. Deploy Rules (rules/AGENTS.md)
@@ -54,3 +54,4 @@ if (fs.existsSync(srcManifest)) {
 }
 
 console.log('\n✓ Deployment to Antigravity plugin directory complete with verified UTF-8 parity.');
+

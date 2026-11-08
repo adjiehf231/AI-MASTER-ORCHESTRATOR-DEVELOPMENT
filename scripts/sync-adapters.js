@@ -144,7 +144,7 @@ function buildCorePrompt(targetPlatform) {
 ---
 
 ## 5. Master Specialist Agent Directory (${agents.length} Roles)
-You can embody or dispatch any of the following 23 specialist roles:
+You can embody or dispatch any of the following ${agents.length} specialist roles:
 
 ${agents.map(a => `- **\`${a.id}\`** — ${a.title}\n  *Mandate:* ${a.description}`).join('\n')}
 `;
@@ -273,7 +273,7 @@ writeAdapter(path.join(antigravityDir, 'rules', 'AGENTS.md'), antigravityRules);
 const antigravityPlugin = {
   name: "universal-orchestrator",
   version: "1.0.0",
-  description: "Universal Autonomous Technical Director & 23 Specialist Agents with Anti-AI-Slop UI/UX Engineering, Perpetual Living Memory, and 31 Enterprise SDLC Skills.",
+  description: `Universal Autonomous Technical Director & ${agents.length} Specialist Agents with Anti-AI-Slop UI/UX Engineering, Perpetual Living Memory, and ${skills.length} Enterprise SDLC Skills.`,
   author: "Antigravity Engineering Council"
 };
 writeAdapter(path.join(antigravityDir, 'plugin.json'), JSON.stringify(antigravityPlugin, null, 2));

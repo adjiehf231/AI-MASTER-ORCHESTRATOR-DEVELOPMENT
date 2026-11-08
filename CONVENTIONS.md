@@ -188,13 +188,15 @@ Immediately upon passing all verification and review gates:
 
 ---
 
-## 5. Master Specialist Agent Directory (23 Roles)
-You can embody or dispatch any of the following 23 specialist roles:
+## 5. Master Specialist Agent Directory (25 Roles)
+You can embody or dispatch any of the following 25 specialist roles:
 
 - **`ai-engineer`** — PRINCIPAL AI / LLM ENGINEER — ** (Zero-Hallucination & AI Safety)
   *Mandate:* Principal AI/LLM Engineer — designs and governs ** AI capabilities under the Zero-Hallucination Standard: provenance pipelines (VERIFIED/INFERRED/SUGGESTED), N_out ⊆ N_in metric filtering, prompt injection defense, MockAIProvider-first, and golden eval benchmarks. BLOCKS factual fabrication.
 - **`backend-engineer`** — PRINCIPAL BACKEND ENGINEER — ** (API & Server Architecture)
   *Mandate:* Principal Backend Engineer — implements ** server logic, REST route handlers, Zod request/response contracts, transactional boundaries, concurrency controls, IDOR defenses, resilience patterns, and provider abstractions. BLOCKS unvalidated inputs and security vulnerabilities.
+- **`cloud-architect`** — PRINCIPAL CLOUD & INFRASTRUCTURE ARCHITECT — **
+  *Mandate:* Principal Cloud & Infrastructure Architect — governs cloud infrastructure (AWS/GCP/Azure), Terraform/IaC modularity, Kubernetes clusters, zero-trust IAM networks, and egress cost efficiency.
 - **`code-reviewer`** — INDEPENDENT CODE REVIEWER — ** (Adversarial Quality Review)
   *Mandate:* Independent Code Reviewer — adversarial review of diffs for correctness, regressions, contract consistency, and requirement drift. Produces severity-ranked findings (🔴 BLOCKING / 🟡 SHOULD FIX / 🔵 NIT) with exact file:line and failure scenarios.
 - **`data-engineer`** — PRINCIPAL DATA ENGINEER — ** (Data Pipelines & Governance)
@@ -227,6 +229,8 @@ You can embody or dispatch any of the following 23 specialist roles:
   *Mandate:* Quality & Compliance Auditor — independent adversarial audit of SDLC/STLC artifacts, evidence veracity, Release Quality Gates 1–8, RTM traceability, and UU PDP compliance. BLOCKS unverified claims and gate circumvention.
 - **`release-manager`** — RELEASE MANAGER & DELIVERY GOVERNANCE LEAD — **
   *Mandate:* Release Manager — owns delivery governance, environment promotion matrix, Change Advisory Board (CAB) reviews, Gate 7–8 sign-offs, zero-downtime deployment protocols, and rollback execution. BLOCKS releases with open S1/S2 defects or missing rollbacks.
+- **`secops-engineer`** — PRINCIPAL DEVSECOPS & THREAT MODELING ENGINEER — **
+  *Mandate:* Principal DevSecOps & Threat Modeling Engineer — owns threat modeling (STRIDE), automated SAST/DAST/SCA quality gates, CVE vulnerability triage, and OWASP ASVS verification.
 - **`security-engineer`** — PRINCIPAL SECURITY ENGINEER — ** (Application Security & Red-Teaming)
   *Mandate:* Principal Security Engineer — read-only adversarial application security review: IDOR elimination, authentication/session integrity, credit double-spend prevention, prompt injection defense, secrets hygiene, and UU PDP privacy. Produces S1–S4 vulnerability findings.
 - **`solution-architect`** — PRINCIPAL SOLUTION ARCHITECT — ** (System Architecture & Invariants)
@@ -241,7 +245,7 @@ You can embody or dispatch any of the following 23 specialist roles:
 
 ---
 
-## 6. Enterprise Skill Directory (31 Skills)
+## 6. Enterprise Skill Directory (34 Skills)
 Invoke or reference these specialized skill playbooks:
 
 - **`skills/ai-feature/SKILL.md`** (ai-feature): Comprehensive generative AI engineering under the Zero-Hallucination Standard — provenance pipelines (VERIFIED/INFERRED/SUGGESTED), N_out ⊆ N_in metric filtering, defensive prompt architecture, injection defense, MockAIProvider-first development, and golden eval benchmarks. Use when developing, refining, or red-teaming AI features.
@@ -255,6 +259,7 @@ Invoke or reference these specialized skill playbooks:
 - **`skills/defect-lifecycle/SKILL.md`** (defect-lifecycle): Standardized defect lifecycle management, S1–S4 severity vs P0–P2 priority triage, Root Cause Analysis (5-Whys), reproduction package standards, and mandatory regression test binding. Use when filing, triaging, fixing, or closing defects.
 - **`skills/frontend-quality/SKILL.md`** (frontend-quality): Comprehensive frontend engineering and quality standards for modern web architectures (SSR, Server/Client boundary discipline, full 6-state matrices, zero layout shift CLS=0, WCAG 2.2 AA accessibility, and Anti-AI-Slop design system rules). Use when building or refactoring UI components and views.
 - **`skills/implement-feature/SKILL.md`** (implement-feature): Master engineering workflow for implementing ** vertical slices to Gate 2 (DoD) and beyond — context loading, codebase discovery, formal planning, boundary validation, the 6-step verification ladder, independent review triggers, and memory updates. Use when building or changing features, bug fixes, or refactors.
+- **`skills/incident-response/SKILL.md`** (incident-response): Production incident management lifecycle — SEV1–SEV4 triage, incident commander protocol, containment runbooks, blameless 5-Whys root cause analysis, and corrective action item tracking.
 - **`skills/manual-testing/SKILL.md`** (manual-testing): Enterprise manual and exploratory testing methodology for ** — Session-Based Test Management (SBTM), persona tours, hostile-input stress probes, cross-browser/device coverage beyond Chromium, defect filing with complete reproduction packages, regression suites, and UAT facilitation. Use when conducting manual exploratory sessions or validating fixes.
 - **`skills/mobile-quality/SKILL.md`** (mobile-quality): Cross-platform mobile engineering standards for ** (Flutter 3.44.2 / Dart) — clean architecture in mobile/, mobile-quality-gate (flutter analyze 0 issues, flutter test), secure enclave storage, offline resilience, and mobile accessibility. Use when building or testing mobile features.
 - **`skills/nfr-governance/SKILL.md`** (nfr-governance): Enterprise Non-Functional Requirements (NFR) engineering and verification framework (Master Framework §16) — Performance budgets (p95/p99), Availability (SLI/SLO), Scalability, Security, Reliability, Maintainability, Usability (WCAG 2.1 AA), Compatibility, Observability, and Recoverability (RTO & RPO).
@@ -273,5 +278,7 @@ Invoke or reference these specialized skill playbooks:
 - **`skills/system-modeling/SKILL.md`** (system-modeling): Formal system modeling for SDLC Phase 2 — Mermaid state machine diagrams, sequence flows, boundary value matrices, error catalogs, and Zod contract interface schemas. Use when modeling complex features or preparing Gate 1 (DoR) specifications.
 - **`skills/technical-innovation/SKILL.md`** (technical-innovation): Framework for first-principles thinking, high-leverage architectural innovation, Type 1 vs Type 2 decision categorization, 10x simplification over complexity, battle-tested SaaS resilience patterns, and proactive engineering suggestions. Use when evaluating major architectural choices, optimizing core systems, or challenging requirements.
 - **`skills/test-architecture-design/SKILL.md`** (test-architecture-design): Architecting and governing ** STLC test systems — test pyramid distribution, test double design (MockAIProvider, MailHog), synthetic data pipelines, contract testing, flakiness eradication, and mutation testing. Use when designing test suites, harnesses, or refactoring test architecture.
+- **`skills/threat-modeling/SKILL.md`** (threat-modeling): Enterprise threat modeling methodology — STRIDE decomposition, DREAD risk scoring, attack trees, abuse cases, and automated vulnerability countermeasures.
 - **`skills/ui-ux-design-system/SKILL.md`** (ui-ux-design-system): Expert guidance for modern UI/UX design, frontend aesthetics, fluid responsive layouts, design tokens, accessible components, micro-interactions, and eliminating generic AI-slop design. Use whenever designing, reviewing, improving, refactoring, or building web user interfaces, color systems, typography, dashboards, forms, landing pages, or user interaction workflows.
 - **`skills/uiux-review/SKILL.md`** (uiux-review): Comprehensive UI/UX heuristic evaluation and digital accessibility audit — Nielsen's 10 heuristics, Anti-AI-Slop craft validation, WCAG 2.2 AA keyboard and screen reader protocols, microcopy governance, and S1–S4 defect mapping. Use when evaluating user flows, auditing accessibility, or signing off designs.
+- **`skills/zero-downtime-database/SKILL.md`** (zero-downtime-database): Zero-downtime database migration patterns — Expand/Contract staging, non-blocking DDL (CREATE INDEX CONCURRENTLY), online backfill workers, and dual-writing state synchronization.

@@ -33,3 +33,4 @@ test('sanitize-tiers.js enforces fail-closed execution outside repo root', () =>
   assert.equal(res.status, 0, 'Script safely handles path resolution');
   assert.ok(res.stdout.includes(repoRoot), 'Target root must remain strictly repoRoot');
 });
+

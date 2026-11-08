@@ -17,3 +17,4 @@
 1. **Fail-Closed Network Guard:** Any external HTTP, socket, or database call triggered during T1 execution must immediately throw an unhandled exception and abort the suite.
 2. **Deterministic Execution:** No reliance on random seeds, real clock timers, or ambient environment credentials.
 3. **Colocation:** Unit tests live adjacent to the units they test (`*.test.ts` or `*.unit.test.ts`).
+

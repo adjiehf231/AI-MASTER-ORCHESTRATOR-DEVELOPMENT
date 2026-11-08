@@ -5,10 +5,10 @@ const path = require('path');
 
 const repoRoot = path.resolve(__dirname, '..');
 
-test('all 23 agents have valid frontmatter and non-empty description', () => {
+test('all specialist agents have valid frontmatter and non-empty description', () => {
   const agentsDir = path.join(repoRoot, 'agents');
   const files = fs.readdirSync(agentsDir).filter(f => f.endsWith('.md'));
-  assert.equal(files.length, 23, 'Must discover exactly 23 agent files');
+  assert.ok(files.length >= 23, `Must discover at least 23 agent files (found ${files.length})`);
 
   files.forEach(file => {
     const content = fs.readFileSync(path.join(agentsDir, file), 'utf8');
@@ -23,10 +23,10 @@ test('all 23 agents have valid frontmatter and non-empty description', () => {
   });
 });
 
-test('all 31 skills have valid frontmatter and kebab-case name', () => {
+test('all enterprise skills have valid frontmatter and kebab-case name', () => {
   const skillsDir = path.join(repoRoot, 'skills');
   const dirs = fs.readdirSync(skillsDir).filter(f => fs.statSync(path.join(skillsDir, f)).isDirectory());
-  assert.equal(dirs.length, 31, 'Must discover exactly 31 skill directories');
+  assert.ok(dirs.length >= 31, `Must discover at least 31 skill directories (found ${dirs.length})`);
 
   dirs.forEach(dir => {
     const skillPath = path.join(skillsDir, dir, 'SKILL.md');
@@ -41,3 +41,4 @@ test('all 31 skills have valid frontmatter and kebab-case name', () => {
     assert.ok(raw.includes('description:'), `Skill ${dir} frontmatter must have description`);
   });
 });
+

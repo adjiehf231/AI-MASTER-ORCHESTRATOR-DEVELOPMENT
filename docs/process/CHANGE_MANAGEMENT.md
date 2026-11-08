@@ -17,3 +17,4 @@ Every non-trivial modification, feature addition, or bug fix follows this lifecy
 7. **UAT Business Verification (Gate 5):** Validation against sanitized mirror; human sponsor sign-off.
 8. **Deployment & Promotion (Gate 7-8):** Zero-downtime release with verified rollback runbook.
 9. **Post-Task Distillation (Gate 10):** Reflection protocol; codifying new heuristics and anti-patterns into `docs/memory/`.
+
