@@ -68,6 +68,7 @@ Before designing or touching a single line of code, automatically ingest:
 4. `docs/memory/ANTI_PATTERNS.md` (Known failure modes and prohibited traps).
 5. `docs/memory/TECHNICAL_DEBT.md` (Active technical debt register).
 6. `docs/memory/LESSONS_LEARNED.md` (Distilled insights from recent sprints).
+7. Pre-flight Symbol Mapping: Ingest structural AST context via `codebase-ast-map` to map relevant classes, exported functions, and dependencies without whole-file context blowup.
 
 *If user instructions contradict approved decisions, HALT and log the conflict in `docs/memory/OPEN_QUESTIONS.md`.*
 
@@ -77,7 +78,7 @@ Before designing or touching a single line of code, automatically ingest:
 Think as a seasoned Technical Director before accepting any proposal:
 - **Assign CR Identifier:** Format `CR-**-YYYY-NNN` if modifying features or infrastructure.
 - **Challenge the Premise:** Is the requested solution solving the root problem or merely treating a superficial symptom?
-- **Assess Blast Radius & Reversibility:** Is this a **Type 1** (irreversible: schemas, auth, core boundaries) or **Type 2** (reversible: UI styling, internal logic) decision? (Invoke `technical-innovation` skill).
+- **Assess Blast Radius & Reversibility:** Is this a **Type 1** (irreversible: schemas, auth, core boundaries) or **Type 2** (reversible: UI styling, internal logic) decision? (Invoke `technical-innovation` and trace symbol graph with `codebase-ast-map`).
 - **Audit 15 Mandatory Documents:** Ensure impacted documents from the 15-document standard (Framework §15) are earmarked for updates.
 - **Invariant Audit:** Does this change preserve the Core Architectural Invariants (Provenance, Erasure Cascade, State & Financial Atomicity, Server Multi-Tenancy, Zero-Cost Dev)?
 
@@ -95,16 +96,22 @@ Load required skills automatically and dispatch specialist subagents per the **M
 | **Vector Search & RAG Pipelines** | `mlops-engineer` $\to$ `ai-engineer` $\to$ `backend-engineer` $\to$ `qa-engineer` | `rag-vector-engineering`, `ai-feature`, `database-change`, `qa-verification` |
 | **Event-Driven & Messaging** | `integration-engineer` $\to$ `backend-engineer` $\to$ `qa-engineer` $\to$ `code-reviewer` | `event-driven-architecture`, `system-integration`, `observability-resilience` |
 | **DocOps & API Contracts** | `technical-writer` $\to$ `backend-engineer` $\to$ `quality-auditor` | `api-documentation-contract`, `api-design`, `requirement-analysis` |
-| **Statutory Audit & Enterprise GRC** | `compliance-auditor` $\to$ `security-engineer` $\to$ `privacy-reviewer` $\to$ `quality-auditor` | `quality-audit`, `security-review`, `privacy-review`, `threat-modeling` |
-| **Disaster Recovery & BCP** | `devops-engineer` $\to$ `cloud-architect` $\to$ `qa-manual` | `disaster-recovery-bcp`, `observability-resilience`, `incident-response` |
-| **Inter-System & Webhooks** | `integration-engineer` $\to$ `qa-engineer` $\to$ `security-engineer` $\to$ `code-reviewer` | `system-integration`, `implement-feature`, `qa-verification`, `security-review`, `observability-resilience` |
-| **Data Pipelines & Analytics** | `data-engineer` $\to$ `qa-engineer` $\to$ `privacy-reviewer` $\to$ `code-reviewer` | `database-change`, `implement-feature`, `qa-verification`, `privacy-review`, `observability-resilience` |
-| **API & Backend** | `backend-engineer` $\to$ `qa-engineer` $\to$ `code-reviewer` $\to$ `security-engineer` | `api-design`, `implement-feature`, `qa-verification`, `security-review`, `observability-resilience`, `nfr-governance` |
-| **Database Schema Evolution** | `database-engineer` $\to$ `qa-engineer` $\to$ `privacy-reviewer` $\to$ `code-reviewer` | `database-change`, `zero-downtime-database`, `implement-feature`, `qa-verification`, `privacy-review` |
-| **AI / LLM Feature** | `ai-engineer` $\to$ `security-engineer` $\to$ `privacy-reviewer` $\to$ `qa-engineer` | `ai-feature`, `rag-vector-engineering`, `implement-feature`, `qa-verification`, `security-review`, `privacy-review` |
-| **UI / UX Overhaul** | `ux-engineer` $\to$ `frontend-engineer` $\to$ `qa-engineer` (a11y/E2E) $\to$ `code-reviewer` | `ui-ux-design-system`, `uiux-review`, `frontend-quality`, `implement-feature`, `qa-verification` |
-| **Deep Bug / Incident** | `system-debugging-rca` $\to$ matching engineer $\to$ `qa-engineer` (regression trap) $\to$ `code-reviewer` | `system-debugging-rca`, `defect-lifecycle`, `incident-response`, `qa-verification`, `continuous-learning` |
-| **SRE / Resilience / NFR** | `devops-engineer` $\to$ `performance-engineer` $\to$ `security-engineer` | `observability-resilience`, `performance-testing`, `nfr-governance`, `ci-cd-deployment` |
+| **Statutory Audit & Enterprise GRC** | `compliance-auditor` $\to` `security-engineer` $\to` `privacy-reviewer` $\to` `quality-auditor` | `quality-audit`, `security-review`, `privacy-review`, `threat-modeling` |
+| **Disaster Recovery & BCP** | `devops-engineer` $\to` `cloud-architect` $\to` `qa-manual` | `disaster-recovery-bcp`, `observability-resilience`, `incident-response` |
+| **Inter-System & Webhooks** | `integration-engineer` $\to` `qa-engineer` $\to` `security-engineer` $\to` `code-reviewer` | `system-integration`, `implement-feature`, `qa-verification`, `security-review`, `observability-resilience` |
+| **Cybersecurity & Penetration Audit** | `cybersecurity-analyst` $\to` `security-engineer` $\to` `qa-engineer` $\to` `code-reviewer` | `penetration-testing-audit`, `threat-modeling`, `security-review` |
+| **Data Analytics & BI Insights** | `data-analyst` $\to` `data-engineer` $\to` `privacy-reviewer` $\to` `code-reviewer` | `exploratory-data-analysis`, `database-change`, `privacy-review` |
+| **Data Science & ML Modeling** | `data-scientist` $\to` `data-engineer` $\to` `ai-engineer` $\to` `qa-engineer` | `ml-experimentation-lifecycle`, `ai-feature`, `rag-vector-engineering` |
+| **Data Pipelines & Analytics** | `data-engineer` $\to` `qa-engineer` $\to` `privacy-reviewer` $\to` `code-reviewer` | `database-change`, `implement-feature`, `qa-verification`, `privacy-review`, `observability-resilience` |
+| **Mobile Application (Flutter/Dart)** | `mobile-engineer` $\to` `qa-engineer` $\to` `code-reviewer` | `mobile-quality`, `implement-feature`, `offline-unit-harness` |
+| **STLC Test Strategy & Exploratory QA** | `test-architect` $\to` `qa-manual` $\to` `qa-engineer` $\to` `quality-auditor` | `test-architecture-design`, `manual-testing`, `qa-verification`, `defect-lifecycle` |
+| **Release Governance & Promotion Matrix** | `release-manager` $\to` `devops-engineer` $\to` `quality-auditor` | `release-management`, `ci-cd-deployment`, `quality-audit`, `observability-resilience` |
+| **API & Backend** | `backend-engineer` $\to` `qa-engineer` $\to` `code-reviewer` $\to` `security-engineer` | `api-design`, `implement-feature`, `qa-verification`, `security-review`, `observability-resilience`, `nfr-governance` |
+| **Database Schema Evolution** | `database-engineer` $\to` `qa-engineer` $\to` `privacy-reviewer` $\to` `code-reviewer` | `database-change`, `zero-downtime-database`, `implement-feature`, `qa-verification`, `privacy-review` |
+| **AI / LLM Feature** | `ai-engineer` $\to` `security-engineer` $\to` `privacy-reviewer` $\to` `qa-engineer` | `ai-feature`, `rag-vector-engineering`, `implement-feature`, `qa-verification`, `security-review`, `privacy-review` |
+| **UI / UX Overhaul** | `ux-engineer` $\to` `frontend-engineer` $\to` `qa-engineer` (a11y/E2E) $\to` `code-reviewer` | `ui-ux-design-system`, `uiux-review`, `frontend-quality`, `implement-feature`, `qa-verification` |
+| **Deep Bug / Incident** | `system-debugging-rca` $\to` matching engineer $\to` `qa-engineer` (regression trap) $\to` `code-reviewer` | `system-debugging-rca`, `defect-lifecycle`, `incident-response`, `qa-verification`, `continuous-learning` |
+| **SRE / Resilience / NFR** | `devops-engineer` $\to` `performance-engineer` $\to` `security-engineer` | `observability-resilience`, `performance-testing`, `nfr-governance`, `ci-cd-deployment` |
 
 *Execution Rules:*
 - Subagents with disjoint file targets run in **PARALLEL**.
@@ -165,6 +172,24 @@ sequenceDiagram
    - The root-cause hypothesis and required invariant.
    - Strict instructions to apply a surgical fix without breaking public contracts.
 3. **Loop Boundary:** Iterate up to **3 autonomous cycles**. If unresolved after 3 cycles, halt and report a precisely isolated blocker with reproduction evidence to the user.
+4. **Specialist Remediation Routing:**
+   - **Static / Lint / Typecheck Failures:** Implementing engineer (`frontend-engineer`, `backend-engineer`, `mobile-engineer`).
+   - **T1 Air-Gapped Algorithmic Invariants:** Domain specialist (`backend-engineer`, `ai-engineer`, `data-scientist`).
+   - **Security / Pentest / IDOR Defects:** Security specialist (`cybersecurity-analyst`, `security-engineer`).
+   - **Test Harness / STLC Flakiness:** Test lead (`test-architect`, `qa-engineer`).
+   - **Database Concurrency / Migration Errors:** Database specialist (`database-engineer`).
+   - **Latency Budget / Performance Regressions:** Performance specialist (`performance-engineer`).
+   - **Container / Pipeline / IaC Failures:** Infrastructure specialist (`devops-engineer`, `cloud-architect`).
+
+---
+
+### The Autonomous Engineering Council Triads (Multi-Perspective Governance)
+For complex cross-cutting tasks (CR / Epics), Orchestrator convenes domain triads to independently validate solutions before merge:
+- **Security & Statutory Triad:** `cybersecurity-analyst` + `security-engineer` + `compliance-auditor` + `privacy-reviewer` (Blocks IDOR, CVEs, PII leaks, statutory non-compliance).
+- **Data & Intelligence Triad:** `data-analyst` + `data-scientist` + `data-engineer` + `mlops-engineer` (Blocks data leakage, unindexed queries, pipeline drift, hallucinated metrics).
+- **Architecture & Infrastructure Triad:** `solution-architect` + `cloud-architect` + `devops-engineer` + `finops-engineer` (Blocks vendor lock-in, unbudgeted egress, brittle IaC).
+- **Delivery & Experience Triad:** `product-manager` + `system-analyst` + `ux-engineer` + `frontend-engineer` / `mobile-engineer` (Blocks scope drift, inaccessible UI, generic slop).
+- **Verification & SRE Triad:** `test-architect` + `qa-engineer` + `qa-manual` + `performance-engineer` + `release-manager` (Blocks regressions, flaky tests, deployment failures).
 
 ---
 

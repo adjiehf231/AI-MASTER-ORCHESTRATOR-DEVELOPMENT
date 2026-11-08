@@ -3,21 +3,21 @@
 <div align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
-[![Specialist Agents](https://img.shields.io/badge/Specialist%20Agents-29%20Roles-6366f1.svg?style=for-the-badge)](agents/)
-[![Enterprise Skills](https://img.shields.io/badge/Enterprise%20Skills-40%20Playbooks-10b981.svg?style=for-the-badge)](skills/)
+[![Specialist Agents](https://img.shields.io/badge/Specialist%20Agents-32%20Roles-6366f1.svg?style=for-the-badge)](agents/)
+[![Enterprise Skills](https://img.shields.io/badge/Enterprise%20Skills-43%20Playbooks-10b981.svg?style=for-the-badge)](skills/)
 [![Frontend Standard](https://img.shields.io/badge/UI%2FUX-Anti--AI--Slop%20Craft-f43f5e.svg?style=for-the-badge)](skills/ui-ux-design-system/)
 [![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.2%20AA-a855f7.svg?style=for-the-badge)](skills/frontend-quality/)
 [![Tests Passing](https://img.shields.io/badge/Test%20Suites-13%2F13%20Passing-0ea5e9.svg?style=for-the-badge)](tests/)
 [![Platforms](https://img.shields.io/badge/Supported%20IDEs-Antigravity%20%7C%20Claude%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20Cline-f59e0b.svg?style=for-the-badge)](adapters/)
 
-**Transform your AI assistant into an autonomous, 29-role enterprise engineering council.**  
+**Transform your AI assistant into an autonomous, 32-role enterprise engineering council.**  
 *Operates at the technical judgment standard of a Principal Software Engineer & Autonomous Technical Director with 25+ years of multidisciplinary software engineering experience.*
 
 [Fitur Utama](#-fitur-utama--keunggulan) •
 [Arsitektur SDLC](#-arsitektur--siklus-otonom-sdlc-10-tahap) •
 [Anti-AI-Slop](#-standar-anti-ai-slop--desain-frontend-craft) •
-[Daftar 29 Agen](#-direktori-29-specialist-agents) •
-[Daftar 40 Skills](#-katalog-40-enterprise-skills) •
+[Daftar 32 Agen](#-direktori-32-specialist-agents) •
+[Daftar 43 Skills](#-katalog-43-enterprise-skills) •
 [Panduan Memulai](#-panduan-instalasi--penggunaan-cepat-quick-start) •
 [CLI Otomasi](#-cli-command-center--manajemen-otomasi) •
 [Multi-Platform](#-kompatibilitas-multi-platform-ide--cli)
@@ -27,7 +27,7 @@
 </div>
 
 > [!NOTE]
-> **Project-Agnostic & Zero Vendor-Lock:** Sistem orkestrator ini bersifat sepenuhnya agnostik terhadap jenis proyek. Cukup konfigurasikan `PROJECT_CONTEXT.md`, dan seluruh 29 agen spesialis beserta 40 skill akan menyesuaikan nama sistem, arsitektur, database, dan aturan bisnis proyek Anda secara dinamis.
+> **Project-Agnostic & Zero Vendor-Lock:** Sistem orkestrator ini bersifat sepenuhnya agnostik terhadap jenis proyek. Cukup konfigurasikan `PROJECT_CONTEXT.md`, dan seluruh 32 agen spesialis beserta 43 skill akan menyesuaikan nama sistem, arsitektur, database, dan aturan bisnis proyek Anda secara dinamis.
 
 ---
 
@@ -37,8 +37,8 @@
 2. [✨ Fitur Utama & Keunggulan](#-fitur-utama--keunggulan)
 3. [🏛️ Arsitektur & Siklus Otonom SDLC 10-Tahap](#-arsitektur--siklus-otonom-sdlc-10-tahap)
 4. [🎨 Standar Anti-AI-Slop & Desain Frontend Craft](#-standar-anti-ai-slop--desain-frontend-craft)
-5. [👥 Direktori 29 Specialist Agents](#-direktori-29-specialist-agents)
-6. [📚 Katalog 40 Enterprise Skills](#-katalog-40-enterprise-skills)
+5. [👥 Direktori 32 Specialist Agents](#-direktori-32-specialist-agents)
+6. [📚 Katalog 43 Enterprise Skills](#-katalog-43-enterprise-skills)
 7. [🚀 Panduan Instalasi & Penggunaan Cepat (Quick Start)](#-panduan-instalasi--penggunaan-cepat-quick-start)
 8. [🛠️ CLI Command Center & Manajemen Otomasi](#-cli-command-center--manajemen-otomasi)
 9. [🌐 Kompatibilitas Multi-Platform (IDE & CLI)](#-kompatibilitas-multi-platform-ide--cli)
@@ -69,7 +69,7 @@ Tradisional AI Assistant                       Universal Master Orchestrator
 ┌─────────────────────────┐                   ┌──────────────────────────────────────────────┐
 │ Autocomplete Kode Acak  │                   │ Phase 0: Ingest Memory & Living Heuristics   │
 │ (Happy path saja,       │                   │ Phase 1: Critical Premise Evaluation & Scope │
-│  tanpa validasi arsitek)│                   │ Phase 2: Dispatch 29 Spesialis & 40 Skills   │
+│  tanpa validasi arsitek)│                   │ Phase 2: Dispatch 32 Spesialis & 43 Skills   │
 └───────────┬─────────────┘                   │ Phase 3: Eksekusi Tangga Verifikasi T0 - T3  │
             ▼                                 │ Phase 4: Self-Healing Otomatis jika Gagal    │
 ┌─────────────────────────┐                   │ Phase 5: Distilasi Pembelajaran Permanen     │
@@ -85,8 +85,8 @@ Tradisional AI Assistant                       Universal Master Orchestrator
 
 ## ✨ Fitur Utama & Keunggulan
 
-### 1. 29 Peran Rekayasa Perangkat Lunak Spesialis
-Mulai dari **Solution Architect**, **System Analyst**, **Principal Frontend/Backend**, **Database DBA**, **DevSecOps**, **FinOps**, **Statutory Privacy Reviewer**, hingga **QA Manual/Automation**—berkolaborasi layaknya dewan teknis senior.
+### 1. 32 Peran Rekayasa Perangkat Lunak Spesialis
+Mulai dari **Solution Architect**, **System Analyst**, **Principal Frontend/Backend**, **Database DBA**, **DevSecOps**, **Cybersecurity Analyst**, **Data Analyst**, **Data Scientist**, **FinOps**, **Statutory Privacy Reviewer**, hingga **QA Manual/Automation**—berkolaborasi layaknya dewan teknis senior.
 
 ### 2. Standar Desain Anti-AI-Slop & WCAG 2.2 AA
 Menegakkan keindahan visual tingkat tinggi:
@@ -95,7 +95,7 @@ Menegakkan keindahan visual tingkat tinggi:
 - **Aksesibilitas Universal:** Kontras $\ge 4.5:1$, fokus keyboard navigasi $\ge 3:1$, touch target minimum $44\times 44\text{px}$, dan kesiapan *Reduced Motion*.
 - **Headless Component Composition:** Menerapkan pola Radix/shadcn compound primitives (`Root`, `Trigger`, `Content`, `Portal`, `Overlay`) untuk mencegah *monolithic div-soup*.
 
-### 3. Ekosistem Skills & Playbook Terlengkap (40 Enterprise Skills)
+### 3. Ekosistem Skills & Playbook Terlengkap (43 Enterprise Skills)
 Panduan rekayasa langkah demi langkah untuk arsitektur, basis data, keamanan, AI RAG, integrasi webhook, penanganan insiden, hingga pemulihan bencana (*Disaster Recovery & BCP*).
 
 ### 4. Single Source of Truth (SSOT) & Multi-Platform Compiler
@@ -186,9 +186,9 @@ stateDiagram-v2
 
 ---
 
-## 👥 Direktori 29 Specialist Agents
+## 👥 Direktori 32 Specialist Agents
 
-Berikut adalah katalog lengkap 29 peran spesialis yang siap digerakkan oleh **Universal Master Orchestrator**:
+Berikut adalah katalog lengkap 32 peran spesialis yang siap digerakkan oleh **Universal Master Orchestrator**:
 
 | # | Agent ID | Peran Spesialis | Hard Gates & Mandat Utama |
 |---|---|---|---|
@@ -221,10 +221,13 @@ Berikut adalah katalog lengkap 29 peran spesialis yang siap digerakkan oleh **Un
 | 27 | **`code-reviewer`** | Independent Code Reviewer | Adversarial review diff kode: mendeteksi regresi, inkonsistensi kontrak, dan memberi peringkat temuan (🔴 BLOCKING / 🟡 SHOULD FIX / 🔵 NIT). |
 | 28 | **`quality-auditor`** | Enterprise Quality Auditor | Penjaga gerbang Release Quality Gates (Gates 1–8), validasi kebenaran bukti uji, RTM traceability, dan sertifikasi rilis. |
 | 29 | **`release-manager`** | Release & Promotion Manager | Tata kelola promosi environment (Sandbox $\to$ UAT $\to$ Production), review CAB, dan protokol rollback deployment. |
+| 30 | **`cybersecurity-analyst`** | Principal Cybersecurity Analyst | Adversary emulation (MITRE ATT&CK), audit pentest non-destruktif, verifikasi PoC celah keamanan, dan red-teaming sistem agen LLM. |
+| 31 | **`data-analyst`** | Principal Data Analyst & BI Specialist | Menerjemahkan kebutuhan analitik ke query SQL tervalidasi, tata kelola metrik semantik, analisis EDA, visualisasi data anti-AI-slop. |
+| 32 | **`data-scientist`** | Principal Data Scientist & ML Specialist | Desain pipeline statistical learning, rekayasa fitur zero-leakage, validasi silang (cross-validation), benchmark baseline, dan interpretabilitas SHAP. |
 
 ---
 
-## 📚 Katalog 40 Enterprise Skills
+## 📚 Katalog 43 Enterprise Skills
 
 Setiap skill merupakan buku pedoman rekayasa formal dengan standarisasi, pola kode, skrip bantuan, dan kriteria penerimaan yang terperinci:
 
@@ -242,10 +245,10 @@ KATEGORI SKILLS          DAFTAR SKILLS ENTERPRISE TERSEDIA
 ⚙️ Backend & Data         • api-design             • database-change
                          • system-integration     • observability-resilience
                          • nfr-governance         • event-driven-architecture
-                         • zero-downtime-db
+                         • zero-downtime-db       • exploratory-data-analysis
 
 🤖 AI & Machine Learning • ai-feature             • continuous-learning
-                         • rag-vector-engineering
+                         • rag-vector-engineering • ml-experimentation-lifecycle
 
 🧪 Testing & Verifikasi  • offline-unit-harness   • qa-verification
                          • manual-testing         • defect-lifecycle
@@ -254,7 +257,7 @@ KATEGORI SKILLS          DAFTAR SKILLS ENTERPRISE TERSEDIA
 
 🔒 Keamanan & Regulasi   • security-review        • privacy-review
                          • threat-modeling        • code-review
-                         • quality-audit
+                         • quality-audit          • penetration-testing-audit
 
 ☁️ DevOps & Cloud SRE    • ci-cd-deployment       • release-management
                          • implement-feature      • finops-cost-governance
@@ -340,7 +343,7 @@ npm run skill:add -- <skill-name> --title="Skill Title" --desc="Panduan playbook
 npm run import:extension -- --type=agent --name=<name> --url="https://raw.githubusercontent.com/.../agent.md"
 npm run import:extension -- --type=skill --name=<name> --file="./templates/skill.md"
 
-# Menampilkan daftar seluruh 29 agen dan 40 skills terdaftar:
+# Menampilkan daftar seluruh 32 agen dan 43 skills terdaftar:
 npm run orchestrator:list
 
 # ==============================================================================
@@ -459,21 +462,21 @@ AI-MASTER-ORCHESTRATOR-DEVELOPMENT/
 │   ├── opencode/                    # OpenCode V2 native adapter
 │   ├── openrouter/                  # OpenRouter system prompt & request payload
 │   └── bundle/                      # Universal prompt bundle (Codex, DeepSeek, Ollama)
-├── agents/                          # 29 Specialist Agents Generalized (SSOT)
+├── agents/                          # 32 Specialist Agents Generalized (SSOT)
 │   ├── orchestrator.md              # Master SDLC Director & Dispatch Matrix
 │   ├── solution-architect.md        # Arsitektur sistem & ADR
 │   ├── frontend-engineer.md         # Anti-AI-Slop, Accessible Frontend Architect
 │   ├── backend-engineer.md          # Contract-first, ACID Backend Architect
 │   ├── ux-engineer.md               # Nielsen heuristics, Cognitive UX Laws, a11y
-│   └── ...                          # 24 agen spesialis lainnya
-├── skills/                          # 40 Enterprise SDLC Skills (SSOT)
+│   └── ...                          # 27 agen spesialis lainnya
+├── skills/                          # 43 Enterprise SDLC Skills (SSOT)
 │   ├── ui-ux-design-system/         # Standar desain Anti-AI-slop, token & layout
 │   ├── frontend-quality/            # 6-state matrix, zero CLS, WCAG 2.2 AA
 │   ├── uiux-review/                 # 7-step evaluator walkthrough & cognitive probes
 │   ├── api-design/                  # REST contracts, Zod, idempotency
 │   ├── database-change/             # Migrasi PostgreSQL 16 & Drizzle ORM
 │   ├── zero-downtime-database/      # Expand/Contract zero-downtime migrations
-│   └── ...                          # 34 skills enterprise lainnya
+│   └── ...                          # 37 skills enterprise lainnya
 ├── scripts/                         # Automation CLI & synchronization scripts
 │   ├── manage-orchestrator.js       # Lifecycle CLI untuk agen & skill
 │   ├── import-extension.js          # Importer extension dari GitHub/lokal

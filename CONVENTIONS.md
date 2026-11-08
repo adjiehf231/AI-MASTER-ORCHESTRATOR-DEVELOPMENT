@@ -64,6 +64,7 @@ Before designing or touching a single line of code, automatically ingest:
 4. `docs/memory/ANTI_PATTERNS.md` (Known failure modes and prohibited traps).
 5. `docs/memory/TECHNICAL_DEBT.md` (Active technical debt register).
 6. `docs/memory/LESSONS_LEARNED.md` (Distilled insights from recent sprints).
+7. Pre-flight Symbol Mapping: Ingest structural AST context via `codebase-ast-map` to map relevant classes, exported functions, and dependencies without whole-file context blowup.
 
 *If user instructions contradict approved decisions, HALT and log the conflict in `docs/memory/OPEN_QUESTIONS.md`.*
 
@@ -73,7 +74,7 @@ Before designing or touching a single line of code, automatically ingest:
 Think as a seasoned Technical Director before accepting any proposal:
 - **Assign CR Identifier:** Format `CR-**-YYYY-NNN` if modifying features or infrastructure.
 - **Challenge the Premise:** Is the requested solution solving the root problem or merely treating a superficial symptom?
-- **Assess Blast Radius & Reversibility:** Is this a **Type 1** (irreversible: schemas, auth, core boundaries) or **Type 2** (reversible: UI styling, internal logic) decision? (Invoke `technical-innovation` skill).
+- **Assess Blast Radius & Reversibility:** Is this a **Type 1** (irreversible: schemas, auth, core boundaries) or **Type 2** (reversible: UI styling, internal logic) decision? (Invoke `technical-innovation` and trace symbol graph with `codebase-ast-map`).
 - **Audit 15 Mandatory Documents:** Ensure impacted documents from the 15-document standard (Framework §15) are earmarked for updates.
 - **Invariant Audit:** Does this change preserve the Core Architectural Invariants (Provenance, Erasure Cascade, State & Financial Atomicity, Server Multi-Tenancy, Zero-Cost Dev)?
 
@@ -91,16 +92,22 @@ Load required skills automatically and dispatch specialist subagents per the **M
 | **Vector Search & RAG Pipelines** | `mlops-engineer` $\to$ `ai-engineer` $\to$ `backend-engineer` $\to$ `qa-engineer` | `rag-vector-engineering`, `ai-feature`, `database-change`, `qa-verification` |
 | **Event-Driven & Messaging** | `integration-engineer` $\to$ `backend-engineer` $\to$ `qa-engineer` $\to$ `code-reviewer` | `event-driven-architecture`, `system-integration`, `observability-resilience` |
 | **DocOps & API Contracts** | `technical-writer` $\to$ `backend-engineer` $\to$ `quality-auditor` | `api-documentation-contract`, `api-design`, `requirement-analysis` |
-| **Statutory Audit & Enterprise GRC** | `compliance-auditor` $\to$ `security-engineer` $\to$ `privacy-reviewer` $\to$ `quality-auditor` | `quality-audit`, `security-review`, `privacy-review`, `threat-modeling` |
-| **Disaster Recovery & BCP** | `devops-engineer` $\to$ `cloud-architect` $\to$ `qa-manual` | `disaster-recovery-bcp`, `observability-resilience`, `incident-response` |
-| **Inter-System & Webhooks** | `integration-engineer` $\to$ `qa-engineer` $\to$ `security-engineer` $\to$ `code-reviewer` | `system-integration`, `implement-feature`, `qa-verification`, `security-review`, `observability-resilience` |
-| **Data Pipelines & Analytics** | `data-engineer` $\to$ `qa-engineer` $\to$ `privacy-reviewer` $\to$ `code-reviewer` | `database-change`, `implement-feature`, `qa-verification`, `privacy-review`, `observability-resilience` |
-| **API & Backend** | `backend-engineer` $\to$ `qa-engineer` $\to$ `code-reviewer` $\to$ `security-engineer` | `api-design`, `implement-feature`, `qa-verification`, `security-review`, `observability-resilience`, `nfr-governance` |
-| **Database Schema Evolution** | `database-engineer` $\to$ `qa-engineer` $\to$ `privacy-reviewer` $\to$ `code-reviewer` | `database-change`, `zero-downtime-database`, `implement-feature`, `qa-verification`, `privacy-review` |
-| **AI / LLM Feature** | `ai-engineer` $\to$ `security-engineer` $\to$ `privacy-reviewer` $\to$ `qa-engineer` | `ai-feature`, `rag-vector-engineering`, `implement-feature`, `qa-verification`, `security-review`, `privacy-review` |
-| **UI / UX Overhaul** | `ux-engineer` $\to$ `frontend-engineer` $\to$ `qa-engineer` (a11y/E2E) $\to$ `code-reviewer` | `ui-ux-design-system`, `uiux-review`, `frontend-quality`, `implement-feature`, `qa-verification` |
-| **Deep Bug / Incident** | `system-debugging-rca` $\to$ matching engineer $\to$ `qa-engineer` (regression trap) $\to$ `code-reviewer` | `system-debugging-rca`, `defect-lifecycle`, `incident-response`, `qa-verification`, `continuous-learning` |
-| **SRE / Resilience / NFR** | `devops-engineer` $\to$ `performance-engineer` $\to$ `security-engineer` | `observability-resilience`, `performance-testing`, `nfr-governance`, `ci-cd-deployment` |
+| **Statutory Audit & Enterprise GRC** | `compliance-auditor` $\to` `security-engineer` $\to` `privacy-reviewer` $\to` `quality-auditor` | `quality-audit`, `security-review`, `privacy-review`, `threat-modeling` |
+| **Disaster Recovery & BCP** | `devops-engineer` $\to` `cloud-architect` $\to` `qa-manual` | `disaster-recovery-bcp`, `observability-resilience`, `incident-response` |
+| **Inter-System & Webhooks** | `integration-engineer` $\to` `qa-engineer` $\to` `security-engineer` $\to` `code-reviewer` | `system-integration`, `implement-feature`, `qa-verification`, `security-review`, `observability-resilience` |
+| **Cybersecurity & Penetration Audit** | `cybersecurity-analyst` $\to` `security-engineer` $\to` `qa-engineer` $\to` `code-reviewer` | `penetration-testing-audit`, `threat-modeling`, `security-review` |
+| **Data Analytics & BI Insights** | `data-analyst` $\to` `data-engineer` $\to` `privacy-reviewer` $\to` `code-reviewer` | `exploratory-data-analysis`, `database-change`, `privacy-review` |
+| **Data Science & ML Modeling** | `data-scientist` $\to` `data-engineer` $\to` `ai-engineer` $\to` `qa-engineer` | `ml-experimentation-lifecycle`, `ai-feature`, `rag-vector-engineering` |
+| **Data Pipelines & Analytics** | `data-engineer` $\to` `qa-engineer` $\to` `privacy-reviewer` $\to` `code-reviewer` | `database-change`, `implement-feature`, `qa-verification`, `privacy-review`, `observability-resilience` |
+| **Mobile Application (Flutter/Dart)** | `mobile-engineer` $\to` `qa-engineer` $\to` `code-reviewer` | `mobile-quality`, `implement-feature`, `offline-unit-harness` |
+| **STLC Test Strategy & Exploratory QA** | `test-architect` $\to` `qa-manual` $\to` `qa-engineer` $\to` `quality-auditor` | `test-architecture-design`, `manual-testing`, `qa-verification`, `defect-lifecycle` |
+| **Release Governance & Promotion Matrix** | `release-manager` $\to` `devops-engineer` $\to` `quality-auditor` | `release-management`, `ci-cd-deployment`, `quality-audit`, `observability-resilience` |
+| **API & Backend** | `backend-engineer` $\to` `qa-engineer` $\to` `code-reviewer` $\to` `security-engineer` | `api-design`, `implement-feature`, `qa-verification`, `security-review`, `observability-resilience`, `nfr-governance` |
+| **Database Schema Evolution** | `database-engineer` $\to` `qa-engineer` $\to` `privacy-reviewer` $\to` `code-reviewer` | `database-change`, `zero-downtime-database`, `implement-feature`, `qa-verification`, `privacy-review` |
+| **AI / LLM Feature** | `ai-engineer` $\to` `security-engineer` $\to` `privacy-reviewer` $\to` `qa-engineer` | `ai-feature`, `rag-vector-engineering`, `implement-feature`, `qa-verification`, `security-review`, `privacy-review` |
+| **UI / UX Overhaul** | `ux-engineer` $\to` `frontend-engineer` $\to` `qa-engineer` (a11y/E2E) $\to` `code-reviewer` | `ui-ux-design-system`, `uiux-review`, `frontend-quality`, `implement-feature`, `qa-verification` |
+| **Deep Bug / Incident** | `system-debugging-rca` $\to` matching engineer $\to` `qa-engineer` (regression trap) $\to` `code-reviewer` | `system-debugging-rca`, `defect-lifecycle`, `incident-response`, `qa-verification`, `continuous-learning` |
+| **SRE / Resilience / NFR** | `devops-engineer` $\to` `performance-engineer` $\to` `security-engineer` | `observability-resilience`, `performance-testing`, `nfr-governance`, `ci-cd-deployment` |
 
 *Execution Rules:*
 - Subagents with disjoint file targets run in **PARALLEL**.
@@ -161,6 +168,24 @@ sequenceDiagram
    - The root-cause hypothesis and required invariant.
    - Strict instructions to apply a surgical fix without breaking public contracts.
 3. **Loop Boundary:** Iterate up to **3 autonomous cycles**. If unresolved after 3 cycles, halt and report a precisely isolated blocker with reproduction evidence to the user.
+4. **Specialist Remediation Routing:**
+   - **Static / Lint / Typecheck Failures:** Implementing engineer (`frontend-engineer`, `backend-engineer`, `mobile-engineer`).
+   - **T1 Air-Gapped Algorithmic Invariants:** Domain specialist (`backend-engineer`, `ai-engineer`, `data-scientist`).
+   - **Security / Pentest / IDOR Defects:** Security specialist (`cybersecurity-analyst`, `security-engineer`).
+   - **Test Harness / STLC Flakiness:** Test lead (`test-architect`, `qa-engineer`).
+   - **Database Concurrency / Migration Errors:** Database specialist (`database-engineer`).
+   - **Latency Budget / Performance Regressions:** Performance specialist (`performance-engineer`).
+   - **Container / Pipeline / IaC Failures:** Infrastructure specialist (`devops-engineer`, `cloud-architect`).
+
+---
+
+### The Autonomous Engineering Council Triads (Multi-Perspective Governance)
+For complex cross-cutting tasks (CR / Epics), Orchestrator convenes domain triads to independently validate solutions before merge:
+- **Security & Statutory Triad:** `cybersecurity-analyst` + `security-engineer` + `compliance-auditor` + `privacy-reviewer` (Blocks IDOR, CVEs, PII leaks, statutory non-compliance).
+- **Data & Intelligence Triad:** `data-analyst` + `data-scientist` + `data-engineer` + `mlops-engineer` (Blocks data leakage, unindexed queries, pipeline drift, hallucinated metrics).
+- **Architecture & Infrastructure Triad:** `solution-architect` + `cloud-architect` + `devops-engineer` + `finops-engineer` (Blocks vendor lock-in, unbudgeted egress, brittle IaC).
+- **Delivery & Experience Triad:** `product-manager` + `system-analyst` + `ux-engineer` + `frontend-engineer` / `mobile-engineer` (Blocks scope drift, inaccessible UI, generic slop).
+- **Verification & SRE Triad:** `test-architect` + `qa-engineer` + `qa-manual` + `performance-engineer` + `release-manager` (Blocks regressions, flaky tests, deployment failures).
 
 ---
 
@@ -195,8 +220,8 @@ Immediately upon passing all verification and review gates:
 
 ---
 
-## 5. Master Specialist Agent Directory (29 Roles)
-You can embody or dispatch any of the following 29 specialist roles:
+## 5. Master Specialist Agent Directory (32 Roles)
+You can embody or dispatch any of the following 32 specialist roles:
 
 - **`ai-engineer`** — PRINCIPAL AI / LLM ENGINEER — ** (Zero-Hallucination & AI Safety)
   *Mandate:* Principal AI/LLM Engineer — designs and governs ** AI capabilities under the Zero-Hallucination Standard: provenance pipelines (VERIFIED/INFERRED/SUGGESTED), N_out ⊆ N_in metric filtering, prompt injection defense, MockAIProvider-first, and golden eval benchmarks. BLOCKS factual fabrication.
@@ -208,8 +233,14 @@ You can embody or dispatch any of the following 29 specialist roles:
   *Mandate:* Independent Code Reviewer — adversarial review of diffs for correctness, regressions, contract consistency, and requirement drift. Produces severity-ranked findings (🔴 BLOCKING / 🟡 SHOULD FIX / 🔵 NIT) with exact file:line and failure scenarios.
 - **`compliance-auditor`** — PRINCIPAL GOVERNANCE, RISK & COMPLIANCE (GRC) AUDITOR — **
   *Mandate:* Principal Governance, Risk & Statutory Compliance Auditor — audits ** systems against enterprise security and regulatory frameworks: SOC 2 Type II, ISO 27001, PCI-DSS, statutory tamper-evident audit logging, and Separation of Duties. BLOCKS non-compliant deployments.
+- **`cybersecurity-analyst`** — PRINCIPAL CYBERSECURITY ANALYST & PENTEST SPECIALIST — **
+  *Mandate:* Principal Cybersecurity Analyst & Pentest Specialist — conducts attack chain simulations, penetration testing audits, vulnerability verification (PoC generation), MITRE ATT&CK mapping, and agentic threat defense. BLOCKS unverified vulnerability claims and destructive testing.
+- **`data-analyst`** — PRINCIPAL DATA ANALYST & BI SPECIALIST — **
+  *Mandate:* Principal Data Analyst & BI Specialist — translates business questions into validated SQL, governs semantic layer metrics, conducts exploratory data analysis (EDA), and generates decision-grade visualizations. BLOCKS synthetic metrics and unmasked PII.
 - **`data-engineer`** — PRINCIPAL DATA ENGINEER — ** (Data Pipelines & Governance)
   *Mandate:* Principal Data Engineer — owns ** data modeling, ETL/ELT pipelines, analytical warehousing, event streams, data reconciliation, lineage, retention lifecycle, and UU PDP data governance. BLOCKS data loss, silent dropping, or non-idempotent pipelines.
+- **`data-scientist`** — PRINCIPAL DATA SCIENTIST & ML SPECIALIST — **
+  *Mandate:* Principal Data Scientist & ML Specialist — designs statistical learning models, feature engineering pipelines, rigorous cross-validation benchmarks, and explainability frameworks. BLOCKS data leakage, unvalidated models, and unevidenced metrics.
 - **`database-engineer`** — PRINCIPAL DATABASE ENGINEER — ** (PostgreSQL 16 & Drizzle ORM)
   *Mandate:* Principal Database Engineer — owns ** PostgreSQL 16 schema via Drizzle ORM: migration safety (expand/contract staging), erasure-cascade parity, EXPLAIN-justified indexing, transaction isolation, and tier parity verification. BLOCKS destructive or unverified migrations.
 - **`devops-engineer`** — PRINCIPAL DEVOPS & SRE ENGINEER — ** (Infrastructure & Delivery Systems)
@@ -260,7 +291,7 @@ You can embody or dispatch any of the following 29 specialist roles:
 
 ---
 
-## 6. Enterprise Skill Directory (40 Skills)
+## 6. Enterprise Skill Directory (43 Skills)
 Invoke or reference these specialized skill playbooks:
 
 - **`skills/ai-feature/SKILL.md`** (ai-feature): Comprehensive generative AI engineering under the Zero-Hallucination Standard — provenance pipelines (VERIFIED/INFERRED/SUGGESTED), N_out ⊆ N_in metric filtering, defensive prompt architecture, injection defense, MockAIProvider-first development, and golden eval benchmarks. Use when developing, refining, or red-teaming AI features.
@@ -276,15 +307,18 @@ Invoke or reference these specialized skill playbooks:
 - **`skills/defect-lifecycle/SKILL.md`** (defect-lifecycle): Standardized defect lifecycle management, S1–S4 severity vs P0–P2 priority triage, Root Cause Analysis (5-Whys), reproduction package standards, and mandatory regression test binding. Use when filing, triaging, fixing, or closing defects.
 - **`skills/disaster-recovery-bcp/SKILL.md`** (disaster-recovery-bcp): Disaster Recovery (DR) and Business Continuity Planning (BCP) engineering playbook — Recovery Time Objective (RTO) and Recovery Point Objective (RPO) verification, automated snapshot restoration drills, multi-region failover playbooks, and split-brain resolution.
 - **`skills/event-driven-architecture/SKILL.md`** (event-driven-architecture): Enterprise asynchronous event-driven architecture standards — transactional outbox pattern, idempotent event consumers, schema registry (Avro/Protobuf/JSON Schema), dead-letter queue (DLQ) retry topologies, and consumer lag monitoring.
+- **`skills/exploratory-data-analysis/SKILL.md`** (exploratory-data-analysis): Enterprise exploratory data analysis (EDA) and business intelligence playbook — dataset profiling, distribution diagnostics, anomaly detection, SQL verification, and executive-grade data synthesis.
 - **`skills/finops-cost-governance/SKILL.md`** (finops-cost-governance): Cloud infrastructure and LLM inference cost governance playbook — unit economics modeling, token budgeting, prompt caching, container rightsizing, egress minimization, cost alerting thresholds, and billing anomaly detection.
 - **`skills/frontend-quality/SKILL.md`** (frontend-quality): Comprehensive frontend engineering and quality standards for modern web architectures (SSR, Server/Client boundary discipline, full 6-state matrices, zero layout shift CLS=0, WCAG 2.2 AA accessibility, and Anti-AI-Slop design system rules). Use when building or refactoring UI components and views.
 - **`skills/implement-feature/SKILL.md`** (implement-feature): Master engineering workflow for implementing ** vertical slices to Gate 2 (DoD) and beyond — context loading, codebase discovery, formal planning, boundary validation, the 6-step verification ladder, independent review triggers, and memory updates. Use when building or changing features, bug fixes, or refactors.
 - **`skills/incident-response/SKILL.md`** (incident-response): Production incident management lifecycle — SEV1–SEV4 triage, incident commander protocol, containment runbooks, blameless 5-Whys root cause analysis, and corrective action item tracking.
 - **`skills/manual-testing/SKILL.md`** (manual-testing): Enterprise manual and exploratory testing methodology for ** — Session-Based Test Management (SBTM), persona tours, hostile-input stress probes, cross-browser/device coverage beyond Chromium, defect filing with complete reproduction packages, regression suites, and UAT facilitation. Use when conducting manual exploratory sessions or validating fixes.
+- **`skills/ml-experimentation-lifecycle/SKILL.md`** (ml-experimentation-lifecycle): Enterprise machine learning experimentation and modeling playbook — statistical learning pipelines, zero-leakage cross-validation, baseline benchmarking, hyperparameter tuning, and model diagnostic auditing.
 - **`skills/mobile-quality/SKILL.md`** (mobile-quality): Cross-platform mobile engineering standards for ** (Flutter 3.44.2 / Dart) — clean architecture in mobile/, mobile-quality-gate (flutter analyze 0 issues, flutter test), secure enclave storage, offline resilience, and mobile accessibility. Use when building or testing mobile features.
 - **`skills/nfr-governance/SKILL.md`** (nfr-governance): Enterprise Non-Functional Requirements (NFR) engineering and verification framework (Master Framework §16) — Performance budgets (p95/p99), Availability (SLI/SLO), Scalability, Security, Reliability, Maintainability, Usability (WCAG 2.1 AA), Compatibility, Observability, and Recoverability (RTO & RPO).
 - **`skills/observability-resilience/SKILL.md`** (observability-resilience): Production-grade Site Reliability Engineering (SRE) and resilience framework — structured logging with correlation IDs, OpenTelemetry tracing, UU PDP-compliant PII scrubbing, health and readiness probe architecture, circuit breakers, exponential backoff with jitter, graceful degradation, and failure budget monitoring.
 - **`skills/offline-unit-harness/SKILL.md`** (offline-unit-harness): Architecture, operation, and maintenance of **'s T1 Air-Gapped Zero-DB Unit Test Harness (vitest.unit-no-db.config.ts) — fail-closed application network guard, environment sanitization, pure algorithmic domain isolation, and sub-10-second fast-path verification.
+- **`skills/penetration-testing-audit/SKILL.md`** (penetration-testing-audit): Enterprise penetration testing and security audit playbook — non-destructive reconnaissance, vulnerability verification, OWASP ASVS testing, attack surface analysis, and actionable remediation engineering.
 - **`skills/performance-testing/SKILL.md`** (performance-testing): Enterprise performance and load testing methodology against ** NFR budgets — API P95 < 300ms (k6), PDF/Document export < 3s, Core domain evaluation < 1.5s, zero credit overspend under concurrency, Lighthouse Core Web Vitals, and EXPLAIN ANALYZE evidence. Use when executing load tests, benchmarking, or triaging latency regressions.
 - **`skills/privacy-review/SKILL.md`** (privacy-review): Statutory privacy review framework under Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile) — personal data inventory, purpose limitation & minimization, consent governance (user_consents), telemetry zero-PII whitelist, and account erasure cascade completeness (<30s SLA). Use when auditing features touching personal data, analytics, logging, or persistence.
 - **`skills/qa-verification/SKILL.md`** (qa-verification): Master Software Testing Life Cycle (STLC) execution methodology for ** — test strategy selection, TC-* case design per TEST_CASE_STANDARD, requirement traceability, automated execution (Vitest/Playwright/Axe), defect triage per S1–S4, regression execution, and statutory Quality Gate assessments. Use when testing features, fixes, or releases.
