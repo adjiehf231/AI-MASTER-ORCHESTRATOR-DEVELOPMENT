@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 [![Specialist Agents](https://img.shields.io/badge/Specialist%20Agents-32%20Roles-6366f1.svg?style=for-the-badge)](agents/)
-[![Enterprise Skills](https://img.shields.io/badge/Enterprise%20Skills-43%20Playbooks-10b981.svg?style=for-the-badge)](skills/)
+[![Enterprise Skills](https://img.shields.io/badge/Enterprise%20Skills-44%20Playbooks-10b981.svg?style=for-the-badge)](skills/)
 [![Frontend Standard](https://img.shields.io/badge/UI%2FUX-Anti--AI--Slop%20Craft-f43f5e.svg?style=for-the-badge)](skills/ui-ux-design-system/)
 [![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.2%20AA-a855f7.svg?style=for-the-badge)](skills/frontend-quality/)
 [![Tests Passing](https://img.shields.io/badge/Test%20Suites-13%2F13%20Passing-0ea5e9.svg?style=for-the-badge)](tests/)
@@ -17,7 +17,7 @@
 [Arsitektur SDLC](#-arsitektur--siklus-otonom-sdlc-10-tahap) •
 [Anti-AI-Slop](#-standar-anti-ai-slop--desain-frontend-craft) •
 [Daftar 32 Agen](#-direktori-32-specialist-agents) •
-[Daftar 43 Skills](#-katalog-43-enterprise-skills) •
+[Daftar 44 Skills](#-katalog-44-enterprise-skills) •
 [Panduan Memulai](#-panduan-instalasi--penggunaan-cepat-quick-start) •
 [CLI Otomasi](#-cli-command-center--manajemen-otomasi) •
 [Multi-Platform](#-kompatibilitas-multi-platform-ide--cli)
@@ -27,7 +27,7 @@
 </div>
 
 > [!NOTE]
-> **Project-Agnostic & Zero Vendor-Lock:** Sistem orkestrator ini bersifat sepenuhnya agnostik terhadap jenis proyek. Cukup konfigurasikan `PROJECT_CONTEXT.md`, dan seluruh 32 agen spesialis beserta 43 skill akan menyesuaikan nama sistem, arsitektur, database, dan aturan bisnis proyek Anda secara dinamis.
+> **Project-Agnostic & Zero Vendor-Lock:** Sistem orkestrator ini bersifat sepenuhnya agnostik terhadap jenis proyek. Cukup konfigurasikan `PROJECT_CONTEXT.md`, dan seluruh 32 agen spesialis beserta 44 skill akan menyesuaikan nama sistem, arsitektur, database, dan aturan bisnis proyek Anda secara dinamis.
 
 ---
 
@@ -38,7 +38,7 @@
 3. [🏛️ Arsitektur & Siklus Otonom SDLC 10-Tahap](#-arsitektur--siklus-otonom-sdlc-10-tahap)
 4. [🎨 Standar Anti-AI-Slop & Desain Frontend Craft](#-standar-anti-ai-slop--desain-frontend-craft)
 5. [👥 Direktori 32 Specialist Agents](#-direktori-32-specialist-agents)
-6. [📚 Katalog 43 Enterprise Skills](#-katalog-43-enterprise-skills)
+6. [📚 Katalog 44 Enterprise Skills](#-katalog-44-enterprise-skills)
 7. [🚀 Panduan Instalasi & Penggunaan Cepat (Quick Start)](#-panduan-instalasi--penggunaan-cepat-quick-start)
 8. [🛠️ CLI Command Center & Manajemen Otomasi](#-cli-command-center--manajemen-otomasi)
 9. [🌐 Kompatibilitas Multi-Platform (IDE & CLI)](#-kompatibilitas-multi-platform-ide--cli)
@@ -69,7 +69,7 @@ Tradisional AI Assistant                       Universal Master Orchestrator
 ┌─────────────────────────┐                   ┌──────────────────────────────────────────────┐
 │ Autocomplete Kode Acak  │                   │ Phase 0: Ingest Memory & Living Heuristics   │
 │ (Happy path saja,       │                   │ Phase 1: Critical Premise Evaluation & Scope │
-│  tanpa validasi arsitek)│                   │ Phase 2: Dispatch 32 Spesialis & 43 Skills   │
+│  tanpa validasi arsitek)│                   │ Phase 2: Dispatch 32 Spesialis & 44 Skills   │
 └───────────┬─────────────┘                   │ Phase 3: Eksekusi Tangga Verifikasi T0 - T3  │
             ▼                                 │ Phase 4: Self-Healing Otomatis jika Gagal    │
 ┌─────────────────────────┐                   │ Phase 5: Distilasi Pembelajaran Permanen     │
@@ -95,7 +95,7 @@ Menegakkan keindahan visual tingkat tinggi:
 - **Aksesibilitas Universal:** Kontras $\ge 4.5:1$, fokus keyboard navigasi $\ge 3:1$, touch target minimum $44\times 44\text{px}$, dan kesiapan *Reduced Motion*.
 - **Headless Component Composition:** Menerapkan pola Radix/shadcn compound primitives (`Root`, `Trigger`, `Content`, `Portal`, `Overlay`) untuk mencegah *monolithic div-soup*.
 
-### 3. Ekosistem Skills & Playbook Terlengkap (43 Enterprise Skills)
+### 3. Ekosistem Skills & Playbook Terlengkap (44 Enterprise Skills)
 Panduan rekayasa langkah demi langkah untuk arsitektur, basis data, keamanan, AI RAG, integrasi webhook, penanganan insiden, hingga pemulihan bencana (*Disaster Recovery & BCP*).
 
 ### 4. Single Source of Truth (SSOT) & Multi-Platform Compiler
@@ -227,7 +227,7 @@ Berikut adalah katalog lengkap 32 peran spesialis yang siap digerakkan oleh **Un
 
 ---
 
-## 📚 Katalog 43 Enterprise Skills
+## 📚 Katalog 44 Enterprise Skills
 
 Setiap skill merupakan buku pedoman rekayasa formal dengan standarisasi, pola kode, skrip bantuan, dan kriteria penerimaan yang terperinci:
 
@@ -241,6 +241,7 @@ KATEGORI SKILLS          DAFTAR SKILLS ENTERPRISE TERSEDIA
 
 🎨 Frontend & UI/UX      • ui-ux-design-system    • frontend-quality
                          • uiux-review            • mobile-quality
+                         • motion-animation-design
 
 ⚙️ Backend & Data         • api-design             • database-change
                          • system-integration     • observability-resilience
@@ -343,7 +344,7 @@ npm run skill:add -- <skill-name> --title="Skill Title" --desc="Panduan playbook
 npm run import:extension -- --type=agent --name=<name> --url="https://raw.githubusercontent.com/.../agent.md"
 npm run import:extension -- --type=skill --name=<name> --file="./templates/skill.md"
 
-# Menampilkan daftar seluruh 32 agen dan 43 skills terdaftar:
+# Menampilkan daftar seluruh 32 agen dan 44 skills terdaftar:
 npm run orchestrator:list
 
 # ==============================================================================
@@ -469,14 +470,14 @@ AI-MASTER-ORCHESTRATOR-DEVELOPMENT/
 │   ├── backend-engineer.md          # Contract-first, ACID Backend Architect
 │   ├── ux-engineer.md               # Nielsen heuristics, Cognitive UX Laws, a11y
 │   └── ...                          # 27 agen spesialis lainnya
-├── skills/                          # 43 Enterprise SDLC Skills (SSOT)
+├── skills/                          # 44 Enterprise SDLC Skills (SSOT)
 │   ├── ui-ux-design-system/         # Standar desain Anti-AI-slop, token & layout
 │   ├── frontend-quality/            # 6-state matrix, zero CLS, WCAG 2.2 AA
 │   ├── uiux-review/                 # 7-step evaluator walkthrough & cognitive probes
 │   ├── api-design/                  # REST contracts, Zod, idempotency
 │   ├── database-change/             # Migrasi PostgreSQL 16 & Drizzle ORM
 │   ├── zero-downtime-database/      # Expand/Contract zero-downtime migrations
-│   └── ...                          # 37 skills enterprise lainnya
+│   └── ...                          # 38 skills enterprise lainnya
 ├── scripts/                         # Automation CLI & synchronization scripts
 │   ├── manage-orchestrator.js       # Lifecycle CLI untuk agen & skill
 │   ├── import-extension.js          # Importer extension dari GitHub/lokal

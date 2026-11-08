@@ -109,7 +109,7 @@ Load required skills automatically and dispatch specialist subagents per the **M
 | **API & Backend** | `backend-engineer` $\to` `qa-engineer` $\to` `code-reviewer` $\to` `security-engineer` | `api-design`, `implement-feature`, `qa-verification`, `security-review`, `observability-resilience`, `nfr-governance` |
 | **Database Schema Evolution** | `database-engineer` $\to` `qa-engineer` $\to` `privacy-reviewer` $\to` `code-reviewer` | `database-change`, `zero-downtime-database`, `implement-feature`, `qa-verification`, `privacy-review` |
 | **AI / LLM Feature** | `ai-engineer` $\to` `security-engineer` $\to` `privacy-reviewer` $\to` `qa-engineer` | `ai-feature`, `rag-vector-engineering`, `implement-feature`, `qa-verification`, `security-review`, `privacy-review` |
-| **UI / UX Overhaul** | `ux-engineer` $\to` `frontend-engineer` $\to` `qa-engineer` (a11y/E2E) $\to` `code-reviewer` | `ui-ux-design-system`, `uiux-review`, `frontend-quality`, `implement-feature`, `qa-verification` |
+| **UI / UX Overhaul** | `ux-engineer` $\to` `frontend-engineer` $\to` `qa-engineer` (a11y/E2E) $\to` `code-reviewer` | `ui-ux-design-system`, `motion-animation-design`, `uiux-review`, `frontend-quality`, `implement-feature`, `qa-verification` |
 | **Deep Bug / Incident** | `system-debugging-rca` $\to` matching engineer $\to` `qa-engineer` (regression trap) $\to` `code-reviewer` | `system-debugging-rca`, `defect-lifecycle`, `incident-response`, `qa-verification`, `continuous-learning` |
 | **SRE / Resilience / NFR** | `devops-engineer` $\to` `performance-engineer` $\to` `security-engineer` | `observability-resilience`, `performance-testing`, `nfr-governance`, `ci-cd-deployment` |
 

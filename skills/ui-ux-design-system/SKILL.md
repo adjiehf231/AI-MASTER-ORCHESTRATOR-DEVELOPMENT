@@ -77,6 +77,15 @@ Structure tokens as CSS variables on `:root` and `.dark` to support theme toggli
   --text-muted: #64748b;
   --accent-primary: #4f46e5;
   --accent-ring: #6366f1;
+
+  /* Motion & Interaction Tokens */
+  --duration-instant: 75ms;
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-moderate: 350ms;
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-move: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .dark {
@@ -88,8 +97,24 @@ Structure tokens as CSS variables on `:root` and `.dark` to support theme toggli
   --text-muted: #94a3b8;
   --accent-primary: #6366f1;
   --accent-ring: #818cf8;
+
+  /* Motion & Interaction Tokens */
+  --duration-instant: 75ms;
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-moderate: 350ms;
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-move: cubic-bezier(0.65, 0, 0.35, 1);
 }
 ```
+
+### Motion & Animation System (Interactive Craft)
+
+Refer to [`skills/motion-animation-design/`](file:///D:/PROGRAM/AI-ORHCESTRATOR/skills/motion-animation-design/SKILL.md) for complete implementation:
+- **GPU Compositor Only:** Animate strictly with `transform` and `opacity`. Animating `width`, `height`, or `margin` triggers layout thrashing and is prohibited.
+- **Physical Feedback:** Button presses must feature tactile micro-depressions (`active:scale-[0.98] transition-transform duration-75`).
+- **Vestibular Invariant (WCAG 2.2 AA):** All animations must automatically respect `prefers-reduced-motion: reduce` via `motion-reduce:transition-none motion-reduce:transform-none`.
 
 ### Iconography Standard (Curated SVG System)
 

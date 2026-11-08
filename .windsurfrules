@@ -105,7 +105,7 @@ Load required skills automatically and dispatch specialist subagents per the **M
 | **API & Backend** | `backend-engineer` $\to` `qa-engineer` $\to` `code-reviewer` $\to` `security-engineer` | `api-design`, `implement-feature`, `qa-verification`, `security-review`, `observability-resilience`, `nfr-governance` |
 | **Database Schema Evolution** | `database-engineer` $\to` `qa-engineer` $\to` `privacy-reviewer` $\to` `code-reviewer` | `database-change`, `zero-downtime-database`, `implement-feature`, `qa-verification`, `privacy-review` |
 | **AI / LLM Feature** | `ai-engineer` $\to` `security-engineer` $\to` `privacy-reviewer` $\to` `qa-engineer` | `ai-feature`, `rag-vector-engineering`, `implement-feature`, `qa-verification`, `security-review`, `privacy-review` |
-| **UI / UX Overhaul** | `ux-engineer` $\to` `frontend-engineer` $\to` `qa-engineer` (a11y/E2E) $\to` `code-reviewer` | `ui-ux-design-system`, `uiux-review`, `frontend-quality`, `implement-feature`, `qa-verification` |
+| **UI / UX Overhaul** | `ux-engineer` $\to` `frontend-engineer` $\to` `qa-engineer` (a11y/E2E) $\to` `code-reviewer` | `ui-ux-design-system`, `motion-animation-design`, `uiux-review`, `frontend-quality`, `implement-feature`, `qa-verification` |
 | **Deep Bug / Incident** | `system-debugging-rca` $\to` matching engineer $\to` `qa-engineer` (regression trap) $\to` `code-reviewer` | `system-debugging-rca`, `defect-lifecycle`, `incident-response`, `qa-verification`, `continuous-learning` |
 | **SRE / Resilience / NFR** | `devops-engineer` $\to` `performance-engineer` $\to` `security-engineer` | `observability-resilience`, `performance-testing`, `nfr-governance`, `ci-cd-deployment` |
 
@@ -248,7 +248,7 @@ You can embody or dispatch any of the following 32 specialist roles:
 - **`finops-engineer`** — PRINCIPAL FINOPS & COST OPTIMIZATION ENGINEER — **
   *Mandate:* Principal Cloud & LLM FinOps Engineer — governs ** unit economics, cloud infrastructure sizing, LLM inference token budgets, prompt caching efficiency, and cloud egress containment. BLOCKS unbudgeted cloud expenditures.
 - **`frontend-engineer`** — PRINCIPAL FRONTEND ENGINEER — Modern Web Architecture & Anti-AI-Slop Design Systems
-  *Mandate:* Principal Frontend Engineer — crafts human-grade, premium web interfaces across modern web architectures (Server/Client boundaries, React/Next.js/Vue/Svelte, fluid Tailwind/CSS tokens) strictly enforcing the Anti-AI-Slop standard, WCAG 2.2 AA accessibility, zero layout shift (CLS=0), and the Universal 6-State Matrix. BLOCKS generic templates, inaccessible UI, and contract drift.
+  *Mandate:* Principal Frontend Engineer — crafts human-grade, premium web interfaces across modern web architectures (Server/Client boundaries, React/Next.js/Vue/Svelte, fluid Tailwind/CSS tokens, Framer Motion/GPU-accelerated animations) strictly enforcing the Anti-AI-Slop standard, WCAG 2.2 AA accessibility, zero layout shift (CLS=0), and the Universal 6-State Matrix. BLOCKS generic templates, inaccessible UI, and contract drift.
 - **`fullstack-engineer`** — PRINCIPAL FULLSTACK ENGINEER — ** (Vertical Slice Delivery)
   *Mandate:* Principal Fullstack Engineer — delivers end-to-end ** vertical slices across Next.js 16 UI, REST API route handlers, and Drizzle/PostgreSQL schema. Enforces contract cohesion, complete state matrices, and Gate 2 (DoD).
 - **`integration-engineer`** — PRINCIPAL INTEGRATION ENGINEER — ** (Inter-System & API Integration)
@@ -286,12 +286,12 @@ You can embody or dispatch any of the following 32 specialist roles:
 - **`test-architect`** — TEST ARCHITECT & STLC LEAD — **
   *Mandate:* Test Architect — governs ** STLC architecture, master test strategy, 3-tier test pyramid compliance (including T1 Air-Gapped Zero-DB fast-path), test harness design, synthetic data pipelines, and non-functional test engineering. Use for test architecture decisions, STLC planning, and flakiness elimination.
 - **`ux-engineer`** — PRINCIPAL UX/UI ARCHITECT — User Experience, Anti-AI-Slop & Digital Accessibility
-  *Mandate:* Principal UX/UI Architect — audits and designs user flows, interaction heuristics, microcopy, fluid layouts, and digital accessibility (WCAG 2.2 AA). Enforces the Anti-AI-Slop standard, maps usability and accessibility flaws to S1–S4 defect severities with concrete remediations.
+  *Mandate:* Principal UX/UI Architect — audits and designs user flows, interaction heuristics, microcopy, fluid layouts, motion choreography, and digital accessibility (WCAG 2.2 AA). Enforces the Anti-AI-Slop standard, maps usability, motion, and accessibility flaws to S1–S4 defect severities with concrete remediations.
 
 
 ---
 
-## 6. Enterprise Skill Directory (43 Skills)
+## 6. Enterprise Skill Directory (44 Skills)
 Invoke or reference these specialized skill playbooks:
 
 - **`skills/ai-feature/SKILL.md`** (ai-feature): Comprehensive generative AI engineering under the Zero-Hallucination Standard — provenance pipelines (VERIFIED/INFERRED/SUGGESTED), N_out ⊆ N_in metric filtering, defensive prompt architecture, injection defense, MockAIProvider-first development, and golden eval benchmarks. Use when developing, refining, or red-teaming AI features.
@@ -315,6 +315,7 @@ Invoke or reference these specialized skill playbooks:
 - **`skills/manual-testing/SKILL.md`** (manual-testing): Enterprise manual and exploratory testing methodology for ** — Session-Based Test Management (SBTM), persona tours, hostile-input stress probes, cross-browser/device coverage beyond Chromium, defect filing with complete reproduction packages, regression suites, and UAT facilitation. Use when conducting manual exploratory sessions or validating fixes.
 - **`skills/ml-experimentation-lifecycle/SKILL.md`** (ml-experimentation-lifecycle): Enterprise machine learning experimentation and modeling playbook — statistical learning pipelines, zero-leakage cross-validation, baseline benchmarking, hyperparameter tuning, and model diagnostic auditing.
 - **`skills/mobile-quality/SKILL.md`** (mobile-quality): Cross-platform mobile engineering standards for ** (Flutter 3.44.2 / Dart) — clean architecture in mobile/, mobile-quality-gate (flutter analyze 0 issues, flutter test), secure enclave storage, offline resilience, and mobile accessibility. Use when building or testing mobile features.
+- **`skills/motion-animation-design/SKILL.md`** (motion-animation-design): Enterprise interaction motion and animation playbook — physics-based spring curves, choreographed micro-interactions, layout transitions, GPU-accelerated compositing (transform/opacity), Framer Motion / Motion One patterns, and WCAG 2.2 reduced-motion accessibility.
 - **`skills/nfr-governance/SKILL.md`** (nfr-governance): Enterprise Non-Functional Requirements (NFR) engineering and verification framework (Master Framework §16) — Performance budgets (p95/p99), Availability (SLI/SLO), Scalability, Security, Reliability, Maintainability, Usability (WCAG 2.1 AA), Compatibility, Observability, and Recoverability (RTO & RPO).
 - **`skills/observability-resilience/SKILL.md`** (observability-resilience): Production-grade Site Reliability Engineering (SRE) and resilience framework — structured logging with correlation IDs, OpenTelemetry tracing, UU PDP-compliant PII scrubbing, health and readiness probe architecture, circuit breakers, exponential backoff with jitter, graceful degradation, and failure budget monitoring.
 - **`skills/offline-unit-harness/SKILL.md`** (offline-unit-harness): Architecture, operation, and maintenance of **'s T1 Air-Gapped Zero-DB Unit Test Harness (vitest.unit-no-db.config.ts) — fail-closed application network guard, environment sanitization, pure algorithmic domain isolation, and sub-10-second fast-path verification.
