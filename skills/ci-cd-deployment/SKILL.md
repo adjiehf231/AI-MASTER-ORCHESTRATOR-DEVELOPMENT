@@ -1,6 +1,6 @@
 ---
-name: CI/CD & Deployment
-description: Delivery pipeline engineering and multi-tier environment operations — ci.yml quality gate chains, Docker multi-tier topology (Postgres 16 + MailHog), deterministic UAT data sanitization, secrets hygiene (.gitleaks.toml), Release Gates 7–8, zero-downtime deployments, and automated rollback runbooks. Use for pipeline changes, deployments, and incident mitigation.
+name: ci-cd-deployment
+description: "Delivery pipeline engineering and multi-tier environment operations — ci.yml quality gate chains, Docker multi-tier topology (Postgres 16 + MailHog), deterministic UAT data sanitization, secrets hygiene (.gitleaks.toml), Release Gates 7–8, zero-downtime deployments, and automated rollback runbooks. Use for pipeline changes, deployments, and incident mitigation."
 ---
 
 # CI/CD Pipeline & Environment Operations — ${PROJECT_NAME}
@@ -76,7 +76,7 @@ Per Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile), raw produ
 
 ### Gate 7: Release Candidate (RC) Verification
 - CI Quality Gate pipeline passes 100% on the target release branch.
-- Database migration parity verified: `npm run db:verify` confirms parity matching the 12 canonical migrations baseline.
+- Database migration parity verified: `npm run db:verify` confirms parity matching the verified schema migration baseline.
 - Automated rollback rehearsal executed in Sandbox/SIT.
 
 ### Gate 8: Production Launch Execution

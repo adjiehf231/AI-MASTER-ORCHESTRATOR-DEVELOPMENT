@@ -8,6 +8,7 @@
 - **Project Name (`${PROJECT_NAME}`):** "Acme Cloud Platform"
 - **Project Identifier (`${PROJECT_ID}`):** "ACME"
 - **Primary Domain (`${PROJECT_DOMAIN}`):** "acme.com"
+- **Database Name (`${DB_NAME}`):** "acme_db"
 - **Target Audience / Personas:** Enterprise B2B Administrators, Operations Managers, Developers
 - **Repository Type:** Monorepo / Polyrepo
 

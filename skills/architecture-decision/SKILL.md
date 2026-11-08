@@ -1,6 +1,6 @@
 ---
-name: Architecture Decision
-description: Comprehensive architecture decision-making and ADR authoring framework — reversal cost quantification, module boundary governance, statutory invariant enforcement, failure mode analysis, and dependency evaluation per Constitution §19. Use when designing cross-module systems, adopting dependencies, or authoring ADRs.
+name: architecture-decision
+description: "Comprehensive architecture decision-making and ADR authoring framework — reversal cost quantification, module boundary governance, statutory invariant enforcement, failure mode analysis, and dependency evaluation per Constitution §19. Use when designing cross-module systems, adopting dependencies, or authoring ADRs."
 ---
 
 # Architecture Decision & System Governance — ${PROJECT_NAME}
@@ -37,7 +37,7 @@ When introducing new functionality, determine its exact architectural location u
                                       | calls via public APIs
 +-----------------------------------------------------------------------------------------+
 | src/modules/ (Core Business Capabilities)                                               |
-| - identity, cv, ats, billing, agent, jobs, applications, notifications, etc. (22 total)  |
+| - identity, document, engine, billing, agent, jobs, applications, notifications, etc. (22 total)  |
 | - Responsibility: Domain entities, business rule enforcement, Zod contract validation    |
 | - INVARIANT: One capability per module. Expose public API exclusively via index.ts.     |
 +-----------------------------------------------------------------------------------------+

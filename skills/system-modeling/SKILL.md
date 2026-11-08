@@ -1,6 +1,6 @@
 ---
-name: System Modeling
-description: Formal system modeling for SDLC Phase 2 — Mermaid state machine diagrams, sequence flows, boundary value matrices, error catalogs, and Zod contract interface schemas. Use when modeling complex features or preparing Gate 1 (DoR) specifications.
+name: system-modeling
+description: "Formal system modeling for SDLC Phase 2 — Mermaid state machine diagrams, sequence flows, boundary value matrices, error catalogs, and Zod contract interface schemas. Use when modeling complex features or preparing Gate 1 (DoR) specifications."
 ---
 
 # System Modeling & Technical Specification — ${PROJECT_NAME} (SDLC Phase 2)
@@ -13,13 +13,13 @@ System modeling eliminates developer guesswork and ambiguity. Before any impleme
 
 ## 1. Mermaid State Machine Modeling
 
-For any workflow with lifecycles (e.g. CV drafts, job applications, interview sessions, credit transactions), model the explicit state transitions:
+For any workflow with lifecycles (e.g. document drafts, user submissions, workflow sessions, credit transactions), model the explicit state transitions:
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Draft: User initializes CV
-    Draft --> InReview: Submit for ATS scoring
-    InReview --> Scored: ATS rules evaluated (<1.5s)
+    [*] --> Draft: User initializes Document
+    Draft --> InReview: Submit for Core domain scoring
+    InReview --> Scored: diagnostic rules evaluated (<1.5s)
     Scored --> Tailored: AI Tailoring applied (Provenance=SUGGESTED)
     Tailored --> Verified: User confirms suggestions (Provenance=VERIFIED)
     Verified --> Exported: A4 PDF Generated (<3s)
@@ -28,7 +28,7 @@ stateDiagram-v2
 ```
 
 ### State Machine Rules:
-1. **Explicit Invalid Transitions:** Specify what happens when an invalid transition is attempted (e.g. attempting to tailor an archived CV returns HTTP 422 with `INVALID_STATE_TRANSITION`).
+1. **Explicit Invalid Transitions:** Specify what happens when an invalid transition is attempted (e.g. attempting to process an archived document returns HTTP 422 with `INVALID_STATE_TRANSITION`).
 2. **Terminal States:** Clearly identify final states (`Deleted`, `Archived`, `Expired`) where mutations are prohibited.
 
 ---
@@ -42,14 +42,14 @@ sequenceDiagram
     autonumber
     actor User as Jobseeker
     participant Client as Next.js 16 Web Client
-    participant API as /api/v1/cv/tailor Route
+    participant API as /api/v1/document/process Route
     participant Auth as Session & IDOR Guard
     participant Ledger as Credit Ledger (DB)
     participant AI as AI Provider (Mock/Real)
     
-    User->>Client: Click "Tailor CV"
-    Client->>API: POST /api/v1/cv/tailor (cvId, jobId)
-    API->>Auth: Validate Session & Verify cvId ownership
+    User->>Client: Click "Process Document"
+    Client->>API: POST /api/v1/document/process (documentId, entityId)
+    API->>Auth: Validate Session & Verify documentId ownership
     alt Unauthorized / IDOR
         Auth-->>Client: 403 Forbidden / 404 Not Found
     end
@@ -61,7 +61,7 @@ sequenceDiagram
     AI-->>API: JSON Output (zod-parsed)
     API->>Ledger: Record Credit Ledger entry
     API-->>Client: 200 OK (Provenance: SUGGESTED)
-    Client-->>User: Render tailored CV with suggestion badges
+    Client-->>User: Render processed document with suggestion badges
 ```
 
 ---
@@ -73,7 +73,7 @@ Construct explicit boundary matrices covering:
 | Dimension | Minimum / Empty Boundary | Nominal / Typical | Maximum / Stress Boundary | Invalid / Hostile Input |
 |---|---|---|---|---|
 | **Text Inputs** | `""` (empty string) | 10–200 characters | Exact max limit (e.g. 5000 chars) | 100k chars, SQL payloads, `<script>` |
-| **CV Uploads** | 0 bytes (empty file) | 1–3 MB PDF/DOCX | 10 MB strict ceiling | Executable (.exe), corrupted PDF, zip bomb |
+| **Document Uploads** | 0 bytes (empty file) | 1–3 MB PDF/DOCX | 10 MB strict ceiling | Executable (.exe), corrupted PDF, zip bomb |
 | **Credit Ledger** | 0 credits remaining | 5–20 credits | 10,000 credits | Negative integers (`-5`), float credits (`1.5`) |
 | **Concurrency** | 1 single request | 2 concurrent requests | 10 concurrent requests | 100 simultaneous requests / same session |
 
@@ -87,7 +87,7 @@ Every endpoint must have a documented error catalog mapping business failure sta
 {
   "error": {
     "code": "INSUFFICIENT_CREDITS",
-    "message": "Saldo kredit Anda tidak mencukupi untuk melakukan tailoring CV.",
+    "message": "Saldo kredit Anda tidak mencukupi untuk melakukan pemrosesan dokumen.",
     "details": {
       "required": 1,
       "current": 0
@@ -113,13 +113,13 @@ Model request and response schemas strictly with Zod:
 ```typescript
 import { z } from 'zod';
 
-export const TailorCvRequestSchema = z.object({
-  cvId: z.string().uuid(),
+export const ProcessDocRequestSchema = z.object({
+  documentId: z.string().uuid(),
   jobId: z.string().uuid(),
   targetFocus: z.enum(['GENERAL', 'SKILLS_MATCH', 'EXECUTIVE']).default('GENERAL'),
 }).strict(); // Enforce strict mode to prevent mass assignment
 
-export const TailorCvResponseSchema = z.object({
+export const ProcessDocResponseSchema = z.object({
   tailoredSectionId: z.string().uuid(),
   suggestedContent: z.string().min(1),
   provenance: z.literal('SUGGESTED'),

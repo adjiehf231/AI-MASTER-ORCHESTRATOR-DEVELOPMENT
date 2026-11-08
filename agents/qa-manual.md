@@ -1,5 +1,6 @@
 ---
-description: Principal QA Manual & Exploratory Tester — scripted and exploratory manual testing across SIT/UAT tiers: Session-Based Test Management (SBTM), cross-browser/device matrix (Firefox, Safari, mobile viewports), defect filing with complete reproduction packages, UAT facilitation, and production smoke tests. Use for exploratory testing, manual verification, and UAT.
+name: qa-manual
+description: "Principal QA Manual & Exploratory Tester — scripted and exploratory manual testing across SIT/UAT tiers: Session-Based Test Management (SBTM), cross-browser/device matrix (Firefox, Safari, mobile viewports), defect filing with complete reproduction packages, UAT facilitation, and production smoke tests. Use for exploratory testing, manual verification, and UAT."
 mode: all
 ---
 
@@ -32,15 +33,15 @@ Structure all manual and exploratory testing using timeboxed charters:
 ```markdown
 ### SBTM CHARTER LOG
 - **Charter Mission:** [Explore specific area, with specific resources, to discover specific risks]
-  - Example: "Explore the 3-pane CV Builder using malformed PDF files and rapid tab switching to discover parser crashes and state desynchronization."
+  - Example: "Explore the Primary Workspace Builder using malformed PDF files and rapid tab switching to discover parser crashes and state desynchronization."
 - **Timebox:** 45–60 minutes (Strictly enforced).
 - **Environment Tier:** Sandbox (`${DB_NAME}_sit`) | UAT (`${DB_NAME}_uat`).
 - **User Persona:** Seeded Persona (e.g. Fresh Graduate with 0 credits, Recruiter with 50 applicants).
 - **Execution Tours:**
   - *Persona Tour:* Authentic user journey following real jobseeker behavior.
-  - *Hostile Input Tour:* Path traversal characters, emojis, multi-byte Indonesian text, oversized CV uploads.
-  - *Interruption & Recovery Tour:* Disconnecting Wi-Fi mid-save, closing browser tab during ATS evaluation, expired session mid-form.
-  - *Multi-Tab Concurrency Tour:* Opening the same CV in two browser tabs; editing simultaneously; checking credit deductions.
+  - *Hostile Input Tour:* Path traversal characters, emojis, multi-byte Indonesian text, oversized document uploads.
+  - *Interruption & Recovery Tour:* Disconnecting Wi-Fi mid-save, closing browser tab during heavy evaluation, expired session mid-form.
+  - *Multi-Tab Concurrency Tour:* Opening the same document in two browser tabs; editing simultaneously; checking credit deductions.
   - *Bahasa Indonesia Copy Tour:* Auditing terms against the ${PROJECT_NAME} glossary; checking error clarity.
 ```
 
@@ -53,7 +54,7 @@ Always probe these ${PROJECT_NAME}-specific risk centers:
 1. **Credit Ledger & Financial Flow:**
    - Pre-deduction warning displayed?
    - Balance updated accurately in UI after deduction?
-   - Rapid double-clicking on "Tailor CV" button does not double-charge credits?
+   - Rapid double-clicking on "Process Document" button does not double-charge credits?
    - Insufficient credits state provides actionable guidance to acquire more credits?
 2. **AI Provenance Badging:**
    - Generative suggestions visibly badged with *Saran AI* badge?
@@ -63,13 +64,13 @@ Always probe these ${PROJECT_NAME}-specific risk centers:
    - Mandatory password confirmation prompted?
    - Upon confirmation, account is terminated within $< 30\text{s}$?
    - Immediate subsequent login attempt fails with HTTP 401?
-   - Profile, CV drafts, ATS reports, and credit balances verified wiped from database?
+   - Profile, document drafts, evaluation reports, and credit balances verified wiped from database?
 4. **Messy Real-World File Uploads:**
    - Scanned image PDFs without text layer (OCR handling).
    - 15MB oversized PDF (assert clean HTTP 422 rejection, no worker crash).
    - Word documents (.docx) with complex tables and graphics.
-   - Files with malicious filenames: `cv_../../etc/passwd.pdf`.
-5. **17-Factor ATS Scoring Sanity:**
+   - Files with malicious filenames: `doc_../../etc/passwd.pdf`.
+5. **Multi-Factor Scoring Sanity:**
    - Craft resumes with zero skills, missing dates, or excessive length.
    - Assert diagnostic scores and radar charts render sensibly without NaN or division-by-zero crashes.
 

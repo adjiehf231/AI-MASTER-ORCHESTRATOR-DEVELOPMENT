@@ -8,6 +8,7 @@
 - **Project Name (`${PROJECT_NAME}`):** "AI Master Orchestrator Development"
 - **Project Identifier (`${PROJECT_ID}`):** "AIMASTER"
 - **Primary Domain (`${PROJECT_DOMAIN}`):** "orchestrator.local"
+- **Database Name (`${DB_NAME}`):** "orchestrator_db"
 - **Target Audience / Personas:** Software Engineers, Tech Leads, QA Engineers, Product Architects
 - **Repository Type:** Polyglot Universal Orchestration System
 

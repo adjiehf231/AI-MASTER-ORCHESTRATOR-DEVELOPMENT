@@ -1,6 +1,6 @@
 ---
 name: uiux-review
-description: Comprehensive UI/UX heuristic evaluation and digital accessibility audit — Nielsen's 10 heuristics, Anti-AI-Slop craft validation, WCAG 2.2 AA keyboard and screen reader protocols, microcopy governance, and S1–S4 defect mapping. Use when evaluating user flows, auditing accessibility, or signing off designs.
+description: "Comprehensive UI/UX heuristic evaluation and digital accessibility audit — Nielsen's 10 heuristics, Anti-AI-Slop craft validation, WCAG 2.2 AA keyboard and screen reader protocols, microcopy governance, and S1–S4 defect mapping. Use when evaluating user flows, auditing accessibility, or signing off designs."
 ---
 
 # UI/UX Review & Accessibility Audit — Enterprise Heuristics & Standards

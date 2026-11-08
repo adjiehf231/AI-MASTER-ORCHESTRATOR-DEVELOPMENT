@@ -1,6 +1,6 @@
 ---
-name: Code Review
-description: Adversarial code review methodology to merge-gate standards — blast-radius mapping, mutation thinking on tests, contract-consistency checks, security/privacy regression sweeps, Next.js 16 App Router discipline, and severity-ranked findings (🔴 BLOCKING / 🟡 SHOULD FIX / 🔵 NIT). Use when reviewing pull requests or diffs.
+name: code-review
+description: "Adversarial code review methodology to merge-gate standards — blast-radius mapping, mutation thinking on tests, contract-consistency checks, security/privacy regression sweeps, Next.js 16 App Router discipline, and severity-ranked findings (🔴 BLOCKING / 🟡 SHOULD FIX / 🔵 NIT). Use when reviewing pull requests or diffs."
 ---
 
 # Adversarial Code Review — ${PROJECT_NAME} (Merge-Gate Standard)
@@ -60,9 +60,9 @@ $$\text{Zod Request/Response Schemas} \iff \text{API Route Handlers} \iff \text{
 ## Step 4 — Security & Privacy Regression Sweep (Diff-Introduced)
 
 - **IDOR Guards:** Does every route handler receiving an entity ID verify server-side ownership before returning or mutating data?
-- **Privacy Telemetry Whitelist (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile)):** Verify that no personal data (names, emails, phones, CV text) is leaked into analytics or logs. Whitelist: `event_id`, `timestamp`, `template_id`, `user_id_hash`.
+- **Privacy Telemetry Whitelist (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile)):** Verify that no personal data (names, emails, phones, raw document text) is leaked into analytics or logs. Whitelist: `event_id`, `timestamp`, `template_id`, `user_id_hash`.
 - **Secrets Hygiene:** Verify that no private keys, passwords, or tokens are committed into source code or serialized into client bundles.
-- **AI Prompt Delimiters:** Ensure user CV text is wrapped in untrusted data tags and isolated from system prompt instructions.
+- **AI Prompt Delimiters:** Ensure user document text is wrapped in untrusted data tags and isolated from system prompt instructions.
 
 ---
 

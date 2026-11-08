@@ -1,6 +1,6 @@
 ---
-name: Continuous Learning & Memory Evolution
-description: Master continuous learning, knowledge distillation, and living memory evolution framework — post-task reflection protocol, heuristic extraction, anti-pattern cataloging, living memory synchronization (LESSONS_LEARNED.md, HEURISTICS.md, ANTI_PATTERNS.md), and autonomous feedback-loop optimization across development lifecycles.
+name: continuous-learning
+description: "Master continuous learning, knowledge distillation, and living memory evolution framework — post-task reflection protocol, heuristic extraction, anti-pattern cataloging, living memory synchronization (LESSONS_LEARNED.md, HEURISTICS.md, ANTI_PATTERNS.md), and autonomous feedback-loop optimization across development lifecycles."
 ---
 
 # Continuous Learning & Memory Evolution — ${PROJECT_NAME}

@@ -1,6 +1,6 @@
 ---
-name: QA Verification
-description: Master Software Testing Life Cycle (STLC) execution methodology for ${PROJECT_NAME} — test strategy selection, TC-* case design per TEST_CASE_STANDARD, requirement traceability, automated execution (Vitest/Playwright/Axe), defect triage per S1–S4, regression execution, and statutory Quality Gate assessments. Use when testing features, fixes, or releases.
+name: qa-verification
+description: "Master Software Testing Life Cycle (STLC) execution methodology for ${PROJECT_NAME} — test strategy selection, TC-* case design per TEST_CASE_STANDARD, requirement traceability, automated execution (Vitest/Playwright/Axe), defect triage per S1–S4, regression execution, and statutory Quality Gate assessments. Use when testing features, fixes, or releases."
 ---
 
 # QA Verification & STLC Automation — ${PROJECT_NAME} (Quality Engineering)
@@ -44,7 +44,7 @@ Every formal test case authored in `tests/` or colocated suites must comply with
  * @traceability BR-${PROJECT_ID}-042, US-BILLING-002
  * @preconditions Seeded user with exactly 1 credit balance
  * @steps
- *   1. Initiate 2 simultaneous POST /api/v1/cv/tailor requests using Promise.all
+ *   1. Initiate 2 simultaneous POST /api/v1/document/process requests using Promise.all
  *   2. Capture HTTP responses and resulting database credit balance
  * @expected
  *   - Exactly one request returns 200 OK
@@ -100,7 +100,7 @@ npm run perf:lighthouse
 ## 5. STLC Phase 5: Defect Management & Triage (docs/qa/DEFECT_MANAGEMENT.md)
 
 Classify all defects strictly by technical impact:
-- **`S1` (Critical):** Data corruption, cross-user IDOR access, persisted hallucinated career facts, account erasure failure, credit double-spends.
+- **`S1` (Critical):** Data corruption, cross-user IDOR access, persisted hallucinated factual entities, account erasure failure, credit double-spends.
 - **`S2` (High):** Major functional journey broken with no viable workaround, A4 PDF generation crash, NFR latency budget breached by $>100\%$.
 - **`S3` (Medium):** Localized functional glitch with a documented workaround, minor UI rendering bug.
 - **`S4` (Low):** Cosmetic flaw, typo, alignment discrepancy.
@@ -118,7 +118,7 @@ A defect ticket may only be marked **CLOSED** when:
 
 Evaluate verification evidence against `docs/qa/RELEASE_QUALITY_GATES.md`:
 - **Gate 2 (Story DoD):** 0 lint/typecheck errors, colocated unit & integration tests pass with real execution output.
-- **Gate 4 (Beta SIT Gate):** 17-factor ATS rules, Job Matcher, and Admin console pass in Sandbox (`${DB_NAME}_sit`).
+- **Gate 4 (Beta SIT Gate):** multi-factor domain diagnostic rules, Job Matcher, and Admin console pass in Sandbox (`${DB_NAME}_sit`).
 - **Gate 6 (Safety Gate):** Zero open S1/S2 vulnerabilities; AI Factuality benchmark achieves 100% zero-hallucination score.
 - **Gate 7 (RC Gate):** Master Golden Path E2E green in CI; migration baseline parity verified (12 canonical migrations).
 

@@ -1,6 +1,6 @@
 ---
-name: Observability, Telemetry & Production Resilience
-description: Production-grade Site Reliability Engineering (SRE) and resilience framework — structured logging with correlation IDs, OpenTelemetry tracing, UU PDP-compliant PII scrubbing, health and readiness probe architecture, circuit breakers, exponential backoff with jitter, graceful degradation, and failure budget monitoring.
+name: observability-resilience
+description: "Production-grade Site Reliability Engineering (SRE) and resilience framework — structured logging with correlation IDs, OpenTelemetry tracing, UU PDP-compliant PII scrubbing, health and readiness probe architecture, circuit breakers, exponential backoff with jitter, graceful degradation, and failure budget monitoring."
 ---
 
 # Observability, Telemetry & Production Resilience — ${PROJECT_NAME}
@@ -47,7 +47,7 @@ Every log entry emitted by server-side code or background workers must be struct
 
 ### 2.2 Inviolable Privacy Invariant: PII Scrubbing
 Under Constitution §12 and Indonesian Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile), telemetry logs must **NEVER** contain:
-- Raw CV text or resume markdown.
+- Raw document text or resume markdown.
 - Personal identity numbers (NIK), phone numbers, or physical addresses.
 - Cleartext email addresses (use hashed identifier or omit).
 - Passwords, authorization headers, bearer tokens, or session secrets.
@@ -109,10 +109,10 @@ If an external enhancement service (e.g. AI-powered real-time suggestion) fails,
 
 ## 6. SRE Error Budget & Alerting Thresholds
 
-- **Availability Target:** 99.9% uptime for core user journeys (CV editing, job application).
+- **Availability Target:** 99.9% uptime for core user journeys (document editing, workflow processing).
 - **Latency Budgets:**
   - $p_{95} < 200\text{ms}$ for standard REST read queries.
   - $p_{95} < 500\text{ms}$ for transactional mutations (credit deduction, account update).
-  - $p_{95} < 2.5\text{s}$ for ATS diagnostic calculations.
+  - $p_{95} < 2.5\text{s}$ for core diagnostic calculations.
   - SLA $< 30\text{s}$ for transactional account erasure cascade.
 

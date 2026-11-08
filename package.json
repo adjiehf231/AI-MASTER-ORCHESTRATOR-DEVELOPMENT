@@ -1,0 +1,27 @@
+{
+  "name": "ai-master-orchestrator",
+  "version": "1.0.0",
+  "description": "Universal AI Master Orchestrator & Enterprise Engineering Team",
+  "main": "scripts/sync-adapters.js",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "test:t1": "node scripts/qa-unit-offline.cjs",
+    "sync": "node scripts/sync-adapters.js",
+    "sync:template": "node scripts/sync-adapters.js --template",
+    "deploy:antigravity": "node scripts/deploy-antigravity.js",
+    "audit": "node scripts/audit-integrity.js"
+  },
+  "keywords": [
+    "ai",
+    "orchestrator",
+    "agents",
+    "skills",
+    "anti-ai-slop",
+    "enterprise-sdlc",
+    "antigravity",
+    "claude",
+    "cursor"
+  ],
+  "author": "Antigravity Engineering Council",
+  "license": "MIT"
+}

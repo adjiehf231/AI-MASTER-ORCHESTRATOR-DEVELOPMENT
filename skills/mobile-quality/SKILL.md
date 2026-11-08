@@ -1,6 +1,6 @@
 ---
-name: Mobile Quality
-description: Cross-platform mobile engineering standards for ${PROJECT_NAME} (Flutter 3.44.2 / Dart) — clean architecture in mobile/, mobile-quality-gate (flutter analyze 0 issues, flutter test), secure enclave storage, offline resilience, and mobile accessibility. Use when building or testing mobile features.
+name: mobile-quality
+description: "Cross-platform mobile engineering standards for ${PROJECT_NAME} (Flutter 3.44.2 / Dart) — clean architecture in mobile/, mobile-quality-gate (flutter analyze 0 issues, flutter test), secure enclave storage, offline resilience, and mobile accessibility. Use when building or testing mobile features."
 ---
 
 # Mobile Quality — ${PROJECT_NAME} (Flutter 3.44.2 / Dart)
@@ -52,7 +52,7 @@ Organize features into three distinct layers:
 
 1. **Encrypted Storage:**
    - Authentication tokens (JWT / refresh tokens) and user profile caches MUST be stored in hardware-backed secure storage via `flutter_secure_storage` (KeyStore on Android, Keychain on iOS).
-   - Plain text `SharedPreferences` or unencrypted local databases are strictly forbidden for personal career data.
+   - Plain text `SharedPreferences` or unencrypted local databases are strictly forbidden for personal user data.
 2. **Network Security:**
    - Enforce HTTPS across all endpoints; validate SSL certificates.
    - User inputs sanitized on device before transmission to backend endpoints.
@@ -69,7 +69,7 @@ Mobile devices operate under intermittent connectivity (4G/3G/offline switches):
    - Every screen state machine must support an explicit `Offline` or `NetworkError` state with a visible retry button.
    - Never show infinite spinner loaders when an HTTP socket fails.
 3. **Local Draft Caching:**
-   - In-progress CV edits must be cached locally to prevent data loss if connectivity drops during editing.
+   - In-progress document edits must be cached locally to prevent data loss if connectivity drops during editing.
 
 ---
 

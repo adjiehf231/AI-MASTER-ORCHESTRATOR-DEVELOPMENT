@@ -1,6 +1,6 @@
 ---
-name: Technical Innovation & High-Level Decision Architecture
-description: Framework for first-principles thinking, high-leverage architectural innovation, Type 1 vs Type 2 decision categorization, 10x simplification over complexity, battle-tested SaaS resilience patterns, and proactive engineering suggestions. Use when evaluating major architectural choices, optimizing core systems, or challenging requirements.
+name: technical-innovation
+description: "Framework for first-principles thinking, high-leverage architectural innovation, Type 1 vs Type 2 decision categorization, 10x simplification over complexity, battle-tested SaaS resilience patterns, and proactive engineering suggestions. Use when evaluating major architectural choices, optimizing core systems, or challenging requirements."
 ---
 
 # Technical Innovation & High-Level Decision Architecture — ${PROJECT_NAME}
@@ -74,7 +74,7 @@ When architecting high-scale, production-ready capabilities, prefer these proven
 - **Innovation Pattern:** Isolate external calls with bounded worker pools, aggressive timeout budgets ($< 5\text{s}$ for synchronous web requests), and circuit breakers that fail fast into fallback responses when downstream error rates exceed 30%.
 
 ### 3.4 Zero-Copy Streaming
-- **Problem:** Buffering large PDF exports, CV files, or ATS reports in Node.js server RAM exhausts memory under concurrent user downloads.
+- **Problem:** Buffering large PDF exports, document files, or evaluation reports in Node.js server RAM exhausts memory under concurrent user downloads.
 - **Innovation Pattern:** Stream data directly from the storage adapter or generator pipeline to the HTTP response stream (`ReadableStream`) without buffering entire multi-megabyte payloads in process memory.
 
 ---

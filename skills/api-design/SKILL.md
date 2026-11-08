@@ -1,6 +1,6 @@
 ---
-name: API Design
-description: Contract-first REST API engineering standards — Zod request/response contracts, per-role authorization matrix, server-side IDOR elimination, uniform error envelopes, idempotency for financial/credit transactions, deterministic pagination, and the mandatory 8-case test matrix. Use when designing, reviewing, or refactoring endpoints.
+name: api-design
+description: "Contract-first REST API engineering standards — Zod request/response contracts, per-role authorization matrix, server-side IDOR elimination, uniform error envelopes, idempotency for financial/credit transactions, deterministic pagination, and the mandatory 8-case test matrix. Use when designing, reviewing, or refactoring endpoints."
 ---
 
 # API Design & Contract Engineering — ${PROJECT_NAME}
@@ -27,14 +27,14 @@ APIs are permanent, public contracts. A poorly designed API leaks internal archi
 Follow clean RESTful conventions:
 
 - **Resource URIs:** Nouns in plural, kebab-case for multi-word paths:
-  - `GET /api/v1/cvs` (List CVs)
-  - `POST /api/v1/cvs` (Create CV draft)
-  - `GET /api/v1/cvs/:id` (Fetch specific CV)
-  - `PUT /api/v1/cvs/:id/sections/:sectionId` (Replace CV section)
-  - `DELETE /api/v1/cvs/:id` (Delete CV)
+  - `GET /api/v1/documents` (List documents)
+  - `POST /api/v1/documents` (Create document draft)
+  - `GET /api/v1/documents/:id` (Fetch specific document)
+  - `PUT /api/v1/documents/:id/sections/:sectionId` (Replace document section)
+  - `DELETE /api/v1/documents/:id` (Delete document)
 - **Sub-Resource Actions:** When an operation represents an action rather than a CRUD mutation:
-  - `POST /api/v1/cvs/:id/tailor` (Tailor CV keyword recommendations)
-  - `POST /api/v1/ats/evaluate` (Evaluate ATS diagnostic rules)
+  - `POST /api/v1/documents/:id/process` (Process document recommendations)
+  - `POST /api/v1/eval/evaluate` (Evaluate system diagnostic rules)
 - **HTTP Method Discipline:**
   - `GET`: Safe and idempotent. Must never mutate persistent state.
   - `POST`: Create non-idempotent resources or trigger credit-consuming processing actions.
@@ -52,12 +52,12 @@ Every endpoint must define its schemas in `contracts/`:
 import { z } from 'zod';
 
 // 1. Request Parameters Schema
-export const UpdateCareerItemParamsSchema = z.object({
+export const UpdateItemParamsSchema = z.object({
   id: z.string().uuid(),
 }).strict();
 
 // 2. Request Body Schema (Strict to prevent mass-assignment)
-export const UpdateCareerItemBodySchema = z.object({
+export const UpdateItemBodySchema = z.object({
   title: z.string().min(1).max(100),
   employer: z.string().min(1).max(100),
   startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
@@ -67,7 +67,7 @@ export const UpdateCareerItemBodySchema = z.object({
 }).strict();
 
 // 3. Response Schema
-export const CareerItemResponseSchema = z.object({
+export const ItemResponseSchema = z.object({
   id: z.string().uuid(),
   userId: z.string().uuid(),
   title: z.string(),
@@ -81,8 +81,8 @@ export const CareerItemResponseSchema = z.object({
 });
 
 // 4. Export Shared Types
-export type UpdateCareerItemBody = z.infer<typeof UpdateCareerItemBodySchema>;
-export type CareerItemResponse = z.infer<typeof CareerItemResponseSchema>;
+export type UpdateItemBody = z.infer<typeof UpdateItemBodySchema>;
+export type ItemResponse = z.infer<typeof ItemResponseSchema>;
 ```
 
 ---
@@ -93,9 +93,9 @@ For every endpoint, specify the explicit role access matrix:
 
 | Endpoint | Jobseeker (Owner) | Jobseeker (Non-Owner) | Corporate Recruiter | Platform Admin | Anonymous |
 |---|:---:|:---:|:---:|:---:|:---:|
-| `GET /api/v1/cvs/:id` | 200 OK | 404 Not Found (IDOR Guard) | 403 Forbidden (Unless applicant) | 200 OK (Audited) | 401 Unauthorized |
-| `PUT /api/v1/cvs/:id` | 200 OK | 404 Not Found (IDOR Guard) | 403 Forbidden | 403 Forbidden (Owner only) | 401 Unauthorized |
-| `DELETE /api/v1/cvs/:id`| 200 OK | 404 Not Found (IDOR Guard) | 403 Forbidden | 403 Forbidden | 401 Unauthorized |
+| `GET /api/v1/documents/:id` | 200 OK | 404 Not Found (IDOR Guard) | 403 Forbidden (Unless applicant) | 200 OK (Audited) | 401 Unauthorized |
+| `PUT /api/v1/documents/:id` | 200 OK | 404 Not Found (IDOR Guard) | 403 Forbidden | 403 Forbidden (Owner only) | 401 Unauthorized |
+| `DELETE /api/v1/documents/:id`| 200 OK | 404 Not Found (IDOR Guard) | 403 Forbidden | 403 Forbidden | 401 Unauthorized |
 
 ### The Existence Oracle Defense:
 When a user attempts to access a resource ID they do not own, return `404 Not Found` rather than `403 Forbidden` unless the business context requires explicit permission disclosure. Returning `403` informs an attacker that a foreign resource ID exists (resource enumeration oracle).
@@ -110,7 +110,7 @@ All non-2xx responses must return the standard JSON envelope:
 {
   "error": {
     "code": "INSUFFICIENT_CREDITS",
-    "message": "Saldo kredit tidak mencukupi untuk melakukan tailoring CV.",
+    "message": "Saldo kredit tidak mencukupi untuk melakukan pemrosesan dokumen.",
     "details": {
       "requiredCredits": 1,
       "currentBalance": 0

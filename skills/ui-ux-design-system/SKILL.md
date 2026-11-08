@@ -1,10 +1,6 @@
 ---
 name: ui-ux-design-system
-description: >-
-  Expert guidance for modern UI/UX design, frontend aesthetics, fluid responsive layouts,
-  design tokens, accessible components, micro-interactions, and eliminating generic AI-slop design.
-  Use whenever designing, reviewing, improving, refactoring, or building web user interfaces,
-  color systems, typography, dashboards, forms, landing pages, or user interaction workflows.
+description: "Expert guidance for modern UI/UX design, frontend aesthetics, fluid responsive layouts, design tokens, accessible components, micro-interactions, and eliminating generic AI-slop design. Use whenever designing, reviewing, improving, refactoring, or building web user interfaces, color systems, typography, dashboards, forms, landing pages, or user interaction workflows."
 ---
 
 # Modern UI/UX & Design System Engineering Skill
@@ -95,26 +91,26 @@ To prevent awkward empty gutters on desktop monitors (e.g. 1680px, 1920px):
 
 ---
 
-## 4. The 6 Mandatory UX States Checklist
+## 4. UI State Matrix & Interactive States Checklist
 
-Every UI component that displays dynamic data or handles user actions MUST support these 6 states:
+To prevent the "happy-path only" failure mode and guarantee consistent verdicts between frontend engineers and auditors, state handling is divided into two distinct, non-overlapping contracts:
 
-1. **Default / Loaded State:** Well-spaced, balanced visual hierarchy, crisp iconography.
-2. **Interactive States (Hover / Focus / Active):**
-   - Hover: Subtle border contrast increase + slight shadow elevation.
-   - Active: Tactile micro-depression (`active:scale-[0.98]`).
-   - Focus: Visible, high-contrast focus rings (`focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2`).
-3. **Loading State:**
-   - Use skeleton pulse blocks matching actual content geometry (`animate-pulse bg-slate-200 dark:bg-slate-800 rounded-lg`).
-   - Avoid blocking full-screen spinners when regional skeletons can be used.
-4. **Empty State:**
-   - Must include: Curated SVG icon in an accent-tinted container, informative header, descriptive subtitle, and clear primary CTA button.
-5. **Error State:**
-   - Specific, understandable error copy (never raw backend traces or codes).
-   - Retry or remediation action directly in the error card.
-6. **Disabled State:**
-   - Visual reduction (`opacity-50 cursor-not-allowed`).
-   - `aria-disabled="true"` with tooltips or guidance explaining how to enable the action.
+### A. Universal 6-State Matrix (For Asynchronous Views & Data Containers)
+Every dynamic data view, page container, or asynchronous query surface MUST implement:
+1. **Loading State (Layout Reservation):** Skeleton pulse blocks matching actual content geometry (`animate-pulse bg-slate-200 dark:bg-slate-800 rounded-lg`) guaranteeing `CLS = 0`.
+2. **Empty State:** Helpful onboarding guidance with a curated SVG icon in a soft container, informative title, subtitle, and primary CTA button.
+3. **Error State:** Human-actionable diagnosis (never raw stack traces) with a direct retry affordance.
+4. **Success State:** Crisp visual hierarchy, structured spacing, and accessible live region announcements for updates.
+5. **Denied State:** Transparent permission explanation without leaking sensitive IDs or internal permissions.
+6. **Stale/Offline State:** Cached presentation with a non-intrusive re-sync or offline connectivity indicator.
+
+### B. Interactive Component State Spectrum (For Interactive Controls & Buttons)
+Every interactive control (button, input, select, link, toggle) MUST support:
+1. **Default State:** Base visual styling with compliant contrast ($\ge 4.5:1$ text, $\ge 3:1$ boundary).
+2. **Hover State:** Subtle border contrast increase + slight shadow elevation (`hover:bg-slate-50 dark:hover:bg-[#1e293b]`).
+3. **Focus-Visible State:** Prominent high-contrast focus ring (`focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2`).
+4. **Active State:** Tactile micro-depression (`active:scale-[0.98] transition-all duration-150`).
+5. **Disabled State:** Visual reduction (`opacity-50 cursor-not-allowed`) with `aria-disabled="true"` and explanatory guidance.
 
 ---
 

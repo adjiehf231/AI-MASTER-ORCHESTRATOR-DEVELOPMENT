@@ -1,6 +1,6 @@
 ---
-name: Requirement Analysis
-description: Master methodology for analyzing and specifying ${PROJECT_NAME} requirements to Gate 1 (DoR) standard — INVEST user stories, Given/When/Then Gherkin criteria, BR-${PROJECT_ID}-* numbering, boundary value analysis, conflict arbitration, and statutory compliance. Use when scoping features, drafting PRDs, and defining acceptance gates.
+name: requirement-analysis
+description: "Master methodology for analyzing and specifying ${PROJECT_NAME} requirements to Gate 1 (DoR) standard — INVEST user stories, Given/When/Then Gherkin criteria, BR-${PROJECT_ID}-* numbering, boundary value analysis, conflict arbitration, and statutory compliance. Use when scoping features, drafting PRDs, and defining acceptance gates."
 ---
 
 # Requirement Analysis & Specification — ${PROJECT_NAME} (Gate 1: Definition of Ready)
@@ -56,7 +56,7 @@ Every story must be:
 
 ### 4.2 Given/When/Then Gherkin Acceptance Criteria
 Acceptance criteria must assert **observable behavior**, not internal code mechanisms:
-- ✅ *Valid:* "Given a jobseeker with 0 credits, When they trigger CV keyword tailoring, Then the request is rejected with HTTP 422 and message 'Saldo kredit tidak mencukupi', and no credit ledger mutation occurs."
+- ✅ *Valid:* "Given a jobseeker with 0 credits, When they trigger document entity processing, Then the request is rejected with HTTP 422 and message 'Saldo kredit tidak mencukupi', and no credit ledger mutation occurs."
 - ❌ *Invalid:* "System checks user credits using CreditService and throws an exception." (Specifies internal implementation rather than contract behavior).
 
 Every story must include:
@@ -80,7 +80,7 @@ Never use subjective adjectives. Quantify every non-functional expectation:
 | "Aman dari serangan" | Server-side ownership validation on 100% of entity IDs; zero IDOR vulnerabilities | Automated IDOR matrix test |
 | "Ramah disabilitas" | WCAG 2.1 Level AA compliance; zero critical Axe violations; 100% keyboard navigable | Playwright + Axe audit |
 | "Ekspor PDF cepat" | A4 PDF compilation and byte-stream generation $< 3000\text{ms}$ | Playwright timer |
-| "Evaluasi ATS instan" | 17-factor ATS diagnostic rule execution $< 1500\text{ms}$ | Vitest benchmark |
+| "Evaluasi diagnostik sistem" | multi-factor diagnostic rule execution $< 1500\text{ms}$ | Vitest benchmark |
 
 ---
 
@@ -88,7 +88,7 @@ Never use subjective adjectives. Quantify every non-functional expectation:
 
 Every requirement package must include an explicit Privacy Impact Section:
 1. **Data Minimization Justification:** For every field collected, state why it is strictly necessary for service delivery.
-2. **Rejected Field Filter (`BR-${PROJECT_ID}-006`):** National identification numbers (`nik`) and full residential addresses (`alamat_lengkap`) are prohibited. Inputting them must return HTTP 422.
+2. **Rejected Field Filter (`BR-${PROJECT_ID}-006`):** Prohibited personal identifiers (`national_id`) and full residential addresses (`full_address`) are prohibited. Inputting them must return HTTP 422.
 3. **Lawful Basis & Consent:** Identify if the feature requires explicit user consent (`user_consents` table) and ensure consent is unbundled and revocable.
 4. **Account Erasure Cascade Parity:** Verify that any new persistent data structure is automatically hard-deleted when the user executes `DELETE /api/v1/user/account` within the statutory $< 30\text{s}$ SLA.
 
@@ -101,9 +101,9 @@ Generate a forward-and-backward traceability mapping for the requirement:
 ```markdown
 | Requirement ID | Acceptance Criterion | Domain Module | Target Route / Schema | Planned Test Case | Status |
 |:---:|:---:|:---:|:---:|:---:|:---:|
-| BR-${PROJECT_ID}-042 | AC-01: Tailor CV nominal | `src/modules/cv` | `POST /api/v1/cv/tailor` | `TC-CV-012` | PLANNED |
-| BR-${PROJECT_ID}-042 | AC-02: Zero credit rejection | `src/modules/billing` | `POST /api/v1/cv/tailor` | `TC-BILL-008` | PLANNED |
-| BR-${PROJECT_ID}-042 | AC-03: IDOR cross-user probe | `src/modules/identity` | `POST /api/v1/cv/tailor` | `TC-SEC-015` | PLANNED |
+| BR-${PROJECT_ID}-042 | AC-01: Process document nominal | `src/modules/document` | `POST /api/v1/document/process` | `TC-DOC-012` | PLANNED |
+| BR-${PROJECT_ID}-042 | AC-02: Zero credit rejection | `src/modules/billing` | `POST /api/v1/document/process` | `TC-BILL-008` | PLANNED |
+| BR-${PROJECT_ID}-042 | AC-03: IDOR cross-user probe | `src/modules/identity` | `POST /api/v1/document/process` | `TC-SEC-015` | PLANNED |
 ```
 
 ---

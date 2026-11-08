@@ -1,6 +1,6 @@
 ---
-name: Test Architecture Design
-description: Architecting and governing ${PROJECT_NAME} STLC test systems — test pyramid distribution, test double design (MockAIProvider, MailHog), synthetic data pipelines, contract testing, flakiness eradication, and mutation testing. Use when designing test suites, harnesses, or refactoring test architecture.
+name: test-architecture-design
+description: "Architecting and governing ${PROJECT_NAME} STLC test systems — test pyramid distribution, test double design (MockAIProvider, MailHog), synthetic data pipelines, contract testing, flakiness eradication, and mutation testing. Use when designing test suites, harnesses, or refactoring test architecture."
 ---
 
 # Test Architecture Design — ${PROJECT_NAME} (STLC Engineering)
@@ -21,14 +21,14 @@ Maintain strict allocation across the testing pyramid:
       / ----\
      /       \   API & Integration (~20%) - Endpoints, DB repos, authz (Vitest + Postgres)
     / --------\
-   /           \ Unit & Domain (~70%) - Business rules, ATS parser, Zod validations (Vitest)
+   /           \ Unit & Domain (~70%) - Business rules, domain payload parser, Zod validations (Vitest)
   /_____________\
 ```
 
-- **Unit Layer (Fast, In-Memory):** Test pure business logic, ATS scoring algorithms, date formatting, and input parsing. Execution speed target: `< 10ms` per unit test.
+- **Unit Layer (Fast, In-Memory):** Test pure business logic, Core domain scoring algorithms, date formatting, and input parsing. Execution speed target: `< 10ms` per unit test.
 - **Integration Layer (Isolated Database):** Test Drizzle repository queries, transaction rollback behavior, and multi-service orchestration against Docker Postgres 16 (`${DB_NAME}_test`). Execution speed target: `< 100ms` per integration test.
 - **API & Contract Layer:** Test route handlers for HTTP error envelopes, Zod request/response validation, role-based authz, and IDOR prevention.
-- **E2E Layer (Golden Path Only):** Reserve Playwright browser automation strictly for top 5 critical user journeys (Identity login, 3-pane CV Builder, ATS Diagnostic report generation, Job Matcher, and Account Deletion cascade).
+- **E2E Layer (Golden Path Only):** Reserve Playwright browser automation strictly for top 5 critical user journeys (Identity login, Primary Workspace Builder, Core Diagnostic report generation, Job Matcher, and Account Deletion cascade).
 
 ---
 
@@ -54,7 +54,7 @@ Design test doubles that eliminate flaky external network dependencies:
 Per Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile), real customer data is strictly prohibited in testing environments.
 
 1. **Synthetic Persona Generators (`scripts/seed-sit.ts`):**
-   - Standardized test personas: Fresh Graduate, Mid-Career Software Engineer, Executive Recruiter, Super Admin.
+   - Standardized test personas: Fresh Graduate, Experienced Engineer, Executive Recruiter, Super Admin.
    - Realistic Indonesian names, synthetic education institutions, and mock employment histories.
 2. **Deterministic State Resetting:**
    - Every integration test suite must establish its own preconditions and clean up residual entities.

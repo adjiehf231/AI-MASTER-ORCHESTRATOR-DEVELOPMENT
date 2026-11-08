@@ -1,6 +1,6 @@
 ---
-name: SDLC & Enterprise Delivery Playbook
-description: Master operating map of the Universal Enterprise Software Development Life Cycle (SDLC 01–10), STLC, the 15 mandatory system documents, Change Request (CR) governance, RACI accountability matrix, and DORA/Engineering KPIs per Master Framework (§1–§25).
+name: sdlc-playbook
+description: "Master operating map of the Universal Enterprise Software Development Life Cycle (SDLC 01–10), STLC, the 15 mandatory system documents, Change Request (CR) governance, RACI accountability matrix, and DORA/Engineering KPIs per Master Framework (§1–§25)."
 ---
 
 # SDLC & Enterprise Delivery Playbook — Universal Enterprise Standard

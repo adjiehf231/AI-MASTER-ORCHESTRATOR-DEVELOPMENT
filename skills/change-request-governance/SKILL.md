@@ -1,6 +1,6 @@
 ---
-name: Change Request Governance & Technical Debt Management
-description: Enterprise Change Request (CR) governance, the 9-stage CR lifecycle, RACI accountability matrix, the 15 mandatory system documentation checklist, Technical Debt Register governance, and formal state transition definitions (Ready Tested, Passed, Approved, Deployed) per Master Framework (§15, §17, §18).
+name: change-request-governance
+description: "Enterprise Change Request (CR) governance, the 9-stage CR lifecycle, RACI accountability matrix, the 15 mandatory system documentation checklist, Technical Debt Register governance, and formal state transition definitions (Ready Tested, Passed, Approved, Deployed) per Master Framework (§15, §17, §18)."
 ---
 
 # Change Request Governance & Technical Debt Management — ${PROJECT_NAME}

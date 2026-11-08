@@ -1,6 +1,6 @@
 ---
-name: Implement Feature
-description: Master engineering workflow for implementing ${PROJECT_NAME} vertical slices to Gate 2 (DoD) and beyond — context loading, codebase discovery, formal planning, boundary validation, the 6-step verification ladder, independent review triggers, and memory updates. Use when building or changing features, bug fixes, or refactors.
+name: implement-feature
+description: "Master engineering workflow for implementing ${PROJECT_NAME} vertical slices to Gate 2 (DoD) and beyond — context loading, codebase discovery, formal planning, boundary validation, the 6-step verification ladder, independent review triggers, and memory updates. Use when building or changing features, bug fixes, or refactors."
 ---
 
 # Feature Implementation & Vertical Slice Engineering — ${PROJECT_NAME}
@@ -24,7 +24,7 @@ Never start coding with stale memory or unverified assumptions:
 Demand an approved requirement package satisfying Gate 1:
 - Acceptance criteria must be formatted as testable Given/When/Then Gherkin scenarios.
 - Business rules must carry immutable `BR-${PROJECT_ID}-NNN` identifiers.
-- Data minimization must be justified (rejection of NIK and full residential address per `BR-${PROJECT_ID}-006`).
+- Data minimization must be justified (data minimization: rejection of unnecessary national ID and full residential address per `BR-${PROJECT_ID}-006`).
 - Classify all requirement statements as **FACT**, **DECISION**, **ASSUMPTION**, or **UNKNOWN**.
 
 ---
@@ -56,7 +56,7 @@ Write down a concise, actionable plan before touching code:
 2. **Zero-Cost-First Principle:** External dependencies must sit behind interface abstractions with default local/mock adapters (`AI_PROVIDER=mock`, MailHog `:1025`).
 3. **Strict Boundary Validation:** Parse and validate all external inputs using Zod with `.strict()`. Never use `any` escapes.
 4. **Server-Side Security:** Verify server-side ownership/tenancy on 100% of entity IDs (IDOR elimination).
-5. **Account Erasure Parity:** Any new table storing user career or personal data must join the transactional hard-deletion cascade (`DELETE /api/v1/user/account` completing in $< 30\text{s}$).
+5. **Account Erasure Parity:** Any new table storing user personal or sensitive domain data must join the transactional hard-deletion cascade (`DELETE /api/v1/user/account` completing in $< 30\text{s}$).
 
 ---
 

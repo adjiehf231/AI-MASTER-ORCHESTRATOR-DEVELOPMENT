@@ -1,6 +1,6 @@
 ---
-name: Security Review
-description: Adversarial application security review framework to Gate 6 standards (zero open S1/S2 vulnerabilities) — IDOR penetration checklists, session security, credit concurrency integrity, prompt injection defense, secrets hygiene, and UU PDP privacy. Use when auditing code changes touching auth, payments, uploads, AI, or public routes.
+name: security-review
+description: "Adversarial application security review framework to Gate 6 standards (zero open S1/S2 vulnerabilities) — IDOR penetration checklists, session security, credit concurrency integrity, prompt injection defense, secrets hygiene, and UU PDP privacy. Use when auditing code changes touching auth, payments, uploads, AI, or public routes."
 ---
 
 # Adversarial Security Review — ${PROJECT_NAME} (Gate 6 Standard)
@@ -16,8 +16,8 @@ Security is an integral implementation constraint, not a pre-release afterthough
 1. **Broken Object-Level Authorization (IDOR):** Any route receiving an entity ID in path, query, or body without server-side tenancy verification (`entity.userId === session.userId` or verified admin role) = **SEVERITY S1 CRITICAL SECURITY BLOCKER**.
 2. **Credit Concurrency Race Condition:** Deducting credits or updating user balances without wrapping the check, debit, and ledger append in an atomic transaction with pessimistic row locking (`SELECT ... FOR UPDATE`) = **SEVERITY S1 FINANCIAL INTEGRITY DEFECT**.
 3. **Hardcoded Secrets in Source / Commits:** Committing API keys, private keys, session secrets, or passwords into Git history or serializing them into client bundles = **CRITICAL SECURITY LEAK**.
-4. **Prompt Injection Executing as System Instruction:** Allowing user-supplied CV text, portfolio URLs, or job descriptions to escape boundary tags and override system prompts = **SEVERITY S1 AI INJECTION DEFECT**.
-5. **Account Erasure Cascade Bypass (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile)):** Any user career data persisting in database tables after executing `DELETE /api/v1/user/account` ($< 30\text{s}$ SLA) = **STATUTORY COMPLIANCE VIOLATION**.
+4. **Prompt Injection Executing as System Instruction:** Allowing user-supplied document text, portfolio URLs, or job descriptions to escape boundary tags and override system prompts = **SEVERITY S1 AI INJECTION DEFECT**.
+5. **Account Erasure Cascade Bypass (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile)):** Any user personal & sensitive data persisting in database tables after executing `DELETE /api/v1/user/account` ($< 30\text{s}$ SLA) = **STATUTORY COMPLIANCE VIOLATION**.
 
 ---
 
@@ -46,7 +46,7 @@ Security is an integral implementation constraint, not a pre-release afterthough
 - [ ] Idempotency keys enforced on payment and credit mutation endpoints to prevent duplicate charges.
 
 ### 2.4 Generative AI Security & Injection Defense
-- [ ] User-supplied CV text wrapped in `<untrusted_user_career_data>` delimiters and treated as passive data.
+- [ ] User-supplied document text wrapped in `<untrusted_user_input_data>` delimiters and treated as passive data.
 - [ ] System prompts explicitly forbid the model from executing instructions embedded in user data.
 - [ ] Cross-user prompt isolation: Zero shared conversational state between different candidate sessions.
 - [ ] Provenance Invariant: Generative recommendations tagged `SUGGESTED`; user confirmation required for promotion to `VERIFIED`.
@@ -63,8 +63,8 @@ Security is an integral implementation constraint, not a pre-release afterthough
 - [ ] Strict Content Security Policy (CSP) headers configured in Next.js production headers.
 
 ### 2.7 Privacy & Data Minimization (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile))
-- [ ] Rejection of national identification numbers (`nik`) and full addresses (`alamat_lengkap`) with HTTP 422 per `BR-${PROJECT_ID}-006`.
-- [ ] Telemetry whitelist enforced: Analytics events contain ONLY `event_id`, `timestamp`, `template_id`, and `user_id_hash`. Raw CV text or PII in analytics is an S2 defect.
+- [ ] Rejection of prohibited identification numbers (`national_id`) and full addresses (`full_address`) with HTTP 422 per `BR-${PROJECT_ID}-006`.
+- [ ] Telemetry whitelist enforced: Analytics events contain ONLY `event_id`, `timestamp`, `template_id`, and `user_id_hash`. Raw document text or PII in analytics is an S2 defect.
 
 ### 2.8 Secrets & Environment Hygiene
 - [ ] Gitleaks scanner (`.gitleaks.toml`) executed clean on active diff.
@@ -77,7 +77,7 @@ Security is an integral implementation constraint, not a pre-release afterthough
 ## 3. Vulnerability Classification Standard (S1–S4)
 
 Map all security findings to `docs/qa/DEFECT_MANAGEMENT.md`:
-- **`S1` (Critical):** Remote code execution, SQL injection, cross-user IDOR access, credit double-spend race condition, persisted hallucinated career facts, account erasure failure.
+- **`S1` (Critical):** Remote code execution, SQL injection, cross-user IDOR access, credit double-spend race condition, persisted hallucinated factual entities, account erasure failure.
 - **`S2` (High):** Stored XSS, SSRF to internal network, PII leakage into logs/telemetry, authentication brute-force vulnerability, unhandled PDF export crash.
 - **`S3` (Medium):** Missing rate limiting on non-sensitive endpoints, descriptive server error disclosures, minor CSRF misconfigurations.
 - **`S4` (Low):** Missing security headers, verbose server banner disclosure, minor information leakage.

@@ -1,6 +1,6 @@
 ---
-name: Quality Audit
-description: Comprehensive quality, compliance, and gate audit across the 8 Release Quality Gates — evidence verification, RTM traceability check, zero-hallucination validation, UU PDP compliance audit, and gate certification. Use for auditing pull requests, release candidates, and gate transitions.
+name: quality-audit
+description: "Comprehensive quality, compliance, and gate audit across the 8 Release Quality Gates — evidence verification, RTM traceability check, zero-hallucination validation, UU PDP compliance audit, and gate certification. Use for auditing pull requests, release candidates, and gate transitions."
 ---
 
 # Quality & Compliance Audit — ${PROJECT_NAME} (Gate 1–8 Assessment)
@@ -42,12 +42,12 @@ $$\text{PRD / SRS} \iff \text{BR-${PROJECT_ID}-NNN} \iff \text{User Story AC} \i
 ## Phase 3 — Statutory & Constitutional Compliance Audit
 
 1. **Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile) Privacy Compliance:**
-   - Audit diff for forbidden personal data fields (`nik` and `alamat_lengkap` must be rejected with HTTP 422 per BR-${PROJECT_ID}-006).
+   - Audit diff for forbidden personal data fields (sensitive national ID (e.g. NIK/SSN) and full residential address must be rejected with HTTP 422 per BR-${PROJECT_ID}-006).
    - Telemetry event audit: ensure telemetry payloads contain ONLY whitelisted fields (`event_id`, `timestamp`, `template_id`, `user_id_hash`).
    - Erasure cascade parity: verify that new user-data tables are integrated into the hard-delete cascade (`DELETE /api/v1/user/account` completing under `< 30s`).
    - UAT tier sanitization: verify that data in `${DB_NAME}_uat` was synchronized via `npm run sync:uat` with deterministic masking.
 2. **AI Factuality & Provenance Invariants:**
-   - Verify provenance tags: every career claim must be explicitly tagged as `VERIFIED`, `INFERRED`, or `SUGGESTED`.
+   - Verify provenance tags: every factual claim must be explicitly tagged as `VERIFIED`, `INFERRED`, or `SUGGESTED`.
    - Verify that `SUGGESTED` or `INFERRED` facts cannot be promoted to `VERIFIED` without active user confirmation.
    - Verify Gate 6 Factuality Benchmark: 100% zero-hallucination score on golden eval test sets.
 3. **Zero-Cost-First Principle:**
@@ -60,7 +60,7 @@ $$\text{PRD / SRS} \iff \text{BR-${PROJECT_ID}-NNN} \iff \text{User Story AC} \i
 
 1. **Migration Safety & Parity:**
    - Review DDL scripts in `drizzle/` for unapproved destructive statements (`DROP TABLE`, `DROP COLUMN`, `ALTER COLUMN TYPE` without expand/contract staging).
-   - Verify migration version consistency: `npm run db:verify` executed against target tier with parity matching the 12 canonical migrations baseline.
+   - Verify migration version consistency: `npm run db:verify` executed against target tier with parity matching the verified schema migration baseline.
    - Verify that push scripts (`db:push`) were NOT executed against shared tiers (`scripts/guard-db-push.ts` enforcement).
 2. **Rollback Verification:**
    - Confirm documented down-migration scripts or container rollback commands are present and valid.
@@ -75,8 +75,8 @@ Score the target against the applicable gate (Gate 1 through Gate 8):
 |---|---|---|---|
 | **Gate 1 (DoR)** | Requirements | Testable ACs, BR-${PROJECT_ID}-* IDs, Zod schemas, zero OPEN_QUESTIONS | |
 | **Gate 2 (DoD)** | Implementation | 0 lint/typecheck, unit/integration test execution, code review | |
-| **Gate 3 (Alpha)**| Core Flows | Identity, Master Profile, 3-pane CV builder pass in Dev | |
-| **Gate 4 (Beta)** | SIT Sandbox | ATS engine & Matcher pass in `${DB_NAME}_sit` with synthetic seeds | |
+| **Gate 3 (Alpha)**| Core Flows | Identity, Core Profile, Primary Workspace flows pass in Dev | |
+| **Gate 4 (Beta)** | SIT Sandbox | Core Computational Engine & Matcher pass in `${DB_NAME}_sit` with synthetic seeds | |
 | **Gate 5 (UAT)** | UAT Business | Sanitized prod mirror in `${DB_NAME}_uat`, PO sign-off artifact | |
 | **Gate 6 (Hardening)**| Security/AI | 0 open S1/S2, 100% factuality benchmark, IDOR matrix clean | |
 | **Gate 7 (RC)** | Candidate | CI golden path E2E pass, migration parity, rollback verified | |

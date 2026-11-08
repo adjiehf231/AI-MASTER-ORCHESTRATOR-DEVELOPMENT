@@ -1,9 +1,20 @@
 const fs = require('fs');
 const path = require('path');
 
-console.log('=== Universal AI Master Orchestrator: Multi-Platform Adapter Generator ===');
+const repoRoot = path.resolve(__dirname, '..');
+const sentinelFile = path.join(repoRoot, 'PROJECT_CONTEXT.template.md');
 
-// 1. Helper to parse YAML frontmatter
+if (!fs.existsSync(sentinelFile)) {
+  console.error('FATAL: Execution scope violation. Sentinel file not found at repository root: ' + repoRoot);
+  process.exit(1);
+}
+
+const isTemplateMode = process.argv.includes('--template');
+console.log('=== Universal AI Master Orchestrator: Multi-Platform Adapter Generator ===');
+console.log('Target Root:', repoRoot);
+console.log('Mode:', isTemplateMode ? 'TEMPLATE (Retaining ${VARIABLE} placeholders)' : 'ACTIVE CONTEXT (Binding from PROJECT_CONTEXT.md)');
+
+// 1. Robust Frontmatter Parser (Supports standard YAML, folded scalars, quoted strings)
 function parseFrontmatter(content) {
   const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) return { frontmatter: {}, body: content };
@@ -12,37 +23,98 @@ function parseFrontmatter(content) {
   const body = content.slice(match[0].length).trim();
   const frontmatter = {};
 
-  rawYaml.split('\n').forEach(line => {
+  const lines = rawYaml.split(/\r?\n/);
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
     const colonIdx = line.indexOf(':');
-    if (colonIdx !== -1) {
+    if (colonIdx !== -1 && !line.startsWith(' ') && !line.startsWith('\t')) {
       const key = line.slice(0, colonIdx).trim();
-      const val = line.slice(colonIdx + 1).trim().replace(/^['"]|['"]$/g, '');
+      let val = line.slice(colonIdx + 1).trim();
+
+      // Check for folded or multiline scalar (>- , > , |)
+      if (val === '>-' || val === '>' || val === '|' || val === '|-') {
+        const blockLines = [];
+        i++;
+        while (i < lines.length && (lines[i].startsWith('  ') || lines[i].trim() === '')) {
+          if (lines[i].trim().length > 0) blockLines.push(lines[i].trim());
+          i++;
+        }
+        i--; // Step back to last processed line
+        val = blockLines.join(' ');
+      }
+
+      // Strip outer quotes and unescape
+      val = val.replace(/^["']|["']$/g, '').replace(/\\"/g, '"');
       frontmatter[key] = val;
     }
-  });
+  }
 
   return { frontmatter, body };
 }
 
-// 2. Discover all Agents
-const agentsDir = path.join(__dirname, '..', 'agents');
+// 2. Load and Parse Project Context
+function loadProjectContext() {
+  const contextPath = path.join(repoRoot, 'PROJECT_CONTEXT.md');
+  const templatePath = path.join(repoRoot, 'PROJECT_CONTEXT.template.md');
+  const activePath = fs.existsSync(contextPath) ? contextPath : templatePath;
+  const content = fs.readFileSync(activePath, 'utf8');
+
+  const context = {
+    PROJECT_NAME: 'Universal Project',
+    PROJECT_ID: 'PROJECT',
+    PROJECT_DOMAIN: 'domain.local',
+    DB_NAME: 'project_db',
+    SRC_DIR: 'src',
+    COMPONENTS_DIR: 'src/components',
+    MODULES_DIR: 'src/features',
+    DOCS_DIR: 'docs'
+  };
+
+  const lines = content.split(/\r?\n/);
+  lines.forEach(line => {
+    // Match pattern: - **Label (`${VAR_NAME}`):** "value"
+    const match = line.match(/\(`\$\{([A-Z0-9_]+)\}`\):\s*["']?([^"'\r\n]+)["']?/);
+    if (match) {
+      context[match[1]] = match[2].trim();
+    }
+  });
+
+  return context;
+}
+
+const projectContext = loadProjectContext();
+
+function applyContext(text, context) {
+  if (isTemplateMode) return text;
+  let result = text;
+  Object.keys(context).forEach(key => {
+    const placeholder = new RegExp(`\\$\\{${key}\\}`, 'g');
+    result = result.replace(placeholder, context[key]);
+  });
+  return result;
+}
+
+// 3. Discover all Agents
+const agentsDir = path.join(repoRoot, 'agents');
 const agentFiles = fs.readdirSync(agentsDir).filter(f => f.endsWith('.md'));
 const agents = agentFiles.map(file => {
   const fullPath = path.join(agentsDir, file);
   const content = fs.readFileSync(fullPath, 'utf8');
   const { frontmatter, body } = parseFrontmatter(content);
   const titleMatch = body.match(/^#\s+(.+)$/m);
+  const id = file.replace('.md', '');
   return {
-    id: file.replace('.md', ''),
+    id,
     filename: file,
-    title: titleMatch ? titleMatch[1] : file.replace('.md', ''),
+    title: titleMatch ? titleMatch[1] : id,
     description: frontmatter.description || '',
-    mode: frontmatter.mode || 'all'
+    mode: frontmatter.mode || 'all',
+    body
   };
 });
 
-// 3. Discover all Skills
-const skillsDir = path.join(__dirname, '..', 'skills');
+// 4. Discover all Skills
+const skillsDir = path.join(repoRoot, 'skills');
 const skillDirs = fs.readdirSync(skillsDir).filter(f => {
   const full = path.join(skillsDir, f);
   return fs.statSync(full).isDirectory() && fs.existsSync(path.join(full, 'SKILL.md'));
@@ -55,158 +127,125 @@ const skills = skillDirs.map(dir => {
   return {
     id: dir,
     name: frontmatter.name || dir,
-    description: frontmatter.description || ''
+    description: frontmatter.description || '',
+    body
   };
 });
 
 console.log(`Discovered ${agents.length} Specialist Agents.`);
 console.log(`Discovered ${skills.length} Enterprise Skills.`);
 
-// 4. Generate Core Orchestration Prompt Body
+// 5. Build Core Orchestration Prompt Body from SSOT (agents/orchestrator.md)
 function buildCorePrompt(targetPlatform) {
-  return `# UNIVERSAL AI MASTER ORCHESTRATOR & ENTERPRISE ENGINEERING TEAM
+  const orchestrator = agents.find(a => a.id === 'orchestrator');
+  let basePrompt = orchestrator ? orchestrator.body : '# UNIVERSAL MASTER ORCHESTRATOR';
 
-## 1. Identity & Role Mandate
-You operate at the technical judgment standard of a **Principal Software Engineer & Autonomous Technical Director with 25+ years of multidisciplinary systems engineering experience**.
-You do not act as a passive chatbot waiting for step-by-step instructions. You autonomously classify tasks, govern Change Requests, ingest living project memory, interrogate requirements critically, load matching skills, orchestrate specialist subagents, execute tiered verification ladders, conduct adversarial reviews, run closed-loop self-healing on defects, and distill newly learned heuristics into permanent memory.
-
-Target Platform: **${targetPlatform}**
-
----
-
-## 2. Inviolable Governance Principles
-1. **Business & Technical Correctness:** Factually correct, computationally accurate, secure, audited, and maintainable without single-vendor or single-person dependency.
-2. **Zero Hallucination Policy:** Every statement is classified as **FACT**, **DECISION**, **ASSUMPTION**, or **UNKNOWN**. Never guess or invent missing evidence.
-3. **Evidence-Based Done:** "No error appeared" is not proof of correctness. A task is NEVER done until verification commands have executed with concrete terminal logs.
-4. **Zero-Cost-First Principle:** Prioritize local, mock, and open-source infrastructure before introducing paid services.
-5. **Strict Human Escalation Boundary:** Automate everything *except* irreversible destructive actions (dropping production databases, force-pushing shared branches, deleting live user data).
-
----
-
-## 3. Perpetual Living Memory & Continuous Learning System (MANDATORY)
-
-You are equipped with a **2-Way Living Memory Flywheel** to eliminate inter-session amnesia and ensure continuous improvement from every development cycle:
-
-### Phase 0: Pre-Flight Memory Ingestion (BEFORE writing any code)
-Before planning or authoring a single line of code, you MUST inspect:
-1. \`docs/memory/PROJECT_STATE.md\` — Current runtime reality, active milestones, and architectural state.
-2. \`docs/memory/DECISIONS.md\` — Binding Architectural Decision Records (ADRs). *Never contradict approved decisions without explicit user escalation.*
-3. \`docs/memory/HEURISTICS.md\` — Battle-tested rules-of-thumb discovered from past executions in this codebase.
-4. \`docs/memory/ANTI_PATTERNS.md\` — Prohibited coding traps and alluring failure modes.
-5. \`docs/memory/TECHNICAL_DEBT.md\` — Active technical debt register and known trade-offs.
-6. \`docs/memory/LESSONS_LEARNED.md\` — Retrospectives and forensic breakthroughs from prior sprints.
-
-### Phase 5: Continuous Learning & Knowledge Distillation (AFTER verification passes)
-Upon passing all verification and review gates, you MUST execute the 4-step reflection protocol:
-1. **Expectation vs Reality:** What domain or technical surprise was uncovered during implementation?
-2. **Hidden Friction:** What unexpected edge case, race condition, or quirk emerged?
-3. **True Root Cause:** What architectural mechanism solved the core problem cleanly?
-4. **Permanent Invariant:** What lint rule, test case, or heuristic prevents this from recurring?
-- **Append new rules-of-thumb** to \`docs/memory/HEURISTICS.md\` using format \`[HEUR-<AREA>-NNN]\`.
-- **Append newly uncovered traps** to \`docs/memory/ANTI_PATTERNS.md\` using format \`[ANTI-<AREA>-NNN]\`.
-- **Update active state & handoff** in \`docs/memory/PROJECT_STATE.md\` and \`docs/memory/SESSION_HANDOFF.md\`.
-
----
-
-## 4. The Anti-AI-Slop & UI/UX Craft Standard (Mandatory for Frontend & Design)
-All user interfaces must be engineered with intentional visual craft, semantic tokens, and high-quality design principles. Generic, low-effort "AI Slop" is strictly prohibited:
-
-- ❌ **No Emoji UI Icons:** Never use emojis (📁, 🚀, ⚡, 🔍, 💼) for UI controls, navigation, or status badges. Always use curated SVG icons (Lucide, Radix, Heroicons).
-- ❌ **No Arbitrary Neon Glows:** Eliminate decorative background blur blobs (\`blur-3xl bg-purple-500/20\`).
-- ❌ **No Fake/Decorative Dashboards:** Every metric, card, and chart must represent real structured product data.
-- ❌ **No Boxed-In Desktop Views:** Do not confine desktop views to rigid \`max-w-4xl\` on widescreen displays (1440px–4K), leaving massive empty side gutters.
-- ❌ **No Raw Inverted Dark Mode:** Dark mode requires layered obsidian and slate tonal depth:
-  - Canvas Base: \`#0b0f19\` (Deep Obsidian)
-  - Surface / Card: \`#111827\` (Slate 900)
-  - Elevated Surface: \`#161f33\` / \`#1e293b\`
-  - Subtle Borders: \`border-slate-800/80\` or \`rgba(255, 255, 255, 0.08)\`
-  - Active Focus Ring: \`ring-2 ring-indigo-500/80\`
-- ✅ **Universal 6-State Matrix:** Every interactive view must implement: **Loading** (zero-CLS layout reservation skeleton), **Empty** (instructional onboarding guidance with primary CTA), **Error** (actionable diagnosis + recovery CTA), **Success**, **Denied**, and **Stale/Offline**.
-- ✅ **Fluid Responsive Grids:** Seamless scaling from 320px mobile to 4K ultra-wide screens.
-- ✅ **Tactile Micro-Interactions:** 150ms–200ms ease-out transitions, tactile button active states (\`active:scale-[0.98]\`), WCAG 2.2 Level AA contrast ratios ($\ge 4.5:1$ text, $\ge 3:1$ controls).
-
+  const agentCatalog = `
 ---
 
 ## 5. Master Specialist Agent Directory (${agents.length} Roles)
 You can embody or dispatch any of the following 23 specialist roles:
 
 ${agents.map(a => `- **\`${a.id}\`** — ${a.title}\n  *Mandate:* ${a.description}`).join('\n')}
+`;
 
+  const skillCatalog = `
 ---
 
 ## 6. Enterprise Skill Directory (${skills.length} Skills)
 Invoke or reference these specialized skill playbooks:
 
 ${skills.map(s => `- **\`skills/${s.id}/SKILL.md\`** (${s.name}): ${s.description}`).join('\n')}
-
----
-
-## 7. Tiered Verification Ladder (Before Marking Any Task Complete)
-Execute the verification protocol in strict tiered order:
-1. **Tier 0: Static Hygiene & Type Safety:** \`npm run lint\` (0 errors, 0 warnings), \`npm run typecheck\` (0 errors).
-2. **Tier 1: Fast-Path Air-Gapped Unit Tests (<10s):** Colocated unit tests validating core algorithmic invariants.
-3. **Tier 2: Integration & Contract Tests:** Database repository and multi-service transaction tests.
-4. **Tier 3: E2E User Journeys & Accessibility Audits:** Playwright / Cypress journeys with automated Axe scans (0 a11y violations).
-
----
-
-## 8. Closed-Loop Self-Healing
-- When tests fail or code reviewers report defects: intercept the failure, formulate a root-cause hypothesis, apply a surgical fix, and re-verify (up to 3 autonomous retries). If unresolved after 3 cycles, halt and report an isolated blocker with reproduction logs.
 `;
+
+  const platformHeader = `Target Platform: **${targetPlatform}**\n\n`;
+
+  // Inject target platform and dynamic catalogs
+  let fullPrompt = basePrompt.replace('## 1. Identity & Autonomous Mandate', `${platformHeader}## 1. Identity & Autonomous Mandate`);
+  fullPrompt = fullPrompt + '\n' + agentCatalog + '\n' + skillCatalog;
+
+  return applyContext(fullPrompt, projectContext);
 }
 
-// 5. Generate CLAUDE.md
-const claudeContent = buildCorePrompt('Claude Code (CLI & Desktop)');
-fs.writeFileSync(path.join(__dirname, '..', 'CLAUDE.md'), claudeContent, 'utf8');
-console.log('✓ Generated CLAUDE.md');
+// 6. Write File Helper with Directory Creation
+function writeAdapter(destPath, content) {
+  const dir = path.dirname(destPath);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  fs.writeFileSync(destPath, content, 'utf8');
+}
 
-// 6. Generate .cursorrules
+// --- GENERATE ADAPTERS ---
+
+// 1. CLAUDE.md & .claude/agents/ (Claude Code)
+const claudeContent = buildCorePrompt('Claude Code (CLI & Desktop)');
+writeAdapter(path.join(repoRoot, 'CLAUDE.md'), claudeContent);
+
+const claudeAgentsDir = path.join(repoRoot, '.claude', 'agents');
+agents.forEach(agent => {
+  const subagentDoc = `---
+name: ${agent.id}
+description: "${agent.description.replace(/"/g, '\\"')}"
+---
+
+${applyContext(agent.body, projectContext)}
+`;
+  writeAdapter(path.join(claudeAgentsDir, `${agent.id}.md`), subagentDoc);
+});
+console.log('✓ Generated CLAUDE.md & .claude/agents/*.md (Native Subagent Profiles)');
+
+// 2. Cursor IDE (.cursorrules)
 const cursorContent = buildCorePrompt('Cursor IDE AI (Composer & Chat)');
-fs.writeFileSync(path.join(__dirname, '..', '.cursorrules'), cursorContent, 'utf8');
+writeAdapter(path.join(repoRoot, '.cursorrules'), cursorContent);
 console.log('✓ Generated .cursorrules');
 
-// 7. Generate .windsurfrules
+// 3. Windsurf IDE (.windsurfrules)
 const windsurfContent = buildCorePrompt('Windsurf IDE (Cascade)');
-fs.writeFileSync(path.join(__dirname, '..', '.windsurfrules'), windsurfContent, 'utf8');
+writeAdapter(path.join(repoRoot, '.windsurfrules'), windsurfContent);
 console.log('✓ Generated .windsurfrules');
 
-// 8. Generate .clinerules & .opencoderules (for Cline, Roo-Code, OpenCode)
+// 4. Cline / Roo-Code (.clinerules) & OpenCode (.opencoderules + .opencode/agents/)
 const clineContent = buildCorePrompt('Cline / Roo-Code / OpenCode');
-fs.writeFileSync(path.join(__dirname, '..', '.clinerules'), clineContent, 'utf8');
-fs.writeFileSync(path.join(__dirname, '..', '.opencoderules'), clineContent, 'utf8');
-console.log('✓ Generated .clinerules & .opencoderules');
+writeAdapter(path.join(repoRoot, '.clinerules'), clineContent);
+writeAdapter(path.join(repoRoot, '.opencoderules'), clineContent);
 
-// 9. Generate CONVENTIONS.md (for Aider & General AI Coding tools)
+const opencodeAgentsDir = path.join(repoRoot, '.opencode', 'agents');
+agents.forEach(agent => {
+  const opencodeDoc = `---
+name: ${agent.id}
+description: "${agent.description.replace(/"/g, '\\"')}"
+mode: subagent
+---
+
+${applyContext(agent.body, projectContext)}
+`;
+  writeAdapter(path.join(opencodeAgentsDir, `${agent.id}.md`), opencodeDoc);
+});
+
+// Also output adapters/opencode/AGENTS.md for OpenCode V2 compliance
+writeAdapter(path.join(repoRoot, 'adapters', 'opencode', 'AGENTS.md'), clineContent);
+console.log('✓ Generated .clinerules, .opencoderules, and .opencode/agents/*.md (OpenCode V2)');
+
+// 5. Aider CLI (CONVENTIONS.md & .aider.conf.yml)
 const conventionsContent = buildCorePrompt('Aider & Polyglot Coding Agents (CONVENTIONS.md)');
-fs.writeFileSync(path.join(__dirname, '..', 'CONVENTIONS.md'), conventionsContent, 'utf8');
-console.log('✓ Generated CONVENTIONS.md (Aider auto-read standard)');
-
-// 10. Generate .aider.conf.yml (for Aider CLI)
-const aiderConfig = `# Aider configuration for Universal AI Master Orchestrator
+writeAdapter(path.join(repoRoot, 'CONVENTIONS.md'), conventionsContent);
+writeAdapter(path.join(repoRoot, '.aider.conf.yml'), `# Aider configuration for Universal AI Master Orchestrator
 read: CONVENTIONS.md
 auto-commits: false
 attribute-author: false
-`;
-fs.writeFileSync(path.join(__dirname, '..', '.aider.conf.yml'), aiderConfig, 'utf8');
-console.log('✓ Generated .aider.conf.yml');
+`);
+console.log('✓ Generated CONVENTIONS.md & .aider.conf.yml');
 
-// 11. Generate Continue.dev Rules
-const continueDir = path.join(__dirname, '..', '.continue', 'rules');
-if (!fs.existsSync(continueDir)) {
-  fs.mkdirSync(continueDir, { recursive: true });
-}
+// 6. Continue.dev Rules
 const continueContent = buildCorePrompt('Continue.dev IDE Assistant');
-fs.writeFileSync(path.join(continueDir, 'universal-orchestrator.md'), continueContent, 'utf8');
+writeAdapter(path.join(repoRoot, '.continue', 'rules', 'universal-orchestrator.md'), continueContent);
 console.log('✓ Generated .continue/rules/universal-orchestrator.md');
 
-// 12. Generate OpenRouter, 9router, OneRouter, and Gateway Adapters
-const openrouterDir = path.join(__dirname, '..', 'adapters', 'openrouter');
-if (!fs.existsSync(openrouterDir)) {
-  fs.mkdirSync(openrouterDir, { recursive: true });
-}
-const openrouterPrompt = buildCorePrompt('OpenRouter / 9router / OneRouter / Gateway Models (Claude Sonnet, DeepSeek R1/V3, Qwen 2.5, Llama 3.3)');
-fs.writeFileSync(path.join(openrouterDir, 'system-prompt.txt'), openrouterPrompt, 'utf8');
-
+// 7. OpenRouter / 9router / LiteLLM Gateway
+const openrouterPrompt = buildCorePrompt('OpenRouter / 9router / OneRouter / Gateway Models');
+const openrouterDir = path.join(repoRoot, 'adapters', 'openrouter');
+writeAdapter(path.join(openrouterDir, 'system-prompt.txt'), openrouterPrompt);
 const openrouterPayload = {
   model: "anthropic/claude-3.5-sonnet",
   messages: [
@@ -218,33 +257,26 @@ const openrouterPayload = {
   temperature: 0.2,
   top_p: 0.95
 };
-fs.writeFileSync(path.join(openrouterDir, 'payload.json'), JSON.stringify(openrouterPayload, null, 2), 'utf8');
+writeAdapter(path.join(openrouterDir, 'payload.json'), JSON.stringify(openrouterPayload, null, 2));
 console.log('✓ Generated adapters/openrouter/system-prompt.txt & payload.json');
 
-// 13. Generate Universal Prompt Bundle (for ChatGPT, Codex, DeepSeek, Ollama)
-const bundleDir = path.join(__dirname, '..', 'adapters', 'bundle');
-if (!fs.existsSync(bundleDir)) {
-  fs.mkdirSync(bundleDir, { recursive: true });
-}
+// 8. Universal Prompt Bundle (Codex, ChatGPT, DeepSeek, Ollama)
 const bundleContent = buildCorePrompt('Universal Prompt Bundle (OpenAI Codex, ChatGPT, DeepSeek, Ollama)');
-fs.writeFileSync(path.join(bundleDir, 'universal-system-prompt.md'), bundleContent, 'utf8');
+writeAdapter(path.join(repoRoot, 'adapters', 'bundle', 'universal-system-prompt.md'), bundleContent);
 console.log('✓ Generated adapters/bundle/universal-system-prompt.md');
 
-// 14. Generate Antigravity / Gemini Plugin Config
-const antigravityDir = path.join(__dirname, '..', 'adapters', 'antigravity');
-if (!fs.existsSync(antigravityDir)) {
-  fs.mkdirSync(antigravityDir, { recursive: true });
-}
+// 9. Antigravity Plugin Structure (plugin.json + rules/AGENTS.md)
+const antigravityRules = buildCorePrompt('Google Antigravity & Gemini Agents');
+const antigravityDir = path.join(repoRoot, 'adapters', 'antigravity');
+writeAdapter(path.join(antigravityDir, 'rules', 'AGENTS.md'), antigravityRules);
+
 const antigravityPlugin = {
-  name: "universal-ai-orchestrator",
+  name: "universal-orchestrator",
   version: "1.0.0",
   description: "Universal Autonomous Technical Director & 23 Specialist Agents with Anti-AI-Slop UI/UX Engineering, Perpetual Living Memory, and 31 Enterprise SDLC Skills.",
-  author: "Antigravity Engineering Council",
-  entrypoint: "agents/orchestrator.md",
-  skillsPath: "skills",
-  agentsPath: "agents"
+  author: "Antigravity Engineering Council"
 };
-fs.writeFileSync(path.join(antigravityDir, 'plugin.json'), JSON.stringify(antigravityPlugin, null, 2), 'utf8');
-console.log('✓ Generated adapters/antigravity/plugin.json');
+writeAdapter(path.join(antigravityDir, 'plugin.json'), JSON.stringify(antigravityPlugin, null, 2));
+console.log('✓ Generated adapters/antigravity/plugin.json & rules/AGENTS.md');
 
 console.log('\n=== Multi-Platform Adapter Synchronization Complete ===');

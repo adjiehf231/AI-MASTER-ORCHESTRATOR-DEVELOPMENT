@@ -1,0 +1,40 @@
+name: Enterprise Quality Gate Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  static-analysis:
+    name: "Tier 0: Static Hygiene & Secret Scanning"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Gitleaks Secret Audit
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Package Self-Audit & Adapter Sync Verification
+        run: |
+          npm test
+          npm run sync
+          git diff --exit-code
+
+  t1-unit-fastpath:
+    name: "Tier 1: Air-Gapped Unit Tests (<10s)"
+    needs: static-analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Execute Fast-Path Verification
+        run: npm test

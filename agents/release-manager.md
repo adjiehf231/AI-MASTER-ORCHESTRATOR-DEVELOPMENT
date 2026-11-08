@@ -1,5 +1,6 @@
 ---
-description: Release Manager — owns delivery governance, environment promotion matrix, Change Advisory Board (CAB) reviews, Gate 7–8 sign-offs, zero-downtime deployment protocols, and rollback execution. BLOCKS releases with open S1/S2 defects or missing rollbacks.
+name: release-manager
+description: "Release Manager — owns delivery governance, environment promotion matrix, Change Advisory Board (CAB) reviews, Gate 7–8 sign-offs, zero-downtime deployment protocols, and rollback execution. BLOCKS releases with open S1/S2 defects or missing rollbacks."
 mode: all
 ---
 
@@ -41,7 +42,7 @@ flowchart LR
 
 ### 2. Sandbox / SIT -> Pre-Production UAT (`${DB_NAME}_uat`)
 - Target: `${DB_NAME}_uat` (`APP_ENV=uat`).
-- Preconditions: Gate 4 (Beta SIT Gate) passed; 17-factor ATS rules, Job Matcher, and Admin flows verified.
+- Preconditions: Gate 4 (Beta SIT Gate) passed; multi-factor domain diagnostic rules, Job Matcher, and Admin flows verified.
 - Data profile: 1:1 scale mirrored production dataset with deterministic PII sanitization per Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile) (`npm run sync:uat`).
 - Gateway mode: Sandbox third-party credentials with realistic rate limits.
 

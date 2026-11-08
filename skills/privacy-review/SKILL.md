@@ -1,21 +1,21 @@
 ---
-name: Privacy Review
-description: Statutory privacy review framework under Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile) — personal data inventory, purpose limitation & minimization, consent governance (user_consents), telemetry zero-PII whitelist, and account erasure cascade completeness (<30s SLA). Use when auditing features touching personal data, analytics, logging, or persistence.
+name: privacy-review
+description: "Statutory privacy review framework under Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile) — personal data inventory, purpose limitation & minimization, consent governance (user_consents), telemetry zero-PII whitelist, and account erasure cascade completeness (<30s SLA). Use when auditing features touching personal data, analytics, logging, or persistence."
 ---
 
 # Statutory Privacy Review — ${PROJECT_NAME} (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile))
 
 Authoritative sources: `docs/qa/PRIVACY_TEST_STRATEGY.md`, `docs/architecture/PRIVACY_ARCHITECTURE.md`, `docs/delivery/PRIVACY_BACKLOG.md`, and the Enterprise Engineering Constitution (§12).
 
-${PROJECT_NAME} processes career data, biographical records, employment histories, contact details, and AI-derived assessments belonging to Indonesian data subjects. Compliance with **Undang-Undang Pelindungan Data Pribadi (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile))** is a mandatory statutory obligation, not a cosmetic policy.
+${PROJECT_NAME} processes user data, biographical records, employment histories, contact details, and AI-derived assessments belonging to Indonesian data subjects. Compliance with **Undang-Undang Pelindungan Data Pribadi (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile))** is a mandatory statutory obligation, not a cosmetic policy.
 
 ---
 
 ## 1. Statutory Hard Gates — STOP & BLOCK IMMEDIATELY WHEN
 
-1. **Account Erasure Cascade Parity Failure (Hak Penghapusan):** Any user career data, CV sections, ATS diagnostic scores, credit ledgers, or consent logs persisting in database tables after executing `DELETE /api/v1/user/account` ($< 30\text{s}$ SLA) = **SEVERITY S1 STATUTORY VIOLATION**.
-2. **Data Minimization Rejection Violation (`BR-${PROJECT_ID}-006`):** Any code path or form accepting national identification numbers (`nik`) or full residential addresses (`alamat_lengkap`) without triggering immediate HTTP 422 rejection = **STATUTORY COMPLIANCE BLOCKER**.
-3. **Telemetry & Log PII Leakage:** Emitting user names, email addresses, phone numbers, or raw CV text into application logs or analytics payloads. Telemetry must strictly adhere to the narrow whitelist (`event_id`, `timestamp`, `template_id`, `user_id_hash`) = **SEVERITY S2 PRIVACY DEFECT**.
+1. **Account Erasure Cascade Parity Failure (Hak Penghapusan):** Any user personal & sensitive data, document sections, diagnostic evaluation scores, credit ledgers, or consent logs persisting in database tables after executing `DELETE /api/v1/user/account` ($< 30\text{s}$ SLA) = **SEVERITY S1 STATUTORY VIOLATION**.
+2. **Data Minimization Rejection Violation (`BR-${PROJECT_ID}-006`):** Any code path or form accepting high-risk national identification numbers (`national_id`) or full residential addresses (`full_address`) without triggering immediate HTTP 422 rejection = **STATUTORY COMPLIANCE BLOCKER**.
+3. **Telemetry & Log PII Leakage:** Emitting user names, email addresses, phone numbers, or raw document/input text into application logs or analytics payloads. Telemetry must strictly adhere to the narrow whitelist (`event_id`, `timestamp`, `template_id`, `user_id_hash`) = **SEVERITY S2 PRIVACY DEFECT**.
 4. **Non-Sanitized Production Data in Lower Tiers:** Copying raw production customer data into Sandbox (`${DB_NAME}_sit`) or UAT (`${DB_NAME}_uat`) environments without deterministic masking via `npm run sync:uat` = **CRITICAL REGULATORY BREACH**.
 5. **Unbundled or Coerced Consent:** Bundling unrelated processing purposes into a single required checkbox or using dark patterns (e.g. pre-ticked consent boxes) = **LEGAL BASIS DEFECT**.
 
@@ -27,9 +27,9 @@ ${PROJECT_NAME} processes career data, biographical records, employment historie
 Perform an exhaustive code sweep of the diff and its dependencies:
 - Grep for personal data fields: `email`, `phone`, `telepon`, `alamat`, `nik`, `nama`, `birth_date`, `tanggal_lahir`, `salary`, `gaji`.
 - Classify touched data into:
-  - *General Personal Data (Data Pribadi Umum):* Name, email, phone, career history.
+  - *General Personal Data (Data Pribadi Umum):* Name, email, phone, user history.
   - *Specific Personal Data (Data Pribadi Spesifik):* Assessment scores, behavioral data.
-  - *Prohibited Data:* `nik` and `alamat_lengkap` (must be rejected per `BR-${PROJECT_ID}-006`).
+  - *Prohibited Data:* sensitive national ID (e.g. NIK/SSN) and full residential address (must be rejected per `BR-${PROJECT_ID}-006`).
 
 ### Step 2: Purpose Limitation & Data Minimization
 - **The Necessity Rule:** Every personal field collected must have an explicit business and service delivery justification.
@@ -37,10 +37,10 @@ Perform an exhaustive code sweep of the diff and its dependencies:
 
 ### Step 3: End-to-End Data Flow & Egress Audit
 Trace the path of every personal datum:
-- **Application Logs:** Structured logging must scrub or hash personal identifiers. Never log passwords, tokens, or raw CV text.
+- **Application Logs:** Structured logging must scrub or hash personal identifiers. Never log passwords, tokens, or raw document/input text.
 - **Telemetry Whitelist:** Events emitted to internal or external analytics must contain ONLY:
   $$\text{Whitelist} = \{\text{event\_id}, \text{timestamp}, \text{template\_id}, \text{user\_id\_hash}\}$$
-  Raw CV text, user names, or phone numbers in telemetry are an automatic S2 finding.
+  Raw document text, user names, or phone numbers in telemetry are an automatic S2 finding.
 - **Third-Party AI Services:** Forward only minimized, de-identified text snippets to external LLM providers. Never forward personal contact details.
 
 ### Step 4: Consent Governance (`user_consents`)
@@ -49,7 +49,7 @@ Trace the path of every personal datum:
 
 ### Step 5: Account Erasure Cascade Parity (`DELETE /api/v1/user/account`)
 Verify that the transactional cascade deletion hard-deletes across all 10 user entities in $< 30\text{s}$:
-$$\text{users} \to \text{career\_profiles} \to \text{career\_items} \to \text{cvs} \to \text{cv\_sections} \to \text{ats\_reports} \to \text{job\_matches} \to \text{user\_credits} \to \text{credit\_ledgers} \to \text{user\_consents}$$
+$$\text{users} \to \text{user\_profiles} \to \text{profile\_items} \to \text{documents} \to \text{document\_sections} \to \text{eval\_reports} \to \text{matched\_entities} \to \text{user\_balances} \to \text{balance\_ledgers} \to \text{user\_consents}$$
 Any new table holding user data without cascade inclusion is an automatic S1 defect.
 
 ### Step 6: Lower-Tier Sanitization & Retention Hygiene

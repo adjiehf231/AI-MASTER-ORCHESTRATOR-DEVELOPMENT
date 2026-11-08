@@ -1,6 +1,6 @@
 ---
-name: Manual Testing
-description: Enterprise manual and exploratory testing methodology for ${PROJECT_NAME} — Session-Based Test Management (SBTM), persona tours, hostile-input stress probes, cross-browser/device coverage beyond Chromium, defect filing with complete reproduction packages, regression suites, and UAT facilitation. Use when conducting manual exploratory sessions or validating fixes.
+name: manual-testing
+description: "Enterprise manual and exploratory testing methodology for ${PROJECT_NAME} — Session-Based Test Management (SBTM), persona tours, hostile-input stress probes, cross-browser/device coverage beyond Chromium, defect filing with complete reproduction packages, regression suites, and UAT facilitation. Use when conducting manual exploratory sessions or validating fixes."
 ---
 
 # Manual & Exploratory Testing — ${PROJECT_NAME} (Exploratory Quality Engineering)
@@ -19,7 +19,7 @@ All exploratory testing must be organized into structured, timeboxed charters:
 ### SBTM CHARTER EXECUTION TEMPLATE
 - **Charter Identifier:** `SBT-<AREA>-NNN`
 - **Target Mission:** [Specific capability, persona, and targeted failure modes]
-  - Example: "Explore the 3-pane CV Builder under low-bandwidth network throttling and multi-tab editing to discover state desynchronization and credit debit flaws."
+  - Example: "Explore the Primary Workspace Builder under low-bandwidth network throttling and multi-tab editing to discover state desynchronization and credit debit flaws."
 - **Timebox:** 45–60 minutes (Strictly enforced; never exceed 60 minutes per charter).
 - **Environment Tier:** Sandbox (`${DB_NAME}_sit`) | UAT (`${DB_NAME}_uat`).
 - **Data Persona:** Seeded multi-persona profile (`npm run seed:sit`).
@@ -54,21 +54,21 @@ Conduct rigorous, targeted probes against ${PROJECT_NAME}'s core architectural r
 
 ### 3.2 AI Provenance Lineage
 - **Visible Badging:** Are AI recommendations clearly marked with the *Saran AI* visual badge?
-- **No Silent Verification:** When a user accepts an AI suggestion, is the content integrated into the CV draft without silently being promoted to `VERIFIED` status in the database?
+- **No Silent Verification:** When a user accepts an AI suggestion, is the content integrated into the document draft without silently being promoted to `VERIFIED` status in the database?
 - **Rejection Integrity:** If a suggestion is rejected, does it disappear permanently from the active draft?
 
 ### 3.3 Account Erasure Cascade (`DELETE /api/v1/user/account`)
 - **Password Re-Authentication:** Does the interface demand password confirmation before initiating account deletion?
 - **SLA Enforcement:** Does the deletion complete within $< 30\text{s}$?
-- **Complete Wipe:** Verify that subsequent login attempts fail with HTTP 401, and that associated CVs, ATS diagnostic reports, and credit balances are wiped from the database.
+- **Complete Wipe:** Verify that subsequent login attempts fail with HTTP 401, and that associated documents, diagnostic reports, and credit balances are wiped from the database.
 
 ### 3.4 Real-World File Uploads & Parsing Stress
 - Upload messy, scanned PDFs lacking text layers (assert proper OCR guidance).
 - Upload 15MB oversized PDF files (assert immediate, graceful HTTP 422 rejection; zero server freeze).
 - Upload Word documents (.docx) containing multi-level nested tables and embedded images.
-- Upload files with path-traversal filenames: `cv_../../etc/passwd.pdf`.
+- Upload files with path-traversal filenames: `doc_../../etc/passwd.pdf`.
 
-### 3.5 17-Factor ATS Scoring Sanity
+### 3.5 Multi-Factor Scoring Sanity
 - Submit resumes with missing dates, duplicate sections, or non-standard formatting.
 - Assert that diagnostic category radar charts and sub-scores render deterministically without division-by-zero or `NaN` errors.
 

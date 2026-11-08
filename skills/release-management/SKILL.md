@@ -1,6 +1,6 @@
 ---
-name: Release Management
-description: Execution of ${PROJECT_NAME} release governance, environment promotion matrix, Change Advisory Board (CAB) reviews, zero-downtime deployment, automated smoke tests (<30s), and rollback runbooks. Use when preparing, executing, or rolling back releases.
+name: release-management
+description: "Execution of ${PROJECT_NAME} release governance, environment promotion matrix, Change Advisory Board (CAB) reviews, zero-downtime deployment, automated smoke tests (<30s), and rollback runbooks. Use when preparing, executing, or rolling back releases."
 ---
 
 # Release Management & Delivery Governance — ${PROJECT_NAME}
@@ -25,7 +25,7 @@ No release enters production on hope or haste. Every release is governed by immu
 ```mermaid
 flowchart TD
     Candidate[Release Candidate Branch] --> SIT[1. Deploy to Sandbox/SIT ${DB_NAME}_sit]
-    SIT --> SITCheck{Automated SIT Suite & ATS Engine Pass?}
+    SIT --> SITCheck{Automated SIT Suite & Core Engine Pass?}
     SITCheck -->|Yes| UAT[2. Deploy to UAT ${DB_NAME}_uat]
     SITCheck -->|No| HaltSIT[Halt & File S1 Defect]
     UAT --> UATSync[Run Data Mirroring & Sanitization: npm run sync:uat]
@@ -40,7 +40,7 @@ flowchart TD
 ### Stage 1: Sandbox / SIT Promotion (`${DB_NAME}_sit`)
 - Deploy target: `${DB_NAME}_sit` (`APP_ENV=sandbox`).
 - Pre-flight: Execute `npm run verify:tiers` and seed synthetic fixtures via `npm run seed:sit`.
-- Verification: Execute automated integration suite covering 17-factor ATS diagnostic rules, Job Matcher, and Admin portal with mock external dependencies (`AI_PROVIDER=mock`, MailHog).
+- Verification: Execute automated integration suite covering multi-factor computational diagnostic rules, Job Matcher, and Admin portal with mock external dependencies (`AI_PROVIDER=mock`, MailHog).
 
 ### Stage 2: UAT Promotion (`${DB_NAME}_uat`)
 - Deploy target: `${DB_NAME}_uat` (`APP_ENV=uat`).
@@ -62,7 +62,7 @@ Immediately upon traffic routing to the new production build:
 1. **Automated Smoke Suite:** Execute production smoke tests targeting:
    - Health probe endpoint (`GET /api/health` -> HTTP 200).
    - Core identity authentication check (session cookie validation).
-   - Read-only master career profile fetch.
+   - Read-only master user profile fetch.
    - Non-destructive test ping.
    - **Threshold:** The entire smoke suite MUST complete in `< 30s`.
 2. **Canary Telemetry Watch (First 60 Minutes):**

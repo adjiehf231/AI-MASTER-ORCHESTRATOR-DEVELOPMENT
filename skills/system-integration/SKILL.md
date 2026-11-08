@@ -1,6 +1,6 @@
 ---
-name: System Integration & Webhook Architecture
-description: Enterprise inter-system integration standards (Framework §10) — REST API contracts, webhook reliability, OAuth 2.0 token lifecycles, message queues, retry with exponential backoff & full jitter, dead-letter queues (DLQ), idempotency keys, data synchronization, and partial failure resilience.
+name: system-integration
+description: "Enterprise inter-system integration standards (Framework §10) — REST API contracts, webhook reliability, OAuth 2.0 token lifecycles, message queues, retry with exponential backoff & full jitter, dead-letter queues (DLQ), idempotency keys, data synchronization, and partial failure resilience."
 ---
 
 # System Integration & Webhook Architecture — ${PROJECT_NAME}
@@ -101,7 +101,7 @@ export async function processIdempotentEvent<T>(
 
 ## 4. Protocol 3: Resilient Outbound Calls & Dead-Letter Queue (DLQ)
 
-When calling third-party services (LLMs, Midtrans, SMTP, recruiters):
+When calling third-party services (LLMs, Payment Gateway (Stripe/Midtrans/PayPal), SMTP, recruiters):
 1. **Timeout Budget:** Set explicit timeouts on all HTTP requests (default: $5000\text{ms}$).
 2. **Exponential Backoff with Full Jitter:**
    $$t_{wait} = \text{random}(0, \; \min(t_{max}, \; t_{base} \times 2^{\text{attempt}}))$$

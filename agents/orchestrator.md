@@ -1,5 +1,6 @@
 ---
-description: Universal Autonomous Technical Director & Master Orchestrator — completely automates the 10-stage enterprise SDLC/STLC, CR lifecycle governance, pre-flight memory ingestion, critical premise evaluation, full-spectrum specialist dispatching, 3-tier verification ladders (including sub-10s T1 air-gapped unit fast-path), closed-loop self-healing retries, and continuous learning distillation without requiring manual user intervention.
+name: orchestrator
+description: "Universal Autonomous Technical Director & Master Orchestrator — completely automates the 10-stage enterprise SDLC/STLC, CR lifecycle governance, pre-flight memory ingestion, critical premise evaluation, full-spectrum specialist dispatching, 3-tier verification ladders (including sub-10s T1 air-gapped unit fast-path), closed-loop self-healing retries, and continuous learning distillation without requiring manual user intervention."
 mode: primary
 ---
 
@@ -113,7 +114,7 @@ npm run lint         # 0 ESLint errors, 0 warnings
 npm run typecheck    # 0 TypeScript compiler errors
 
 # Tier 1: Fast-Path T1 Air-Gapped Zero-DB Unit Suites (<10s) ⚡
-# Validates core algorithmic invariants (Provenance, Ownership, ATS scoring, Job matching, Skill-gap)
+# Validates core algorithmic invariants (Provenance, Ownership, Core domain scoring, Job matching, Skill-gap)
 node scripts/qa-unit-offline.cjs
 # (OR: npx vitest run --config vitest.unit-no-db.config.ts)
 

@@ -1,6 +1,6 @@
 ---
-name: Offline Unit Harness & Air-Gapped Testing
-description: Architecture, operation, and maintenance of ${PROJECT_NAME}'s T1 Air-Gapped Zero-DB Unit Test Harness (vitest.unit-no-db.config.ts) — fail-closed application network guard, environment sanitization, pure algorithmic domain isolation, and sub-10-second fast-path verification.
+name: offline-unit-harness
+description: "Architecture, operation, and maintenance of ${PROJECT_NAME}'s T1 Air-Gapped Zero-DB Unit Test Harness (vitest.unit-no-db.config.ts) — fail-closed application network guard, environment sanitization, pure algorithmic domain isolation, and sub-10-second fast-path verification."
 ---
 
 # Offline Unit Harness & Air-Gapped Testing — ${PROJECT_NAME}
@@ -89,25 +89,20 @@ Before spawning worker processes, the runner scrubs all sensitive keys from `pro
 
 ---
 
-## 4. Current T1 Suite Inventory (The 18 Canonical Suites)
+## 4. Canonical T1 Suite Inventory & Domain Categories
 
-The 18 pure algorithmic suites included in `vitest.unit-no-db.config.ts` represent ${PROJECT_NAME}'s core computational engines:
+The pure algorithmic test suites included in `vitest.unit-no-db.config.ts` represent ${PROJECT_NAME}'s core computational, business, and invariant engines that must execute sub-10s without database dependencies:
 
-| Area | Suite Path | Assertions Verified |
+| Domain Area | Target Suite Pattern | Core Assertions & Invariants Verified |
 |---|---|---|
-| **Provenance** | `src/modules/career/provenance.test.ts` | State machine: `VERIFIED`, `INFERRED`, `SUGGESTED` lifecycle & idempotency |
-| **Security** | `src/shared/security/ownership.test.ts` | Universal IDOR / BOLA defense & role boundary matrix |
-| **ATS Engine** | `tests/ats/engine.unit.test.ts` | 17-factor scoring engine calculations & weight distribution |
-| **ATS Rules** | `tests/ats/rules.unit.test.ts` | Formatting, keyword, experience, skills, structure, and contact rules |
-| **CV Engine** | `tests/cv/cv.unit.test.ts` | CV data extraction, section structuring, and sanitization |
-| **CV Templates** | `tests/cv/template.unit.test.ts` | HTML rendering across all 20 Phase 4 templates |
-| **Job Engine** | `tests/jobs/engine.unit.test.ts` | Vacancy matching scoring, relevance ranking, and filters |
-| **Job Staleness**| `tests/jobs/staleness.unit.test.ts` | Expiration and freshness state transitions |
-| **Agent AI** | `tests/unit/agent-intent.unit.test.ts` | Career AI intent classification |
-| **Agent CTA** | `tests/unit/agent-cta.unit.test.ts` | Suggested action creation and URL protocol sanitization |
-| **Career Roles** | `tests/unit/career-recommendation-roles.unit.test.ts` | Completeness of 10 canonical profession catalogs |
-| **Career Map** | `tests/unit/career-recommendation-transferability.unit.test.ts` | Cross-role skill transferability mappings |
-| **Skill Gap (6)**| `tests/unit/skill-gap-*.unit.test.ts` | Engine, difficulty, normalization, priority, project ideas, roadmap |
+| **Data Provenance** | `${SRC_DIR}/**/provenance*.test.ts` | State machine transitions (`VERIFIED`, `INFERRED`, `SUGGESTED`), idempotency, promotion rules |
+| **Security & Ownership**| `${SRC_DIR}/**/ownership*.test.ts` | Universal IDOR / BOLA authorization matrix, tenant isolation, role hierarchy boundaries |
+| **Domain Engine** | `tests/**/engine*.unit.test.ts` | Pure computational calculations, scoring weights, threshold normalization |
+| **Validation & Invariants**| `tests/**/rules*.unit.test.ts` | Boundary conditions, negative paths, schema constraint validations, formatting guards |
+| **State Transitions** | `tests/**/state*.unit.test.ts` | Finite state machines, status lifecycles, expiration & staleness invariants |
+| **AI Intent & Routing** | `tests/**/intent*.unit.test.ts` | Semantic classification, parameter extraction, prompt boundary defenses |
+| **Document / Template** | `tests/**/template*.unit.test.ts` | Pure template rendering, layout contract guarantees, escaping & XSS prevention |
+| **Algorithmic Mappings**| `tests/**/mapping*.unit.test.ts` | Graph traversal, priority queues, transferability matrices, sorting stability |
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: frontend-quality
-description: Comprehensive frontend engineering and quality standards for modern web architectures (SSR, Server/Client boundary discipline, full 6-state matrices, zero layout shift CLS=0, WCAG 2.2 AA accessibility, and Anti-AI-Slop design system rules). Use when building or refactoring UI components and views.
+description: "Comprehensive frontend engineering and quality standards for modern web architectures (SSR, Server/Client boundary discipline, full 6-state matrices, zero layout shift CLS=0, WCAG 2.2 AA accessibility, and Anti-AI-Slop design system rules). Use when building or refactoring UI components and views."
 ---
 
 # Frontend Quality & UI Architecture — Enterprise Standards

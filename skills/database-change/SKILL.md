@@ -1,6 +1,6 @@
 ---
-name: Database Change
-description: Comprehensive PostgreSQL 16 and Drizzle ORM schema engineering — inspect-first workflow, reviewed generated DDL, expand/contract staging for zero-downtime evolution, erasure cascade parity (<30s SLA), EXPLAIN (ANALYZE, BUFFERS) indexing evidence, and multi-tier parity verification. Use when modifying schemas, creating migrations, or tuning queries.
+name: database-change
+description: "Comprehensive PostgreSQL 16 and Drizzle ORM schema engineering — inspect-first workflow, reviewed generated DDL, expand/contract staging for zero-downtime evolution, erasure cascade parity (<30s SLA), EXPLAIN (ANALYZE, BUFFERS) indexing evidence, and multi-tier parity verification. Use when modifying schemas, creating migrations, or tuning queries."
 ---
 
 # Database Change & Migration Engineering — ${PROJECT_NAME} (PostgreSQL 16 + Drizzle)
@@ -17,7 +17,7 @@ Database migrations permanently alter persistent production state. A flawed migr
 2. **Review Generated SQL Line by Line:** Generated DDL from `npm run db:generate` must be inspected line by line before execution. Any unpredicted `DROP` or destructive `ALTER` requires an immediate stop and schema redesign.
 3. **Explicit Approval for Destructive DDL:** `DROP TABLE`, `DROP COLUMN`, `TRUNCATE`, type narrowing, or adding un-defaulted `NOT NULL` columns to populated tables requires explicit written human approval and a tested rollback plan (Constitution §18).
 4. **Zero-Downtime Expand/Contract Staging:** Destructive changes or column renames must be executed in staged phases across separate releases. Direct renames on populated tables are forbidden.
-5. **Erasure Cascade Parity (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile)):** Any new table containing user career or personal data must be integrated into the transactional account erasure cascade (`DELETE /api/v1/user/account` completing in $< 30\text{s}$). Missing integration is an S1 Critical Defect.
+5. **Erasure Cascade Parity (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile)):** Any new table containing user personal or sensitive domain data must be integrated into the transactional account erasure cascade (`DELETE /api/v1/user/account` completing in $< 30\text{s}$). Missing integration is an S1 Critical Defect.
 6. **No `db:push` Against Shared Tiers:** Never execute `drizzle-kit push` against shared, SIT, UAT, or Production databases. Enforced via `scripts/guard-db-push.ts`.
 7. **Query Plan Evidence for Indexes:** Every new index must be justified by an exact query and before/after `EXPLAIN (ANALYZE, BUFFERS)` evidence demonstrating sequential scan elimination.
 
@@ -42,10 +42,10 @@ flowchart LR
 - Populate the new column from historical data in bounded transactional batches:
   ```sql
   -- Bounded batch backfill pattern
-  UPDATE cv_sections
+  UPDATE document_sections
   SET structured_data = jsonb_build_object('raw', legacy_content)
   WHERE id IN (
-    SELECT id FROM cv_sections
+    SELECT id FROM document_sections
     WHERE structured_data IS NULL
     LIMIT 5000
   );
@@ -82,15 +82,15 @@ WHERE status = 'PENDING_REVIEW';
 ### 3.3 EXPLAIN Evidence Format
 Document index justification in the delivery report:
 ```text
-Query: SELECT * FROM cvs WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 10;
+Query: SELECT * FROM documents WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 10;
 Row Count: 250,000 rows
 
 BEFORE INDEX:
-Seq Scan on cvs  (cost=0.00..8450.20 rows=10 width=512) (actual time=45.120..48.310 rows=10 loops=1)
+Seq Scan on documents  (cost=0.00..8450.20 rows=10 width=512) (actual time=45.120..48.310 rows=10 loops=1)
 Buffers: shared hit=421 read=3820
 
-AFTER INDEX (CREATE INDEX idx_cvs_user_updated ON cvs (user_id, updated_at DESC)):
-Index Scan using idx_cvs_user_updated on cvs  (cost=0.42..8.45 rows=10 width=512) (actual time=0.045..0.062 rows=10 loops=1)
+AFTER INDEX (CREATE INDEX idx_docs_user_updated ON documents (user_id, updated_at DESC)):
+Index Scan using idx_docs_user_updated on documents  (cost=0.42..8.45 rows=10 width=512) (actual time=0.045..0.062 rows=10 loops=1)
 Buffers: shared hit=4 read=0
 Execution Time: 0.085 ms (99.8% reduction in latency)
 ```
@@ -122,12 +122,12 @@ Verify that the deletion cascade covers all user entities within the $< 30\text{
 // Transactional cascade erasure order
 await db.transaction(async (tx) => {
   // 1. Delete dependent leaf records
-  await tx.delete(atsReports).where(eq(atsReports.userId, targetUserId));
+  await tx.delete(evalReports).where(eq(evalReports.userId, targetUserId));
   await tx.delete(jobMatches).where(eq(jobMatches.userId, targetUserId));
-  await tx.delete(cvSections).where(eq(cvSections.userId, targetUserId));
-  await tx.delete(cvs).where(eq(cvs.userId, targetUserId));
-  await tx.delete(careerItems).where(eq(careerItems.userId, targetUserId));
-  await tx.delete(careerProfiles).where(eq(careerProfiles.userId, targetUserId));
+  await tx.delete(documentSections).where(eq(documentSections.userId, targetUserId));
+  await tx.delete(documents).where(eq(documents.userId, targetUserId));
+  await tx.delete(userItems).where(eq(userItems.userId, targetUserId));
+  await tx.delete(userProfiles).where(eq(userProfiles.userId, targetUserId));
   await tx.delete(creditLedgers).where(eq(creditLedgers.userId, targetUserId));
   await tx.delete(userCredits).where(eq(userCredits.userId, targetUserId));
   await tx.delete(userConsents).where(eq(userConsents.userId, targetUserId));

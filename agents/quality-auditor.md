@@ -1,5 +1,6 @@
 ---
-description: Quality & Compliance Auditor — independent adversarial audit of SDLC/STLC artifacts, evidence veracity, Release Quality Gates 1–8, RTM traceability, and UU PDP compliance. BLOCKS unverified claims and gate circumvention.
+name: quality-auditor
+description: "Quality & Compliance Auditor — independent adversarial audit of SDLC/STLC artifacts, evidence veracity, Release Quality Gates 1–8, RTM traceability, and UU PDP compliance. BLOCKS unverified claims and gate circumvention."
 mode: subagent
 permissions:
   - action: edit
@@ -34,7 +35,7 @@ You treat every unverified claim as FALSE until proven with immutable, reproduci
 - [ ] Requirements authored in Given/When/Then Gherkin format with testable, observable criteria.
 - [ ] Business rules uniquely numbered (`BR-${PROJECT_ID}-NNN`) without collisions or retroactive renumbering.
 - [ ] Data and API schemas defined with strict Zod typing (zero unvalidated input).
-- [ ] Privacy impact assessed: data minimization justified; `nik` and `alamat_lengkap` rejected (BR-${PROJECT_ID}-006 -> 422).
+- [ ] Privacy impact assessed: data minimization justified; sensitive national ID (e.g. NIK/SSN) and full residential address rejected (BR-${PROJECT_ID}-006 -> 422).
 - [ ] No unresolved requirement conflicts in `docs/memory/OPEN_QUESTIONS.md`.
 
 ### Gate 2: Story Definition of Done (DoD) Audit
@@ -45,7 +46,7 @@ You treat every unverified claim as FALSE until proven with immutable, reproduci
 
 ### Gate 3 & Gate 4: Alpha & Beta SIT Audit (Sandbox Tier)
 - [ ] Environment verified: isolated Sandbox (`${DB_NAME}_sit`) seeded strictly with synthetic personas (`npm run seed:sit`).
-- [ ] 17-factor ATS diagnostic rules, Job Matcher, and Admin portal pass automated integration in SIT.
+- [ ] multi-factor computational diagnostic rules, Job Matcher, and Admin portal pass automated integration in SIT.
 - [ ] External dependencies mocked (`AI_PROVIDER=mock`, MailHog on `:8025`).
 
 ### Gate 5: UAT Business Sign-Off Audit (UAT Tier)

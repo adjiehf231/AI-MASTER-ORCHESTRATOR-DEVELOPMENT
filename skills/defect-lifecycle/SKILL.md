@@ -1,6 +1,6 @@
 ---
-name: Defect Lifecycle & RCA
-description: Standardized defect lifecycle management, S1–S4 severity vs P0–P2 priority triage, Root Cause Analysis (5-Whys), reproduction package standards, and mandatory regression test binding. Use when filing, triaging, fixing, or closing defects.
+name: defect-lifecycle
+description: "Standardized defect lifecycle management, S1–S4 severity vs P0–P2 priority triage, Root Cause Analysis (5-Whys), reproduction package standards, and mandatory regression test binding. Use when filing, triaging, fixing, or closing defects."
 ---
 
 # Defect Lifecycle & Root Cause Analysis — ${PROJECT_NAME}
@@ -77,7 +77,7 @@ An unreproducible defect report is a defective report. Every report must contain
 
 For all S1 and S2 defects, conduct a 5-Whys RCA to identify systemic root causes:
 
-- *Problem:* A jobseeker was charged double credits during CV tailoring.
+- *Problem:* A user was charged double balance during document processing.
 - *Why 1:* Two concurrent requests both read balance = 1 and both passed deduction check.
 - *Why 2:* The deduction logic checked balance in memory before writing to the database.
 - *Why 3:* There was no row-level database lock or atomic transaction boundary wrapping the check and debit.

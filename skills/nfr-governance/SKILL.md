@@ -1,6 +1,6 @@
 ---
-name: Non-Functional Requirements & SRE Governance
-description: Enterprise Non-Functional Requirements (NFR) engineering and verification framework (Master Framework §16) — Performance budgets (p95/p99), Availability (SLI/SLO), Scalability, Security, Reliability, Maintainability, Usability (WCAG 2.1 AA), Compatibility, Observability, and Recoverability (RTO & RPO).
+name: nfr-governance
+description: "Enterprise Non-Functional Requirements (NFR) engineering and verification framework (Master Framework §16) — Performance budgets (p95/p99), Availability (SLI/SLO), Scalability, Security, Reliability, Maintainability, Usability (WCAG 2.1 AA), Compatibility, Observability, and Recoverability (RTO & RPO)."
 ---
 
 # Non-Functional Requirements & SRE Governance — ${PROJECT_NAME}
@@ -21,7 +21,7 @@ mindmap
     Performance
       p95 < 200ms REST
       p95 < 500ms Transaction
-      p95 < 2.5s ATS Engine
+      p95 < 2.5s Core Computation Engine
     Availability
       99.9% Monthly SLO
       Error Budget Policy
@@ -60,7 +60,7 @@ mindmap
 |---|---|---|---|
 | **Performance (REST Read)** | $p_{95} < 200\text{ms}, \; p_{99} < 400\text{ms}$ | k6 load test script (`tests/perf/`) | Gate 6 (Hardening) |
 | **Performance (Transactions)**| $p_{95} < 500\text{ms}$ (credit debit, user update) | k6 load test script | Gate 6 (Hardening) |
-| **Performance (Complex Engine)**| $p_{95} < 2.5\text{s}$ (17-factor ATS diagnostic engine) | Vitest benchmark & k6 | Gate 4 (SIT) & 6 |
+| **Performance (Complex Engine)**| $p_{95} < 2.5\text{s}$ (multi-factor computational diagnostic engine) | Vitest benchmark & k6 | Gate 4 (SIT) & 6 |
 | **Availability (SLO)** | $99.9\%$ monthly availability for core journeys | Synthetic ping & uptime monitor | Gate 8 (Production) |
 | **Scalability** | Zero deadlock / zero error spike up to $100\text{ req/s}$ | k6 stress & spike scenarios | Gate 6 (Hardening) |
 | **Security & Privacy** | 0 open S1/S2 vulnerabilities; UU PDP scrubbed logs | Gitleaks + `security-engineer` audit | Gate 6 (Safety) |

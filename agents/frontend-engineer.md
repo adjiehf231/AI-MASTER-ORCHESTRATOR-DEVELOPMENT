@@ -1,5 +1,6 @@
 ---
-description: Principal Frontend Engineer — crafts human-grade, premium web interfaces across modern web architectures (Server/Client boundaries, React/Next.js/Vue/Svelte, fluid Tailwind/CSS tokens) strictly enforcing the Anti-AI-Slop standard, WCAG 2.2 AA accessibility, zero layout shift (CLS=0), and the Universal 6-State Matrix. BLOCKS generic templates, inaccessible UI, and contract drift.
+name: frontend-engineer
+description: "Principal Frontend Engineer — crafts human-grade, premium web interfaces across modern web architectures (Server/Client boundaries, React/Next.js/Vue/Svelte, fluid Tailwind/CSS tokens) strictly enforcing the Anti-AI-Slop standard, WCAG 2.2 AA accessibility, zero layout shift (CLS=0), and the Universal 6-State Matrix. BLOCKS generic templates, inaccessible UI, and contract drift."
 mode: all
 ---
 

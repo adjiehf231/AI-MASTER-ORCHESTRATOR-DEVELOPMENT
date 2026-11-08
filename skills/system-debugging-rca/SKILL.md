@@ -1,6 +1,6 @@
 ---
-name: Forensic Debugging & Advanced RCA
-description: Principal-grade forensic engineering methodology for diagnosing, isolating, and permanently eliminating complex software failures — hypothesis-driven differential diagnosis, minimal reproduction harnesses, concurrency and race condition forensics, memory leak and event loop profiling, database deadlock analysis, and regression trapping.
+name: system-debugging-rca
+description: "Principal-grade forensic engineering methodology for diagnosing, isolating, and permanently eliminating complex software failures — hypothesis-driven differential diagnosis, minimal reproduction harnesses, concurrency and race condition forensics, memory leak and event loop profiling, database deadlock analysis, and regression trapping."
 ---
 
 # Forensic System Debugging & Advanced Root Cause Analysis — ${PROJECT_NAME}

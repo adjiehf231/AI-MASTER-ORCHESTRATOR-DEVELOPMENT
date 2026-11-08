@@ -1,6 +1,6 @@
 ---
-name: Performance Testing
-description: Enterprise performance and load testing methodology against ${PROJECT_NAME} NFR budgets — API P95 < 300ms (k6), PDF export < 3s, ATS eval < 1.5s, zero credit overspend under concurrency, Lighthouse Core Web Vitals, and EXPLAIN ANALYZE evidence. Use when executing load tests, benchmarking, or triaging latency regressions.
+name: performance-testing
+description: "Enterprise performance and load testing methodology against ${PROJECT_NAME} NFR budgets — API P95 < 300ms (k6), PDF/Document export < 3s, Core domain evaluation < 1.5s, zero credit overspend under concurrency, Lighthouse Core Web Vitals, and EXPLAIN ANALYZE evidence. Use when executing load tests, benchmarking, or triaging latency regressions."
 ---
 
 # Performance & Load Testing — ${PROJECT_NAME} (NFR Budgets & Verification)
@@ -16,8 +16,8 @@ Performance is an architectural contract. Unmeasured performance claims, estimat
 | Target Journey / Operation | SLA / Budget | Tool | Measurement Method & Conditions |
 |---|---|---|---|
 | **API Latency (Cached/Indexed CRUD)** | **P95 $< 300\text{ms}$** | k6 (OSS) | 50 concurrent virtual users, warm cache, representative dataset |
-| **A4 PDF Export (CV Generation)** | **$< 3000\text{ms}$** | Playwright timer / k6 | Complex 2-page CV with profile picture and 10 sections |
-| **17-Factor ATS Diagnostic Evaluation** | **$< 1500\text{ms}$** | Vitest bench | 10k-character candidate resume against 50 ATS rule evaluators |
+| **A4 PDF Export (Document Generation)** | **$< 3000\text{ms}$** | Playwright timer / k6 | Complex multi-page document with structured layout and 10 sections |
+| **Core Multi-Factor Diagnostic Evaluation** | **$< 1500\text{ms}$** | Vitest bench | 10k-character structured payload against multi-factor rule evaluators |
 | **Credit Concurrency Integrity** | **Zero Overspend** | k6 concurrency script | 10 concurrent requests from 5-credit balance (Final balance: 0) |
 | **Production Smoke Test Suite** | **$< 30\text{s}$** | Playwright runner | Live production golden-path traversal |
 | **Core Web Vitals: CLS** | **Strictly $0.0$** | Lighthouse | Skeleton loading reservation on all dynamic views |
@@ -68,7 +68,7 @@ export default function () {
 ```
 
 ### Credit Concurrency Stress Scenario:
-- Simulate 10 simultaneous HTTP `POST /api/v1/cv/tailor` requests from a user possessing exactly 5 credits using concurrent asynchronous workers.
+- Simulate 10 simultaneous HTTP `POST /api/v1/document/process` requests from a user possessing exactly 5 credits using concurrent asynchronous workers.
 - Assert that exactly 5 requests return HTTP 200 and 5 requests return HTTP 422.
 - Query database: assert `balance === 0` and exactly 5 ledger rows exist. Any overspend is an S1 Critical Defect.
 
@@ -88,7 +88,7 @@ Isolate and measure bottlenecks at the appropriate layer before proposing code r
    - Execute `EXPLAIN (ANALYZE, BUFFERS)` on slow query endpoints.
    - Assert sequential scans are replaced by Index Scans on high-volume tables.
 4. **Process & CPU Layer:**
-   - Profile CPU-bound algorithms (ATS rule evaluation) using Node.js inspector or Vitest bench.
+   - Profile CPU-bound algorithms (diagnostic rule evaluation) using Node.js inspector or Vitest bench.
 
 ---
 
