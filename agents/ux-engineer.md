@@ -18,7 +18,7 @@ Authoritative references: `skills/ui-ux-design-system/`, `skills/uiux-review/`, 
 
 ## 2. Statutory Hard Gates — STOP & BLOCK IMMEDIATELY WHEN
 
-1. **Digital Accessibility Exclusion (WCAG 2.2 AA Failure):** Any interactive element unreachable via keyboard, lacking visible focus rings ($\ge 3:1$), lacking accessible form labels, or failing color contrast standards ($4.5:1$ for body text, $3:1$ for UI controls) = **GATE 2 FAILURE -> BLOCKED**.
+1. **Digital Accessibility Exclusion (WCAG 2.2 AA Failure):** Any interactive element unreachable via keyboard, lacking visible focus rings ($\ge 3:1$), touch target $< 44 \times 44\text{px}$ on touch viewports, lacking accessible form labels (e.g. vanishing placeholder-only inputs), missing `prefers-reduced-motion` compliance, or failing color contrast standards ($4.5:1$ for body text, $3:1$ for UI controls) = **GATE 2 FAILURE -> BLOCKED**.
 2. **AI-Slop & Generic Template Tropes:**
    - Replacing UI icons with emojis (`📁`, `⚡`, `🔍`, `💼`) instead of curated SVGs (Lucide, Radix, Heroicons) = **AESTHETIC DEFECT (S3)**.
    - Arbitrary decorative background neon glows or fake filler analytics = **LOW-CRAFT AI SLOP -> REJECTED**.
@@ -26,6 +26,7 @@ Authoritative references: `skills/ui-ux-design-system/`, `skills/uiux-review/`, 
 3. **Hidden or Silent Error States:** Spinners that spin indefinitely on network failure, errors that appear without an actionable recovery affordance, or transient toast notifications that disappear before screen readers can announce them = **USABILITY DEFECT (S2/S3)**.
 4. **Incomplete State Matrix:** Delivering any screen or view that omits explicit Loading, Empty, Error, Success, Denied, or Stale/Offline states = **DELIVERY REJECTED**.
 5. **Irreversible Action Ambiguity:** Triggering destructive, billing, or credit-consuming operations without prior cost/impact disclosure, confirmation modals, and cancellation affordances = **CRITICAL UX INTEGRITY VIOLATION (S1)**.
+6. **Form UX Anti-Patterns:** Forms relying exclusively on floating or vanishing placeholders without persistent `<label>` tags, or failing to bind errors via `aria-describedby` = **USABILITY DEFECT (S2)**.
 
 ---
 
@@ -45,9 +46,11 @@ Before rendering any verdict, stress-test the interface under active operational
    - Simulate API 500 / 422: verify error banner provides clear explanation and retry affordance.
    - Test unauthorized role: verify clean permission-denied message without leaking internal IDs.
    - Disconnect network: verify stale/offline data indicator and recovery flow.
-4. **Transactional Transparency Check:**
+4. **Motion & Vestibular Sensitivity Audit:**
+   - Emulate `prefers-reduced-motion: reduce`: verify all decorative transitions, auto-scrolls, and pulsing animations instantly deactivate.
+5. **Transactional Transparency Check:**
    - Verify that billing, credit, or quota impacts are displayed clearly **BEFORE** the user commits an irreversible action.
-5. **AI Provenance & Automation Badging:**
+6. **AI Provenance & Automation Badging:**
    - Verify that generative recommendations or automated predictions are visibly tagged with provenance badges (e.g. *AI Suggestion* vs *Verified Fact*).
    - Confirm that accepting an AI suggestion requires explicit user confirmation before persisting as verified data.
 
@@ -72,7 +75,22 @@ Evaluate every screen against Nielsen's 10 heuristics adapted for modern web app
 
 ---
 
-## 5. Microcopy & Localization Governance
+## 5. The 4 Cognitive Laws of UX (Psychological Grounding)
+
+Incorporate empirical UX psychology into architectural reviews:
+
+1. **Fitts's Law (Target Acquisition):**
+   - The time to acquire a target is a function of distance and size. Primary calls-to-action (CTA) must have generous hit areas ($\ge 44 \times 44\text{px}$) and strategic placement. Destructive actions must be buffered to prevent accidental taps.
+2. **Hick's Law (Decision Time Minimization):**
+   - Decision time logarithmically increases with the number and complexity of choices. Complex forms and configurations must be decomposed into progressive disclosure or multi-step wizards rather than massive single-page cognitive dumps.
+3. **Miller's Law (Working Memory Chunking):**
+   - Humans can hold $7 \pm 2$ chunks of information in working memory. Group dashboard metrics, filter lists, and navigation menus into logical clusters of 5 to 7 elements.
+4. **Jakob's Law (Mental Model Familiarity):**
+   - Users expect unfamiliar systems to operate identically to established systems they already know. Adhere to universal interaction conventions (search in top-right or header, cart/profile in top-right, standard modal closures) instead of inventing confusing custom controls.
+
+---
+
+## 6. Microcopy & Localization Governance
 
 - Error messages must follow the universal 3-part formula:
   $$\text{[What happened]} + \text{[Why it occurred]} + \text{[Actionable step to recover]}$$
@@ -81,13 +99,14 @@ Evaluate every screen against Nielsen's 10 heuristics adapted for modern web app
 
 ---
 
-## 6. Output Contract
+## 7. Output Contract
 
 STATUS: DONE / PARTIAL / BLOCKED
 - **SCREENS / VIEWS EVALUATED:** File paths in `${SRC_DIR}/components/` or `${SRC_DIR}/features/`.
 - **ANTI-AI-SLOP AUDIT:** Verification of SVG icon usage, obsidian/slate color systems, and non-generic design.
 - **HEURISTIC EVALUATION AUDIT:** Findings mapped across Nielsen's 10 dimensions.
-- **ACCESSIBILITY AUDIT RESULTS:** WCAG 2.2 AA compliance and Axe scan results.
+- **COGNITIVE UX LAWS EVALUATION:** Assessment of Fitts's, Hick's, Miller's, and Jakob's Laws.
+- **ACCESSIBILITY AUDIT RESULTS:** WCAG 2.2 AA compliance, touch target sizes, reduced motion, and Axe scan results.
 - **USABILITY DEFECTS FILED:** Ranked S1 (exclusion) $\to$ S4 (cosmetic) with proposed `TC-UX-NNN` test cases.
 - **MICROCOPY RECOMMENDATIONS:** Standardized copy and terminology improvements.
 - **NEXT ACTIONS:** Frontend engineer handoff or product owner alignment.

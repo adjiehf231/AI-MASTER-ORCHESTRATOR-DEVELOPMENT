@@ -24,10 +24,11 @@ Authoritative references: `skills/ui-ux-design-system/`, `skills/frontend-qualit
    - Introducing arbitrary neon glow blobs (`blur-3xl bg-purple-500/20`) or decorative fake metrics = **LOW-CRAFT AI SLOP -> BLOCKED**.
    - Boxed-in widescreen layouts (e.g. rigid `max-w-4xl` leaving vast empty gutters on 1440px–4K displays) = **LAYOUT INTEGRITY FAILURE**.
 2. **Server/Client Boundary Defaulting (Server-First Violation):** Marking components with `'use client'` without an explicit interactivity or browser API justification. Server Components / SSR are the mandatory default = **ARCHITECTURAL DEFECT**.
-3. **WCAG 2.2 Level AA Accessibility Failure:** Any interactive component unreachable by keyboard, lacking visible focus indicators ($\ge 3:1$), lacking accessible form labels, or failing color contrast ($4.5:1$ text, $3:1$ UI controls) = **GATE 2 FAILURE -> BLOCKED**.
-4. **Cumulative Layout Shift (CLS > 0):** Any page or component rendering without reserved layout dimensions for dynamic content, images, or async loaders that triggers visual layout shifts = **PERFORMANCE BUDGET VIOLATION**.
+3. **WCAG 2.2 Level AA Accessibility Failure:** Any interactive component unreachable by keyboard, lacking visible focus indicators ($\ge 3:1$), lacking accessible form labels, touch targets $< 44 \times 44\text{px}$ on touch viewports, or failing color contrast ($4.5:1$ text, $3:1$ UI controls) = **GATE 2 FAILURE -> BLOCKED**.
+4. **Cumulative Layout Shift (CLS > 0):** Any page or component rendering without reserved layout dimensions for dynamic content, images (`next/image` without explicit dimensions/aspect ratio), or async loaders that triggers visual layout shifts = **PERFORMANCE BUDGET VIOLATION**.
 5. **Client-Side Secret Exposure:** Importing server-only environment variables, database clients, or internal tokens into Client Components or public runtime configs = **CRITICAL SECURITY LEAK**.
 6. **Incomplete State Matrix:** Delivering a screen or form that implements only the happy path while omitting Loading, Empty, Error, Denied, or Stale/Offline states = **DELIVERY REJECTED**.
+7. **Monolithic Div-Soup & Missing Headless Primitives:** Authoring custom complex dropdowns, dialogs, comboboxes, or tooltips with raw unmanaged `<div>` and ad-hoc event listeners instead of accessible headless primitives (Radix, React Aria, Headless UI) = **ENGINEERING STANDARD VIOLATION**.
 
 ---
 
@@ -82,21 +83,30 @@ Every user-facing screen and complex component must explicitly implement all 6 s
 5. **Permission-Denied State:** Clear explanation of why the user cannot view the content without leaking internal resource IDs.
 6. **Stale / Offline State:** Graceful presentation of cached data with a non-intrusive re-sync indicator when network disconnects.
 
-### 4.3 Fluid Responsive Grid (320px to 4K Ultra-Wide)
+### 4.3 Fluid Responsive Grid & CSS Logical Properties (320px to 4K Ultra-Wide)
 - **Container Scaling:** Adapt fluidly with dynamic padding (`px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20`).
 - **Card Grids:** `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6`.
 - **Content + Inspector:** Asymmetric multi-column (`lg:col-span-8` main workspace + `lg:col-span-4` contextual sidebar).
+- **CSS Logical Properties (RTL/LTR Invariant):** Use inline start/end logical spacing (`ms-*`, `me-*`, `ps-*`, `pe-*`, `start-*`, `end-*`) instead of directional physical utilities (`ml-*`, `mr-*`, `pl-*`, `pr-*`, `left-*`, `right-*`) to ensure seamless bidirectional layout resilience (Arabic, Hebrew).
 
-### 4.4 Form Handling & Contract Synchronization
-- **Schema Synchronization:** Client-side forms must validate against the exact schema exported by the backend API contracts (Zod, TypeBox, or OpenAPI). Divergent validation rules are prohibited.
-- **Accessible Error Linking:** Form input errors must be bound via `aria-describedby` and marked with `aria-invalid="true"`.
-- **Double-Submit Prevention:** Form submission buttons must disable immediately upon click and display an accessible loading indicator.
+### 4.4 Form Engineering & Contract Synchronization
+- **Schema Synchronization:** Client-side forms must validate against the exact schema exported by the backend API contracts (Zod, TypeBox, or OpenAPI) via `react-hook-form` and `@hookform/resolvers/zod`. Divergent validation rules are prohibited.
+- **Accessible Error Linking:** Form input errors must be bound via `aria-describedby="[fieldId]-error"` and marked with `aria-invalid="true"`.
+- **Tactile Validation UX:** Style inputs using the modern `:user-invalid` pseudo-class (e.g. `aria-[invalid=true]:border-rose-500`) to prevent jarring premature error borders before the user has blurred or submitted.
+- **Double-Submit Prevention:** Form submission buttons must disable immediately upon click when `isSubmitting` is true and display an accessible loading indicator with `aria-busy="true"`.
 
 ### 4.5 Digital Accessibility (WCAG 2.2 AA Checklist)
 - **Keyboard Navigation:** Full user journeys must be completable using only `Tab`, `Shift+Tab`, `Enter`, `Space`, and `Escape`.
+- **Touch Target Dimensions:** Interactive controls on mobile/touch viewports must maintain a minimum target area of $44 \times 44\text{px}$ (WCAG 2.2 SC 2.5.8 Target Size).
+- **Vestibular & Reduced Motion:** Respect user preferences via `motion-reduce:transition-none` and `motion-reduce:animate-none` on all micro-interactions.
 - **Modal Focus Management:** Modals, drawers, and popovers must trap focus inside while open and return focus to the triggering element upon closing.
 - **Accessible Names:** Icon-only buttons must provide explicit `aria-label` or visually hidden text (`sr-only`).
 - **Semantic HTML:** Proper heading hierarchy (`h1` -> `h2` -> `h3`), `<main>`, `<nav>`, `<aside>`, `<header>`, and `<footer>` landmarks.
+
+### 4.6 Headless Component Composition (Radix / shadcn Anatomy)
+- **Primitive Slot Architecture:** Compose complex interactive widgets (Dialogs, Dropdowns, Popovers, Tooltips, Accordions) using unstyled headless primitives (Radix UI, React Aria, Headless UI).
+- **Structured Anatomy:** Always expose modular sub-components (`<Dialog>`, `<DialogTrigger>`, `<DialogContent>`, `<DialogHeader>`, `<DialogTitle>`, `<DialogClose>`) rather than monolithic prop-heavy black-box components.
+- **Icon Sizing & ARIA Standard:** Use curated SVG icons (Lucide, Radix) sized consistently ($16\text{px}$ for badges/inline, $20\text{px}$ for buttons/menus, $24\text{px}$ for headers) and marked with `aria-hidden="true"` by default (unless standalone action button with `aria-label`).
 
 ---
 

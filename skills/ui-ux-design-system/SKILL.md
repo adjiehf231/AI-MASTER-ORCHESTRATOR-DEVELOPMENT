@@ -63,6 +63,43 @@ Always structure styles with layered semantic tokens rather than arbitrary ad-ho
 - **Suggested / Advisory / AI:** Indigo / Violet (`text-indigo-600 dark:text-indigo-400`, `bg-indigo-50 dark:bg-indigo-950/40`, `border-indigo-200 dark:border-indigo-800/60`)
 - **Critical / Danger / Destructive:** Rose (`text-rose-600 dark:text-rose-400`, `bg-rose-50 dark:bg-rose-950/40`, `border-rose-200 dark:border-rose-800/60`)
 
+### CSS Custom Properties Theme Contract (shadcn & Tailwind v4 Parity)
+
+Structure tokens as CSS variables on `:root` and `.dark` to support theme toggling and high-contrast modes:
+
+```css
+:root {
+  --bg-canvas: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-elevated: #f1f5f9;
+  --border-subtle: rgba(15, 23, 42, 0.08);
+  --text-primary: #0f172a;
+  --text-muted: #64748b;
+  --accent-primary: #4f46e5;
+  --accent-ring: #6366f1;
+}
+
+.dark {
+  --bg-canvas: #0b0f19;
+  --bg-surface: #111827;
+  --bg-elevated: #161f33;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --text-primary: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent-primary: #6366f1;
+  --accent-ring: #818cf8;
+}
+```
+
+### Iconography Standard (Curated SVG System)
+
+- **Default Icon Library:** `lucide-react` or Radix Icons. Emojis in place of UI controls are strictly prohibited.
+- **Predictable Dimension Scale:**
+  - **Inline / Badge:** `w-4 h-4` ($16\text{px}$) with `strokeWidth={2}`.
+  - **Button / Menu Item:** `w-5 h-5` ($20\text{px}$) with `strokeWidth={1.75}`.
+  - **Hero / Section Header:** `w-6 h-6` ($24\text{px}$) with `strokeWidth={1.5}`.
+- **Accessibility Rule:** All icons must include `aria-hidden="true"` by default. Icon-only action buttons must have an explicit `aria-label` or visually hidden `<span className="sr-only">`.
+
 ---
 
 ## 3. Fluid Responsive Layout Guidelines
@@ -89,6 +126,24 @@ To prevent awkward empty gutters on desktop monitors (e.g. 1680px, 1920px):
 - **Dashboard Stat Metrics:** `grid grid-cols-2 md:grid-cols-4 gap-4`
 - **Content + Sidebar Views:** `grid grid-cols-1 lg:grid-cols-12 gap-8`, with main content taking `lg:col-span-8` and sidebar taking `lg:col-span-4`.
 
+### Fluid Typography Scale (CSS Clamp)
+
+Eliminate jagged breakpoint font jumps with smooth fluid typography:
+
+- **Caption / Small:** `font-size: clamp(0.75rem, 0.7rem + 0.15vw, 0.875rem)`
+- **Body / Base:** `font-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1rem); line-height: 1.6;`
+- **Heading 3 (h3):** `font-size: clamp(1.125rem, 1.05rem + 0.35vw, 1.25rem)`
+- **Heading 2 (h2):** `font-size: clamp(1.35rem, 1.25rem + 0.5vw, 1.625rem)`
+- **Heading 1 (h1):** `font-size: clamp(1.75rem, 1.5rem + 1vw, 2.25rem)`
+
+### Bi-Directional Layouts (CSS Logical Properties)
+
+Never hardcode directional margins, paddings, or alignments:
+- Use `ms-auto` / `me-auto` instead of `ml-auto` / `mr-auto`.
+- Use `ps-4` / `pe-4` instead of `pl-4` / `pr-4`.
+- Use `text-start` / `text-end` instead of `text-left` / `text-right`.
+- Use `start-0` / `end-0` instead of `left-0` / `right-0`.
+
 ---
 
 ## 4. UI State Matrix & Interactive States Checklist
@@ -111,6 +166,8 @@ Every interactive control (button, input, select, link, toggle) MUST support:
 3. **Focus-Visible State:** Prominent high-contrast focus ring (`focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2`).
 4. **Active State:** Tactile micro-depression (`active:scale-[0.98] transition-all duration-150`).
 5. **Disabled State:** Visual reduction (`opacity-50 cursor-not-allowed`) with `aria-disabled="true"` and explanatory guidance.
+6. **Touch Target Sizing:** Minimum target bounding box of $44 \times 44\text{px}$ on touch screens (WCAG 2.2 SC 2.5.8).
+7. **Reduced Motion Adaptation:** Micro-interactions must automatically yield to `motion-reduce:transition-none` and `motion-reduce:animate-none`.
 
 ---
 

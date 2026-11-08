@@ -25,6 +25,7 @@ All user interfaces must be engineered with intentional visual craft, semantic t
 ### 1.2 Mandatory Craft Principles
 - ✅ **Layered Design Tokens:** Dark mode uses Obsidian Slate (`#0b0f19` canvas, `#111827` surface, `#161f33` elevated); Light mode uses Clean Slate (`#f8fafc` canvas, `#ffffff` surface).
 - ✅ **Fluid Responsive Grids:** Seamless scaling from 320px mobile to 4K ultra-wide screens.
+- ✅ **CSS Logical Properties:** Use inline start/end logical spacing (`ms-*`, `me-*`, `ps-*`, `pe-*`, `start-*`, `end-*`) instead of physical directional utilities (`ml-*`, `mr-*`, `pl-*`, `pr-*`, `left-*`, `right-*`) for full RTL multi-language resilience.
 - ✅ **Tactile Micro-Interactions:** 150ms–200ms ease-out transitions, tactile button active states (`active:scale-[0.98]`), accessible focus rings.
 - ✅ **Semantic HTML & WCAG 2.2 AA:** Meaningful landmark tags, full keyboard operability, contrast $\ge 4.5:1$ text and $\ge 3:1$ controls.
 
@@ -108,15 +109,39 @@ Digital accessibility is a non-negotiable release gate:
 - Text contrast must achieve $\ge 4.5:1$ for normal body text and $\ge 3:1$ for large headings ($>18\text{pt}$ or bold $>14\text{pt}$).
 - Never convey meaning through color alone (e.g. pair red error text with an alert icon).
 
+### 4.4 Touch Target Minimums (WCAG 2.2 SC 2.5.8)
+- Interactive controls on touch viewports must maintain an area of at least $44 \times 44\text{px}$ (or minimum $24\times 24\text{px}$ with sufficient surrounding spacing) to prevent tap errors.
+
+### 4.5 Vestibular & Reduced Motion Protection
+- All animations and transitions must strictly respect user OS accessibility preferences:
+  ```css
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  ```
+- In Tailwind: use `motion-reduce:transition-none` and `motion-reduce:animate-none`.
+
 ---
 
-## 5. Performance & Core Web Vitals
+## 5. Performance & Core Web Vitals (Concrete Guardrails)
 
-Defend performance budgets:
-1. **Core Web Vitals Thresholds:**
-   - **LCP (Largest Contentful Paint):** $< 2.5\text{s}$.
-   - **CLS (Cumulative Layout Shift):** Strictly `0.0`.
-   - **INP (Interaction to Next Paint):** $< 200\text{ms}$.
+Defend performance budgets through verified engineering practices:
+1. **Core Web Vitals Thresholds & Guardrails:**
+   - **CLS (Cumulative Layout Shift) Strictly `0.0`:**
+     - Always declare explicit `width` and `height` (or CSS `aspect-ratio`) on all images, videos, and canvas elements.
+     - Skeleton loaders must strictly mirror the geometry and aspect ratio of incoming content.
+     - Never inject dynamic banner/toast content above existing content without reserved space.
+   - **LCP (Largest Contentful Paint) $< 2.5\text{s}$:**
+     - Add `priority` or `fetchpriority="high"` to above-the-fold hero images.
+     - Use `font-display: swap` for custom web fonts to prevent FOIT (Flash of Invisible Text).
+   - **INP (Interaction to Next Paint) $< 200\text{ms}$:**
+     - Break long synchronous loops in event handlers using `scheduler.yield()` or micro-tasks.
+     - Avoid triggering heavy state mutations on rapid keystrokes without debouncing.
 2. **Render Optimization:**
    - Never define inline objects or arrays inside dependency arrays of `useEffect` or `useMemo`.
    - Never trigger synchronous `setState` inside the render phase.
@@ -126,7 +151,28 @@ Defend performance budgets:
 
 ---
 
-## 6. Verification Protocol (The 4-Step Ladder)
+## 6. Headless Component Composition (Radix / shadcn Standard)
+
+Avoid creating monolithic "black-box" UI components with hundreds of props. Adopt the headless compound-component pattern:
+
+```
++-----------------------------------------------------------------------------------+
+| COMPOUND COMPONENT PATTERN (Separation of Concerns)                               |
+| <Dialog>              -> Root state container (open, onOpenChange)                |
+|   <DialogTrigger>     -> Unstyled accessible trigger button                       |
+|   <DialogPortal>      -> Renders modal into document.body portal                  |
+|     <DialogOverlay>   -> Backdrop layer with blur and fade animation              |
+|     <DialogContent>   -> Accessible modal container with focus trap & ESC close   |
+|       <DialogTitle>   -> Accessible title bound via aria-labelledby               |
+|       <DialogClose>   -> Explicit dismissal button                                |
++-----------------------------------------------------------------------------------+
+```
+
+- **Iconography Standard:** Curated SVG icons (Lucide, Radix) must be sized predictably ($16\text{px}$ badge/inline, $20\text{px}$ button/menu, $24\text{px}$ header) and marked with `aria-hidden="true"` by default.
+
+---
+
+## 7. Verification Protocol (The 4-Step Ladder)
 
 Execute before submitting any frontend work:
 
@@ -144,6 +190,8 @@ npm test
 npm run test:e2e
 ```
 
+- **Visual Regression Tolerance:** When visual regression diffing is configured, pixel shift threshold must not exceed $< 0.1\%$ across responsive breakpoints.
+
 ---
 
 ## Output Contract
@@ -151,5 +199,7 @@ npm run test:e2e
 STATUS: DONE / PARTIAL / BLOCKED
 - **UI COMPONENTS / PAGES:** File paths in `${SRC_DIR}/components/` or `${SRC_DIR}/features/`.
 - **ANTI-AI-SLOP AUDIT:** Verification of SVG icons, obsidian/slate color systems, and non-generic design.
+- **HEADLESS COMPOSITION AUDIT:** Verification of modular sub-component anatomy.
 - **UNIVERSAL STATE MATRIX:** Verified states (Loading, Empty, Error, Success, Denied, Stale).
-- **ACCESSIBILITY AUDIT:** WCAG 2.2 AA compliance and Axe automated scan results.
+- **ACCESSIBILITY AUDIT:** WCAG 2.2 AA compliance, touch target sizing, reduced motion, and Axe automated scan results.
+- **PERFORMANCE AUDIT:** Core Web Vitals compliance (CLS=0, LCP < 2.5s, INP < 200ms).

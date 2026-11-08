@@ -11,7 +11,7 @@ A feature is not done merely because backend code executes. If an interface is c
 
 ---
 
-## 1. The 5-Step Evaluator Walkthrough Protocol
+## 1. The 7-Step Evaluator Walkthrough Protocol
 
 Before rendering any verdict, stress-test the interface under active operational conditions:
 
@@ -27,15 +27,22 @@ Before rendering any verdict, stress-test the interface under active operational
    - Simulate API 500 / 422: verify error banner provides clear explanation and retry affordance.
    - Test unauthorized role: verify clean permission-denied message without leaking internal IDs.
    - Disconnect network: verify offline cached state and graceful recovery.
-4. **Anti-AI-Slop Craft Audit:**
+4. **Motion & Vestibular Sensitivity Audit:**
+   - Emulate `prefers-reduced-motion: reduce`: verify all non-essential animations, spins, and micro-interactions completely deactivate (`motion-reduce:transition-none`).
+5. **Anti-AI-Slop Craft Audit:**
    - Verify zero emoji icons used in place of proper SVG controls.
    - Verify zero arbitrary background glow blobs or fake decorative charts.
    - Verify that dark mode uses layered obsidian/slate tones rather than harsh inverted black.
    - Verify that widescreen desktop displays make fluid use of available space without awkward empty gutters.
-5. **Transactional & AI Transparency Check:**
+6. **Transactional & AI Transparency Check:**
    - Check billing/quota/credit balance display before, during, and after any transaction.
    - Verify that deduction warnings appear **BEFORE** the user commits an irreversible action.
    - Verify that AI-generated suggestions carry explicit visual provenance tags (e.g. *AI Suggestion* badge) and require explicit user acceptance.
+7. **Cognitive UX Psychology Probes (Fitts's, Hick's, Miller's & Jakob's Laws):**
+   - **Fitts's Law:** Are primary CTAs sufficiently large ($\ge 44\text{px}$) and conveniently placed? Are destructive triggers isolated from accidental clicks?
+   - **Hick's Law:** Is cognitive decision fatigue avoided by limiting simultaneous choices via progressive disclosure?
+   - **Miller's Law:** Are complex data views, filters, and dashboard metrics chunked into manageable groups of $5 \pm 2$?
+   - **Jakob's Law:** Does the UI follow established mental models (standard search inputs, persistent top-level navigation, standard modal dismissals)?
 
 ---
 
@@ -71,11 +78,12 @@ Audit compliance across all 4 accessibility principles:
 - [ ] Prominent, visible focus indicator on all focused elements ($\ge 3:1$ contrast).
 - [ ] Zero keyboard traps.
 - [ ] Modals trap focus inside while open and return focus to trigger button upon close.
-- [ ] Interactive touch targets achieve minimum size of $44 \times 44\text{px}$.
+- [ ] Interactive touch targets achieve minimum size of $44 \times 44\text{px}$ (WCAG 2.2 SC 2.5.8).
+- [ ] Motion sensitivity: all decorative animations yield to `@media (prefers-reduced-motion: reduce)`.
 
 ### 3.3 Understandable
 - [ ] Document language set correctly (e.g. `<html lang="en">` or matching locale).
-- [ ] Input fields carry explicit `<label>` elements or accessible `aria-labelledby`.
+- [ ] Input fields carry explicit `<label>` elements or accessible `aria-labelledby` (vanishing placeholders prohibited).
 - [ ] Form input errors bound to inputs using `aria-describedby` and marked with `aria-invalid="true"`.
 - [ ] Predictable navigation: navigation menus and layouts maintain consistent positioning across pages.
 
@@ -96,11 +104,11 @@ Audit compliance across all 4 accessibility principles:
 
 ---
 
-## 5. Usability Defect Classification Standard (S1–S4)
+## 5. Usability Defect Classification Standard (S1–S4) & Visual Regression
 
 - **`S1` (Critical Exclusion / Data Risk):** Critical user journey uncompletable by keyboard, focus trapped permanently in dialog, destructive/billing action executed without confirmation.
-- **`S2` (High Usability Friction):** Unhandled error state with infinite spinner, form validation errors invisible to screen readers, touch target overlap blocking mobile taps.
-- **`S3` (Medium Friction):** Inconsistent terminology between surfaces, sub-optimal tab order, missing empty state guidance, generic AI slop aesthetic.
+- **`S2` (High Usability Friction):** Unhandled error state with infinite spinner, form validation errors invisible to screen readers, touch target overlap blocking mobile taps, vanishing placeholder-only inputs without labels.
+- **`S3` (Medium Friction):** Inconsistent terminology between surfaces, sub-optimal tab order, missing empty state guidance, generic AI slop aesthetic, visual regression diff exceeding $0.1\%$ pixel drift.
 - **`S4` (Low / Cosmetic):** Minor visual misalignment, non-standard padding, minor copy phrasing polish.
 
 ---
@@ -111,7 +119,8 @@ STATUS: APPROVED / APPROVED_WITH_CONDITIONS / REJECTED
 - **FLOWS & VIEWS AUDITED:** Screen paths in `${SRC_DIR}/components/` or `${SRC_DIR}/features/`.
 - **ANTI-AI-SLOP AUDIT:** Verification of SVG icons, obsidian/slate color systems, and non-generic design.
 - **HEURISTIC EVALUATION REPORT:** Findings mapped across Nielsen's 10 dimensions.
-- **ACCESSIBILITY AUDIT EVIDENCE:** WCAG 2.2 AA evaluation and Axe automated scan results.
+- **COGNITIVE UX LAWS EVALUATION:** Assessment of Fitts's, Hick's, Miller's, and Jakob's Laws.
+- **ACCESSIBILITY AUDIT EVIDENCE:** WCAG 2.2 AA evaluation, touch targets, reduced motion, and Axe automated scan results.
 - **USABILITY DEFECTS FILED:** S1–S4 defects with proposed `TC-UX-NNN` regression test cases.
 - **MICROCOPY & GLOSSARY AUDIT:** Status of domain terminology consistency.
 - **NEXT ACTIONS:** Frontend engineer handoff or release manager sign-off.
