@@ -112,3 +112,4 @@ Evaluate RAG pipelines using deterministic offline golden datasets:
 2. **Mean Reciprocal Rank (MRR):** Average of reciprocal rank of the first relevant result (Target: $\ge 0.85$).
 3. **Context Relevance Score:** Percentage of injected tokens directly relevant to answer generation (Target: $\ge 80\%$).
 4. **Zero-Hallucination Parity:** 100% of factual assertions in answer verifiable against retrieved chunks ($N_{out} \subseteq N_{in}$).
+

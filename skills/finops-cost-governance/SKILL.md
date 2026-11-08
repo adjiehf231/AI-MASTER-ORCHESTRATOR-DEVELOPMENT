@@ -92,3 +92,4 @@ async function queryWithSemanticCache(query: string, tenantId: string): Promise<
 | **Prompt Caching Read Ratio** | $\ge 60\%$ | $< 40\%$ | Reorder prompt components to stabilize prefix. |
 | **Non-Prod Cloud Spend Ratio** | $\le 20\%$ of total spend | $> 30\%$ of total spend | Audit idle sandbox environments, enable auto-sleep schedules. |
 | **Egress Cost Percentage** | $\le 5\%$ of cloud bill | $> 10\%$ of cloud bill | Inspect CDN caching, VPC endpoints, and uncompressed API payloads. |
+

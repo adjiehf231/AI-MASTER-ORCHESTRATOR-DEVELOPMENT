@@ -100,3 +100,4 @@ async function handleEventWithDeduplication(event: DomainEvent): Promise<void> {
 1. **Additive Changes Only:** New fields must always be optional or have defaults.
 2. **Deprecation Policy:** Never delete an existing field in an event schema until all downstream consumers have upgraded (minimum 2 minor release cycles).
 3. **Payload Typing:** All events must validate against formal Zod, JSON Schema, or Protobuf definitions.
+

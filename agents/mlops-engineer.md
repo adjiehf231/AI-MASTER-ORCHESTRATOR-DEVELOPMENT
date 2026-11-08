@@ -47,3 +47,4 @@ Authoritative references: `docs/architecture/`, `docs/qa/`, and the Enterprise E
   - **Recall@K & Precision@K:** Comparing ANN results against exact kNN baseline.
   - **Latency Budgets:** P50 < 8ms, P95 < 20ms, P99 < 50ms under concurrent search loads.
   - **Memory Footprint:** Ensure HNSW graph fits entirely within available RAM/buffer cache.
+

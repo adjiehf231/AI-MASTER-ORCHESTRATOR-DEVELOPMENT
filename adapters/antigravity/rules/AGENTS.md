@@ -86,13 +86,20 @@ Load required skills automatically and dispatch specialist subagents per the **M
 |---|---|---|
 | **Full Feature / Epic** | `product-manager` $\to$ `system-analyst` $\to$ `solution-architect` $\to$ `fullstack-engineer` $\to$ `qa-engineer` $\to$ `code-reviewer` $\to$ `security-engineer` $\to$ `quality-auditor` | `sdlc-playbook`, `requirement-analysis`, `system-modeling`, `architecture-decision`, `ui-ux-design-system`, `implement-feature`, `qa-verification`, `offline-unit-harness`, `change-request-governance`, `code-review`, `security-review`, `quality-audit` |
 | **Core Domain Logic / Algorithms** | `backend-engineer` $\to$ `qa-engineer` $\to$ `code-reviewer` | `offline-unit-harness`, `implement-feature`, `qa-verification`, `code-review` |
+| **Cloud Architecture & IaC** | `cloud-architect` $\to$ `secops-engineer` $\to$ `finops-engineer` $\to$ `code-reviewer` | `architecture-decision`, `ci-cd-deployment`, `finops-cost-governance`, `threat-modeling` |
+| **FinOps & Cost Optimization** | `finops-engineer` $\to$ `cloud-architect` $\to$ `code-reviewer` | `finops-cost-governance`, `nfr-governance`, `performance-testing` |
+| **Vector Search & RAG Pipelines** | `mlops-engineer` $\to$ `ai-engineer` $\to$ `backend-engineer` $\to$ `qa-engineer` | `rag-vector-engineering`, `ai-feature`, `database-change`, `qa-verification` |
+| **Event-Driven & Messaging** | `integration-engineer` $\to$ `backend-engineer` $\to$ `qa-engineer` $\to$ `code-reviewer` | `event-driven-architecture`, `system-integration`, `observability-resilience` |
+| **DocOps & API Contracts** | `technical-writer` $\to$ `backend-engineer` $\to$ `quality-auditor` | `api-documentation-contract`, `api-design`, `requirement-analysis` |
+| **Statutory Audit & Enterprise GRC** | `compliance-auditor` $\to$ `security-engineer` $\to$ `privacy-reviewer` $\to$ `quality-auditor` | `quality-audit`, `security-review`, `privacy-review`, `threat-modeling` |
+| **Disaster Recovery & BCP** | `devops-engineer` $\to$ `cloud-architect` $\to$ `qa-manual` | `disaster-recovery-bcp`, `observability-resilience`, `incident-response` |
 | **Inter-System & Webhooks** | `integration-engineer` $\to$ `qa-engineer` $\to$ `security-engineer` $\to$ `code-reviewer` | `system-integration`, `implement-feature`, `qa-verification`, `security-review`, `observability-resilience` |
 | **Data Pipelines & Analytics** | `data-engineer` $\to$ `qa-engineer` $\to$ `privacy-reviewer` $\to$ `code-reviewer` | `database-change`, `implement-feature`, `qa-verification`, `privacy-review`, `observability-resilience` |
 | **API & Backend** | `backend-engineer` $\to$ `qa-engineer` $\to$ `code-reviewer` $\to$ `security-engineer` | `api-design`, `implement-feature`, `qa-verification`, `security-review`, `observability-resilience`, `nfr-governance` |
-| **Database Schema** | `database-engineer` $\to$ `qa-engineer` $\to$ `privacy-reviewer` $\to$ `code-reviewer` | `database-change`, `implement-feature`, `qa-verification`, `privacy-review` |
-| **AI / LLM Feature** | `ai-engineer` $\to$ `security-engineer` $\to$ `privacy-reviewer` $\to$ `qa-engineer` | `ai-feature`, `implement-feature`, `qa-verification`, `security-review`, `privacy-review` |
+| **Database Schema Evolution** | `database-engineer` $\to$ `qa-engineer` $\to$ `privacy-reviewer` $\to$ `code-reviewer` | `database-change`, `zero-downtime-database`, `implement-feature`, `qa-verification`, `privacy-review` |
+| **AI / LLM Feature** | `ai-engineer` $\to$ `security-engineer` $\to$ `privacy-reviewer` $\to$ `qa-engineer` | `ai-feature`, `rag-vector-engineering`, `implement-feature`, `qa-verification`, `security-review`, `privacy-review` |
 | **UI / UX Overhaul** | `ux-engineer` $\to$ `frontend-engineer` $\to$ `qa-engineer` (a11y/E2E) $\to$ `code-reviewer` | `ui-ux-design-system`, `uiux-review`, `frontend-quality`, `implement-feature`, `qa-verification` |
-| **Deep Bug / Incident** | `system-debugging-rca` $\to$ matching engineer $\to$ `qa-engineer` (regression trap) $\to$ `code-reviewer` | `system-debugging-rca`, `defect-lifecycle`, `qa-verification`, `continuous-learning` |
+| **Deep Bug / Incident** | `system-debugging-rca` $\to$ matching engineer $\to$ `qa-engineer` (regression trap) $\to$ `code-reviewer` | `system-debugging-rca`, `defect-lifecycle`, `incident-response`, `qa-verification`, `continuous-learning` |
 | **SRE / Resilience / NFR** | `devops-engineer` $\to$ `performance-engineer` $\to$ `security-engineer` | `observability-resilience`, `performance-testing`, `nfr-governance`, `ci-cd-deployment` |
 
 *Execution Rules:*

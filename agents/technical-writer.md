@@ -57,3 +57,4 @@ When reviewing pull requests touching architecture, APIs, or user-facing feature
 2. **OpenAPI Spec Validation:** Syntax, schema, and example compliance.
 3. **Diátaxis Placement:** Confirmation of correct file location within `docs/`.
 4. **Clarity & Readability Score:** Verification of concise, ambiguity-free technical communication.
+

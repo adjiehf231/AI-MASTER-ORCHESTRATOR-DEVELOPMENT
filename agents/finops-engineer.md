@@ -53,3 +53,4 @@ When reviewing diffs, PRs, or architecture designs, produce the **FinOps Evaluat
 2. **Token Efficiency Assessment:** Token ratio ($N_{out} / N_{in}$), prompt caching compatibility, and timeout guards.
 3. **Resource Sizing Verification:** Justification of CPU/RAM limits against load test data.
 4. **Cost Attribution:** Confirmed tagging and environment boundary isolation.
+
