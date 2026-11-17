@@ -30,6 +30,11 @@
     "cursor"
   ],
   "author": "Antigravity Engineering Council",
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "dependencies": {
+    "yaml": "2.9.1"
+  }
 }
-

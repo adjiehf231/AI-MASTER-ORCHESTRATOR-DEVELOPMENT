@@ -1,31 +1,50 @@
 #!/usr/bin/env node
-/**
- * T1 Air-Gapped Zero-DB Fast-Path Test Runner
- * Enforces fail-closed network guards and environment sanitization.
- */
+const { spawnSync } = require('node:child_process');
+const fs = require('node:fs');
+const path = require('node:path');
 
-const { spawnSync } = require('child_process');
-const path = require('path');
+const workspaceRoot = path.resolve(__dirname, '..');
+const runtimeVariables = [
+  'PATH', 'SystemRoot', 'WINDIR', 'ComSpec', 'PATHEXT', 'TEMP', 'TMP', 'TMPDIR'
+];
 
-console.log('=== [T1 FAST-PATH] Air-Gapped Unit Test Runner ===');
-console.log('Enforcing zero-network and zero-database guardrails...');
+function runUnitTests(root, { files, executable = process.execPath, stdio = 'inherit' } = {}) {
+  const directory = path.join(root, 'tests');
+  const suite = files ?? fs.readdirSync(directory, { withFileTypes: true })
+    .filter(file => file.isFile() && file.name.endsWith('.test.js'))
+    .map(file => file.name)
+    .sort();
+  if (suite.length === 0) throw new Error('No unit test files were found');
 
-// 1. Sanitize Environment
-const safeEnv = {
-  PATH: process.env.PATH,
-  TEMP: process.env.TEMP,
-  TMP: process.env.TMP,
-  HOME: process.env.HOME,
-  NODE_ENV: 'test',
-  VITEST_NO_DB: 'true'
-};
+  const env = { NODE_ENV: 'test' };
+  for (const name of runtimeVariables) {
+    if (process.env[name] !== undefined) env[name] = process.env[name];
+  }
+  const result = spawnSync(executable, ['--test', ...suite.map(file => path.join(directory, file))], {
+    cwd: root,
+    env,
+    encoding: 'utf8',
+    stdio,
+    timeout: 60_000,
+    windowsHide: true
+  });
 
-// 2. Execute Node test runner or configured test runner
-const res = spawnSync('node', ['--test', 'tests/*.test.js'], {
-  stdio: 'inherit',
-  env: safeEnv,
-  cwd: path.resolve(__dirname, '..')
-});
+  if (result.error) throw new Error('Unable to run the unit test suite', { cause: result.error });
+  if (result.status !== 0) {
+    const outcome = result.signal ? `signal ${result.signal}` : `exit code ${result.status}`;
+    throw new Error(`Unit test suite failed with ${outcome}`);
+  }
+  return suite.length;
+}
 
-process.exit(res.status || 0);
+if (require.main === module) {
+  console.log('=== [T1] Local unit tests with a sanitized environment ===');
+  try {
+    runUnitTests(workspaceRoot);
+  } catch (error) {
+    console.error(error.message, error.cause?.message ?? '');
+    process.exitCode = 1;
+  }
+}
 
+module.exports = { runUnitTests };

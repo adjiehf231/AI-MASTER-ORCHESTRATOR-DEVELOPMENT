@@ -77,7 +77,7 @@ Before signing off on any integration or webhook flow:
    - External provider times out ($> 5\text{s}$) $\to$ assert client timeout and circuit break.
    - Duplicate webhook delivery $\to$ assert exactly one processing execution (idempotency pass).
    - Malformed signature $\to$ assert immediate `401/403` rejection.
-4. **Air-Gapped & Unit Tests:** Run relevant suites in `vitest.unit-no-db.config.ts`.
+4. **Unit Tests:** Run the relevant local suites using the current project's configured runner.
 
 ---
 

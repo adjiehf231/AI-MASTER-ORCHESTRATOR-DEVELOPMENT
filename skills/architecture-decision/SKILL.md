@@ -5,7 +5,7 @@ description: "Comprehensive architecture decision-making and ADR authoring frame
 
 # Architecture Decision & System Governance — ${PROJECT_NAME}
 
-Authoritative sources: `docs/architecture/`, `docs/governance/`, `docs/integrations/`, and the Enterprise Engineering Constitution (§7–§12 & §19).
+Repository references: `docs/process/SDLC.md`, `docs/process/CHANGE_MANAGEMENT.md`, `skills/system-modeling/SKILL.md`.
 
 An architectural decision is a structural commitment that is expensive or irreversible to change. This skill provides the formal framework to evaluate options, analyze reversal costs, defend statutory invariants, and document decisions as immutable Architecture Decision Records (ADRs).
 
@@ -14,7 +14,7 @@ An architectural decision is a structural commitment that is expensive or irreve
 ## 1. Statutory Triggers: When an ADR is Mandatory
 
 An ADR is **legally mandatory** in `docs/architecture/` whenever a proposed change:
-1. Crosses or modifies module boundaries across the 22 capabilities in `${SRC_DIR}/modules/*` or 6 domains in `${SRC_DIR}/domains/*`.
+1. Crosses or modifies module boundaries across the active module and domain boundaries described in project documentation.
 2. Adopts, upgrades, or removes an external runtime dependency or third-party SDK.
 3. Alters the persistent database schema architecture, transaction boundaries, or concurrency isolation levels.
 4. Impacts core statutory invariants: Provenance pipeline (`VERIFIED / INFERRED / SUGGESTED`), Account Erasure cascade ($<30\text{s}$ SLA), or Credit Ledger atomicity.
@@ -30,7 +30,7 @@ When introducing new functionality, determine its exact architectural location u
 ```
 +-----------------------------------------------------------------------------------------+
 | src/domains/ (Presentation & Surface Adapters)                                          |
-| - web-jobseeker, web-recruiter, web-admin, compro, ads-job, social                      |
+| - public UI, operator UI, administration, or other active product surfaces                      |
 | - Responsibility: Next.js 16 pages, route handlers, view components, surface UI state   |
 | - PROHIBITION: Never implement core domain rules or direct DB queries here.             |
 +-----------------------------------------------------------------------------------------+
@@ -75,7 +75,7 @@ Evaluate every architectural candidate against the five-dimension scorecard:
 Any architecture design must affirmatively prove preservation of the 5 ${PROJECT_NAME} Invariants:
 
 - [ ] **1. Provenance Integrity:** AI-derived facts maintain explicit `VERIFIED`, `INFERRED`, or `SUGGESTED` provenance tags through database columns, API response payloads, and frontend views. Coercion into `VERIFIED` without explicit user confirmation is architecturally impossible.
-- [ ] **2. Account Erasure Parity (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile)):** Any new table containing user-identifiable data is wired into the transactional hard-deletion cascade (`DELETE /api/v1/user/account` completing in $< 30\text{s}$).
+- [ ] **2. Account Erasure Parity (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile)):** Any new table containing user-identifiable data is wired into the transactional hard-deletion cascade within the project's approved erasure deadline.
 - [ ] **3. Credit Ledger Atomicity:** Credit deductions and ledger appends execute within a single atomic database transaction utilizing pessimistic row locking (`FOR UPDATE`). Overspending is mathematically prevented (`CHECK balance >= 0`).
 - [ ] **4. Server-Side Multi-Tenancy:** Authorization checks are enforced on every entity ID. Client-side visibility controls are treated as pure UX sugar, never as access boundaries.
 - [ ] **5. Provider Pluggability:** External infrastructure dependencies (AI, payment, storage, email) reside behind strict interface abstractions with default mock implementations for local testing (`AI_PROVIDER=mock`, MailHog).

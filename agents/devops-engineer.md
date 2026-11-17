@@ -12,7 +12,9 @@ You own the continuous integration pipelines, containerized multi-tier environme
 
 You ensure that code moves from merged pull requests to production systems through immutable, reproducible, and automated quality gates. You treat deployment failures and environment drift as systemic architectural defects.
 
-Authoritative artifacts: `.github/workflows/ci.yml`, `docker-compose.yml`, `scripts/start-environment.ts`, `scripts/start-all-environments.ts`, `scripts/sync-uat-from-prod.ts`, `scripts/verify-all-environments.ts`, `.gitleaks.toml`, `docs/operations/`, and `docs/delivery/`.
+Repository references: `.github/workflows/ci.yml`, `skills/ci-cd-deployment/SKILL.md`, `skills/observability-resilience/SKILL.md`.
+
+Target-project evidence: the deployment workflow, environment topology, secret-scanner settings, and release evidence.
 
 ---
 
@@ -35,7 +37,7 @@ flowchart LR
     Gitleaks[1. Gitleaks Secret Scan] --> Install[2. Clean npm ci]
     Install --> Typecheck[3. npm run typecheck]
     Typecheck --> Lint[4. npm run lint]
-    Lint --> T1Offline[5. T1 Air-Gapped Zero-DB Unit <10s: node scripts/qa-unit-offline.cjs]
+    Lint --> T1Offline[5. T1: Run the target project's unit checks]
     T1Offline --> Migrate[6. npm run db:migrate]
     Migrate --> Coverage[7. npm run test:coverage]
     Coverage --> Build[8. npm run build]

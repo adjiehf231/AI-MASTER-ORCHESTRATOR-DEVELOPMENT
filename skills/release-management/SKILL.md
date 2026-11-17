@@ -5,7 +5,9 @@ description: "Execution of ${PROJECT_NAME} release governance, environment promo
 
 # Release Management & Delivery Governance — ${PROJECT_NAME}
 
-Authoritative sources: `docs/process/RELEASE_GOVERNANCE.md`, `docs/process/CHANGE_MANAGEMENT.md`, `docs/operations/ENVIRONMENT_TOPOLOGY.md`, and `docs/qa/RELEASE_QUALITY_GATES.md`.
+Repository references: `docs/process/CHANGE_MANAGEMENT.md`, `docs/qa/RELEASE_QUALITY_GATES.md`, `skills/ci-cd-deployment/SKILL.md`.
+
+Target-project evidence: the active environment topology, promotion approvals, and rollback runbook.
 
 No release enters production on hope or haste. Every release is governed by immutable invariants, verified quality gates, and pre-tested rollback mechanisms.
 
@@ -40,12 +42,12 @@ flowchart TD
 ### Stage 1: Sandbox / SIT Promotion (`${DB_NAME}_sit`)
 - Deploy target: `${DB_NAME}_sit` (`APP_ENV=sandbox`).
 - Pre-flight: Execute `npm run verify:tiers` and seed synthetic fixtures via `npm run seed:sit`.
-- Verification: Execute automated integration suite covering multi-factor computational diagnostic rules, Job Matcher, and Admin portal with mock external dependencies (`AI_PROVIDER=mock`, MailHog).
+- Verification: Execute automated integration suite covering approved critical business rules and privileged workflows with controlled external dependencies.
 
 ### Stage 2: UAT Promotion (`${DB_NAME}_uat`)
 - Deploy target: `${DB_NAME}_uat` (`APP_ENV=uat`).
 - Data Mirroring: Execute `npm run sync:uat` to populate a 1:1 production volume snapshot with deterministic PII masking per Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile).
-- Stakeholder Sign-Off: Facilitate end-to-end business acceptance with the Human Product Owner and archive the signed package in `docs/governance/PROMPT_50_UAT_PRODUCT_OWNER_SIGNOFF.md`.
+- Stakeholder Sign-Off: Facilitate end-to-end business acceptance with the Human Product Owner and archive the signed package in the active project's release evidence.
 
 ### Stage 3: Production Deployment (`${DB_NAME}_prod`)
 - Deploy target: `${DB_NAME}_prod` (`APP_ENV=production`).
@@ -85,7 +87,7 @@ Immediately upon traffic routing to the new production build:
 2. **Database Reversion (if migration was applied):**
    - If change followed expand/contract staging: leave additive columns in place (previous code version is forward-compatible).
    - If destructive change occurred: execute pre-tested Drizzle down-migration script.
-3. **Notification & Incident Freeze:** Log incident in `docs/operations/INCIDENT_LOG.md` and trigger emergency team notification.
+3. **Notification & Incident Freeze:** Record the incident in the project's incident log and trigger emergency team notification.
 4. **Post-Mortem Requirement:** Convene blameless post-mortem within 24 hours to identify root causes and generate corrective actions.
 
 ---

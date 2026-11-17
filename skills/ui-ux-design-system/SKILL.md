@@ -27,7 +27,7 @@ AI-generated interfaces often look unmistakably generic: excessive purple/blue g
 - ✅ **Fluid Responsive Grids:** Seamless scaling from 375px mobile to 1920px widescreen.
 - ✅ **Subtle Micro-Interactions:** 150ms–200ms ease-out transitions, tactile button active states (`active:scale-[0.98]`), accessible focus rings.
 - ✅ **Intentional Typography:** Clear font weight contrast (semibold/bold headings vs regular text), controlled line heights (`leading-relaxed`), and balanced title wrapping.
-- ✅ **Semantic HTML & Accessibility:** Meaningful tags, full keyboard navigation, WCAG 2.1 AA contrast ratios.
+- ✅ **Semantic HTML & Accessibility:** Meaningful tags, full keyboard navigation, WCAG 2.2 AA contrast ratios.
 
 ---
 
@@ -114,7 +114,7 @@ Structure tokens as CSS variables on `:root` and `.dark` to support theme toggli
 Refer to [`skills/motion-animation-design/`](file:///D:/PROGRAM/AI-ORHCESTRATOR/skills/motion-animation-design/SKILL.md) for complete implementation:
 - **GPU Compositor Only:** Animate strictly with `transform` and `opacity`. Animating `width`, `height`, or `margin` triggers layout thrashing and is prohibited.
 - **Physical Feedback:** Button presses must feature tactile micro-depressions (`active:scale-[0.98] transition-transform duration-75`).
-- **Vestibular Invariant (WCAG 2.2 AA):** All animations must automatically respect `prefers-reduced-motion: reduce` via `motion-reduce:transition-none motion-reduce:transform-none`.
+- **Reduced-Motion Standard (WCAG 2.2 SC 2.3.3 Level AAA):** All animations must automatically respect `prefers-reduced-motion: reduce` via `motion-reduce:transition-none motion-reduce:transform-none`.
 
 ### Iconography Standard (Curated SVG System)
 
@@ -191,7 +191,7 @@ Every interactive control (button, input, select, link, toggle) MUST support:
 3. **Focus-Visible State:** Prominent high-contrast focus ring (`focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2`).
 4. **Active State:** Tactile micro-depression (`active:scale-[0.98] transition-all duration-150`).
 5. **Disabled State:** Visual reduction (`opacity-50 cursor-not-allowed`) with `aria-disabled="true"` and explanatory guidance.
-6. **Touch Target Sizing:** Minimum target bounding box of $44 \times 44\text{px}$ on touch screens (WCAG 2.2 SC 2.5.8).
+6. **Touch Target Sizing:** Meet WCAG 2.2 SC 2.5.8 Level AA: pointer targets are at least 24 × 24 CSS pixels or satisfy a criterion exception, including its spacing exception. Prefer 44 × 44 CSS pixels for primary touch controls as a design target (SC 2.5.5 Level AAA).
 7. **Reduced Motion Adaptation:** Micro-interactions must automatically yield to `motion-reduce:transition-none` and `motion-reduce:animate-none`.
 
 ---

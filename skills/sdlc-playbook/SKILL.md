@@ -18,12 +18,12 @@ Principles: The system must be **business-aligned, technically precise, secure, 
 | **01** | **Discovery & Feasibility** | `product-manager` / `orchestrator` | `system-analyst`, `solution-architect` | `requirement-analysis`, `technical-innovation` | Feasibility memo, initial scope, risk register | Business goal aligned, technical viability confirmed, zero-cost-first approved |
 | **02** | **Requirement Analysis** | `product-manager` | `system-analyst`, `privacy-reviewer` | `requirement-analysis`, `change-request-governance` | **BRD**, User Stories, `BR-${PROJECT_ID}-*`, Given/When/Then ACs | **Gate 1 (DoR):** Unique BR numbers, testable ACs, data minimization justified |
 | **03** | **System & UX Design** | `system-analyst` & `solution-architect` | `ux-engineer`, `database-engineer`, `security-engineer` | `system-modeling`, `architecture-decision`, `ui-ux-design-system`, `uiux-review`, `nfr-governance` | **SRS**, **ADR**, **ERD & Data Dictionary**, **API Contract**, Wireframes | Contracts locked, state machines defined, NFRs budgeted, threat model reviewed |
-| **04** | **Development & Peer Review** | `fullstack-engineer` (or specialist: `frontend`, `backend`, `integration`, `data`, `ai`, `mobile`) | `code-reviewer` | `implement-feature`, `frontend-quality`, `system-integration`, `offline-unit-harness`, `code-review` | Source code in `${SRC_DIR}/`, colocated unit tests | **Gate 2 (DoD):** 0 lint/typecheck errors, T1 air-gapped unit tests pass (<10s), peer review clean |
+| **04** | **Development & Peer Review** | `fullstack-engineer` (or specialist: `frontend`, `backend`, `integration`, `data`, `ai`, `mobile`) | `code-reviewer` | `implement-feature`, `frontend-quality`, `system-integration`, `offline-unit-harness`, `code-review` | Source code in `${SRC_DIR}/`, colocated unit tests | **Gate 2 (DoD):** 0 lint/typecheck errors, T1 unit tests pass within the agreed budget, peer review clean |
 | **05** | **Continuous Integration** | `devops-engineer` | `test-architect` | `ci-cd-deployment`, `offline-unit-harness` | `.github/workflows/ci.yml`, CI build artifacts | Gitleaks secret scan clean, T1 unit pass, db:migrate verification, static analysis clean |
 | **06** | **SIT & Quality Validation** | `qa-engineer` (Auto) + `qa-manual` (Exploratory) | `security-engineer`, `performance-engineer` | `qa-verification`, `defect-lifecycle`, `system-debugging-rca`, `security-review`, `performance-testing` | **Test Plan & Cases**, **Defect Log**, **SIT Report**, k6 load reports | **Gate 4 (Beta SIT Gate) & Gate 6 (Safety):** Invariant algorithms pass, zero open S1/S2, 100% AI eval |
 | **07** | **UAT & Business Approval** | `release-manager` | `qa-manual`, Human Business Owner | `release-management`, `change-request-governance` | **UAT Report**, Business Sign-off Certificate | **Gate 5 (UAT Gate):** 1:1 sanitized prod mirror pass; formal PO sign-off archived |
 | **08** | **Deployment & Promotion** | `release-manager` | `devops-engineer`, `database-engineer` | `release-management`, `ci-cd-deployment` | **Deployment & Rollback Plan**, Release candidate tag | **Gate 7 (RC Gate):** Golden path E2E green, migration parity and schema integrity verified |
-| **09** | **Production Verification** | `release-manager` & `devops-engineer` | `qa-manual`, `sre-engineer` | `observability-resilience`, `manual-testing` | Smoke test logs (<30s), live telemetry, **Release Notes** | **Gate 8 (Production Gate):** Zero-downtime rollout, smoke test green, canary telemetry stable |
+| **09** | **Production Verification** | `release-manager` & `devops-engineer` | `qa-manual` | `observability-resilience`, `manual-testing` | Smoke test logs (<30s), live telemetry, **Release Notes** | **Gate 8 (Production Gate):** Zero-downtime rollout, smoke test green, canary telemetry stable |
 | **10** | **Maintenance, Debt & Distillation** | `orchestrator` | All Leads | `continuous-learning`, `system-debugging-rca`, `change-request-governance` | **Runbook & SOP**, **LESSONS_LEARNED.md**, **HEURISTICS.md**, **TECHNICAL_DEBT.md** | Post-mortem distilled, technical debt logged, heuristics codified for next cycle |
 
 ---
@@ -37,16 +37,16 @@ Every major release cycle or feature capability must maintain and synchronize th
  2. System Requirements Specification (SRS)     ──► docs/product/SRS/
  3. Functional & Non-Functional (NFR) Specs     ──► docs/design/NFR/
  4. Architecture Document & Boundary Maps       ──► docs/architecture/
- 5. ERD & Data Dictionary                       ──► docs/data/DATA_DICTIONARY.md
+ 5. ERD & Data Dictionary                       ──► Project data dictionary
  6. API Contracts (Zod / OpenAPI)               ──► docs/api/ & src/modules/*/contracts
  7. UI/UX Design, Flow & Design System          ──► docs/design/ & src/components/
  8. Test Plan & Test Cases (TC-*)               ──► docs/qa/ & tests/
- 9. Defect & Open Ticket Log                    ──► docs/qa/DEFECT_MANAGEMENT.md
-10. Change Request (CR) Register                ──► docs/process/CR_REGISTER.md
+ 9. Defect & Open Ticket Log                    ──► Project defect tracker
+10. Change Request (CR) Register                ──► Project change register
 11. SIT & UAT Execution Reports                 ──► docs/reports/
-12. Deployment & Rollback Plan                  ──► docs/delivery/DEPLOYMENT_RUNBOOK.md
-13. Release Notes & Changelog                   ──► docs/memory/CHANGELOG.md
-14. Runbook & Operational SOP                   ──► docs/operations/RUNBOOK.md
+12. Deployment & Rollback Plan                  ──► Project deployment and rollback runbook
+13. Release Notes & Changelog                   ──► Project changelog
+14. Runbook & Operational SOP                   ──► Project operations runbook
 15. ADR & Technical Debt Register               ──► docs/architecture/ADR-* & docs/memory/TECHNICAL_DEBT.md
 ```
 
@@ -71,11 +71,11 @@ Every feature change or bug fix follows the 9-stage CR pipeline:
 
 | STLC Phase | Lead Owner | Support | Primary Skill | Core Deliverables & Standards |
 |---|---|---|---|---|
-| **1. Test Requirement Analysis** | `test-architect` | `system-analyst`, `qa-engineer` | `test-architecture-design`, `requirement-analysis` | Testability review of BRD/SRS; initiate `TEST_TRACEABILITY_MATRIX.md` |
+| **1. Test Requirement Analysis** | `test-architect` | `system-analyst`, `qa-engineer` | `test-architecture-design`, `requirement-analysis` | Testability review of BRD/SRS; initialize the project traceability matrix |
 | **2. Test Planning & Strategy** | `test-architect` | `qa-engineer` | `test-architecture-design`, `qa-verification` | 3-tier pyramid allocation, domain test strategies in `docs/qa/` |
 | **3. Test Case Design** | `qa-engineer` | `system-analyst` | `qa-verification`, `system-modeling` | Formal `TC-<AREA>-NNN` design covering happy, boundary, negative, and IDOR paths |
 | **4. Test Environment & Data Setup** | `test-architect` | `devops-engineer`, `qa-manual` | `test-architecture-design`, `manual-testing` | Synthetic persona seeding (`scripts/seed-sit.ts`); Docker Postgres tiers; MailHog setup |
-| **5. Test Execution (Automation & Manual)** | `qa-engineer` (Auto) + `qa-manual` (Manual) | `mobile-engineer` | `qa-verification`, `offline-unit-harness`, `manual-testing`, `mobile-quality` | T1 air-gapped unit runs (<10s), Vitest, Playwright, k6 load runs, exploratory charters |
+| **5. Test Execution (Automation & Manual)** | `qa-engineer` (Auto) + `qa-manual` (Manual) | `mobile-engineer` | `qa-verification`, `offline-unit-harness`, `manual-testing`, `mobile-quality` | T1 unit runs, Vitest, Playwright, k6 load runs, exploratory charters |
 | **6. Defect Forensics & Retesting** | `qa-engineer` | `system-debugging-rca`, Developer | `system-debugging-rca`, `defect-lifecycle`, `qa-verification` | Reproduction packages, S1–S4 triage, forensic 5-Whys RCA, mandatory regression test binding |
 | **7. Test Closure & Quality Gate Audit** | `quality-auditor` | `test-architect`, `release-manager` | `quality-audit`, `release-management`, `continuous-learning` | Real code coverage report (`npm run test:coverage`), Gate 1–8 readiness audit, distilled heuristics |
 

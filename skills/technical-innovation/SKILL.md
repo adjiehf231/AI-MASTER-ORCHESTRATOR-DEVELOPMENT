@@ -5,7 +5,7 @@ description: "Framework for first-principles thinking, high-leverage architectur
 
 # Technical Innovation & High-Level Decision Architecture — ${PROJECT_NAME}
 
-Authoritative sources: `docs/architecture/`, the Enterprise Engineering Constitution (§1, §2, §8, §19), and the Senior AI Engineering Core Rule.
+Repository references: `skills/architecture-decision/SKILL.md`, `docs/process/SDLC.md`.
 
 Engineering excellence is not measured by the volume of code written or the complexity of the architecture deployed. The mark of a true Principal/Staff Engineer is the ability to find **10x simpler, more resilient, and higher-leverage solutions** that minimize cognitive load, eliminate entire classes of failure, and maximize business longevity.
 
@@ -70,7 +70,7 @@ When architecting high-scale, production-ready capabilities, prefer these proven
 - **Innovation Pattern:** Client passes `Idempotency-Key: <uuid>`. Server stores the key and hashed payload with a unique constraint in `idempotency_keys` table. Repeated requests with the same key immediately return the cached completed response without re-executing business logic.
 
 ### 3.3 Bulkhead Isolation & Circuit Breakers
-- **Problem:** Slow external dependencies (LLM APIs, third-party recruiters, SMTP servers) exhaust the application server's thread/connection pool, taking down unrelated parts of the app.
+- **Problem:** Slow external dependencies (LLM APIs, partner APIs, SMTP servers) exhaust the application server's thread/connection pool, taking down unrelated parts of the app.
 - **Innovation Pattern:** Isolate external calls with bounded worker pools, aggressive timeout budgets ($< 5\text{s}$ for synchronous web requests), and circuit breakers that fail fast into fallback responses when downstream error rates exceed 30%.
 
 ### 3.4 Zero-Copy Streaming

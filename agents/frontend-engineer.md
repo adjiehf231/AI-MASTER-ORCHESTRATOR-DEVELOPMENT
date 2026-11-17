@@ -25,7 +25,7 @@ Authoritative references: `skills/ui-ux-design-system/`, `skills/frontend-qualit
    - Introducing arbitrary neon glow blobs (`blur-3xl bg-purple-500/20`) or decorative fake metrics = **LOW-CRAFT AI SLOP -> BLOCKED**.
    - Boxed-in widescreen layouts (e.g. rigid `max-w-4xl` leaving vast empty gutters on 1440px–4K displays) = **LAYOUT INTEGRITY FAILURE**.
 2. **Server/Client Boundary Defaulting (Server-First Violation):** Marking components with `'use client'` without an explicit interactivity or browser API justification. Server Components / SSR are the mandatory default = **ARCHITECTURAL DEFECT**.
-3. **WCAG 2.2 Level AA Accessibility Failure:** Any interactive component unreachable by keyboard, lacking visible focus indicators ($\ge 3:1$), lacking accessible form labels, touch targets $< 44 \times 44\text{px}$ on touch viewports, or failing color contrast ($4.5:1$ text, $3:1$ UI controls) = **GATE 2 FAILURE -> BLOCKED**.
+3. **WCAG 2.2 Level AA Accessibility Failure:** Any interactive component unreachable by keyboard, lacking visible focus indicators ($\ge 3:1$), lacking accessible form labels, pointer targets failing SC 2.5.8 (24 × 24 CSS pixels or a criterion exception), or failing color contrast ($4.5:1$ text, $3:1$ UI controls) = **GATE 2 FAILURE -> BLOCKED**.
 4. **Cumulative Layout Shift (CLS > 0):** Any page or component rendering without reserved layout dimensions for dynamic content, images (`next/image` without explicit dimensions/aspect ratio), or async loaders that triggers visual layout shifts = **PERFORMANCE BUDGET VIOLATION**.
 5. **Client-Side Secret Exposure:** Importing server-only environment variables, database clients, or internal tokens into Client Components or public runtime configs = **CRITICAL SECURITY LEAK**.
 6. **Incomplete State Matrix:** Delivering a screen or form that implements only the happy path while omitting Loading, Empty, Error, Denied, or Stale/Offline states = **DELIVERY REJECTED**.
@@ -99,7 +99,7 @@ Every user-facing screen and complex component must explicitly implement all 6 s
 
 ### 4.5 Digital Accessibility (WCAG 2.2 AA Checklist)
 - **Keyboard Navigation:** Full user journeys must be completable using only `Tab`, `Shift+Tab`, `Enter`, `Space`, and `Escape`.
-- **Touch Target Dimensions:** Interactive controls on mobile/touch viewports must maintain a minimum target area of $44 \times 44\text{px}$ (WCAG 2.2 SC 2.5.8 Target Size).
+- **Touch Target Dimensions:** Meet WCAG 2.2 SC 2.5.8 Level AA: pointer targets are at least 24 × 24 CSS pixels or satisfy a criterion exception, including its spacing exception. Prefer 44 × 44 CSS pixels for primary touch controls as a design target (SC 2.5.5 Level AAA).
 - **Vestibular & Reduced Motion:** Respect user preferences via `motion-reduce:transition-none` and `motion-reduce:animate-none` on all micro-interactions.
 - **Modal Focus Management:** Modals, drawers, and popovers must trap focus inside while open and return focus to the triggering element upon closing.
 - **Accessible Names:** Icon-only buttons must provide explicit `aria-label` or visually hidden text (`sr-only`).

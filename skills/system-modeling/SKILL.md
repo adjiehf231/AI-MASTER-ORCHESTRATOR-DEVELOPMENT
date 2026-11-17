@@ -5,7 +5,7 @@ description: "Formal system modeling for SDLC Phase 2 — Mermaid state machine 
 
 # System Modeling & Technical Specification — ${PROJECT_NAME} (SDLC Phase 2)
 
-Authoritative sources: `docs/process/SDLC.md`, `docs/design/`, `docs/api/`, `docs/data/`, and `docs/qa/RELEASE_QUALITY_GATES.md` (Gate 1: Story DoR).
+Repository references: `docs/process/SDLC.md`, `skills/architecture-decision/SKILL.md`, `skills/api-design/SKILL.md`.
 
 System modeling eliminates developer guesswork and ambiguity. Before any implementation begins, the system's states, boundaries, failure modes, and interaction contracts must be formally specified.
 
@@ -18,13 +18,13 @@ For any workflow with lifecycles (e.g. document drafts, user submissions, workfl
 ```mermaid
 stateDiagram-v2
     [*] --> Draft: User initializes Document
-    Draft --> InReview: Submit for Core domain scoring
-    InReview --> Scored: diagnostic rules evaluated (<1.5s)
+    Draft --> InReview: Submit for review
+    InReview --> Scored: review within the agreed performance budget
     Scored --> Tailored: AI Tailoring applied (Provenance=SUGGESTED)
     Tailored --> Verified: User confirms suggestions (Provenance=VERIFIED)
     Verified --> Exported: A4 PDF Generated (<3s)
     Draft --> Archived: User soft-deletes
-    Archived --> [*]: Account erasure cascade (<30s)
+    Archived --> [*]: Erasure under the approved retention policy
 ```
 
 ### State Machine Rules:
@@ -40,7 +40,7 @@ Model cross-module and cross-tier chronological interactions:
 ```mermaid
 sequenceDiagram
     autonumber
-    actor User as Jobseeker
+    actor User as End User
     participant Client as Next.js 16 Web Client
     participant API as /api/v1/document/process Route
     participant Auth as Session & IDOR Guard
@@ -98,7 +98,7 @@ Every endpoint must have a documented error catalog mapping business failure sta
 
 - `400 BAD_REQUEST`: Zod parsing failure on request body, invalid JSON syntax.
 - `401 UNAUTHORIZED`: Missing or expired session cookie.
-- `403 FORBIDDEN`: Authenticated user lacks required role (e.g. jobseeker accessing recruiter dashboard).
+- `403 FORBIDDEN`: Authenticated user lacks required role (e.g. standard user accessing an operations dashboard).
 - `404 NOT_FOUND`: Resource does not exist or user does not own it (IDOR protection without existence leakage).
 - `422 UNPROCESSABLE_ENTITY`: Business rule violation (e.g. BR-${PROJECT_ID}-006 NIK input, insufficient credits, invalid state transition).
 - `429 TOO_MANY_REQUESTS`: Rate limit threshold exceeded on sensitive endpoints.

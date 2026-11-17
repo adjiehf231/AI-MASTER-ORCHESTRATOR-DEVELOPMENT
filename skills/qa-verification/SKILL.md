@@ -1,11 +1,11 @@
 ---
 name: qa-verification
-description: "Master Software Testing Life Cycle (STLC) execution methodology for ${PROJECT_NAME} — test strategy selection, TC-* case design per TEST_CASE_STANDARD, requirement traceability, automated execution (Vitest/Playwright/Axe), defect triage per S1–S4, regression execution, and statutory Quality Gate assessments. Use when testing features, fixes, or releases."
+description: "Master Software Testing Life Cycle (STLC) execution methodology for ${PROJECT_NAME} — test strategy selection, traceable test-case design, requirement traceability, automated execution (Vitest/Playwright/Axe), defect triage per S1–S4, regression execution, and statutory Quality Gate assessments. Use when testing features, fixes, or releases."
 ---
 
 # QA Verification & STLC Automation — ${PROJECT_NAME} (Quality Engineering)
 
-Authoritative sources: `docs/qa/QA_MASTER_STRATEGY.md`, `docs/qa/TEST_CASE_STANDARD.md`, `docs/qa/DEFECT_MANAGEMENT.md`, `docs/qa/TEST_TRACEABILITY_MATRIX.md`, `docs/qa/RELEASE_QUALITY_GATES.md`, and the Enterprise Engineering Constitution (§13).
+Repository references: `docs/process/STLC.md`, `docs/qa/TEST_PYRAMID.md`, `docs/qa/RELEASE_QUALITY_GATES.md`, `skills/defect-lifecycle/SKILL.md`.
 
 Quality assurance is not a final phase; it is an unbroken verification discipline operating across the entire SDLC. "No error appeared" is not proof of correctness. Tests must actively attempt to disprove correctness through hostile probes, boundary stresses, and mutation verification.
 
@@ -34,7 +34,7 @@ flowchart TD
 
 ## 2. STLC Phase 2: Test Case Design Standard (`TC-<AREA>-NNN`)
 
-Every formal test case authored in `tests/` or colocated suites must comply with `docs/qa/TEST_CASE_STANDARD.md`:
+Every formal test case authored in `tests/` or colocated suites must comply with the test-case standard in `docs/process/STLC.md` or the active project's approved equivalent:
 
 ```typescript
 /**
@@ -57,9 +57,9 @@ Every formal test case authored in `tests/` or colocated suites must comply with
 
 ### Mandatory Coverage Matrix per Capability:
 1. **Happy Path:** Standard inputs and valid authentication.
-2. **Boundary Values:** Empty arrays, maximum string lengths, multi-byte Unicode strings, 15MB oversized PDF uploads.
+2. **Boundary Values:** Empty arrays, maximum string lengths, multi-byte Unicode strings, uploads exceeding the configured limit.
 3. **Negative & Malformed Inputs:** Invalid JSON, missing required fields, SQL injection strings.
-4. **Role Permission Matrix:** Read and write access tests across Jobseeker, Recruiter, Admin, and Anonymous roles.
+4. **Role Permission Matrix:** Read and write access tests across the project's ownership, delegated, administrative, and anonymous access levels as applicable.
 5. **UI State Matrix:** Explicit assertions for Loading skeletons, Empty states, Error banners, and Success feedback.
 6. **Regression Invariant:** Dedicated test case reproducing any previously discovered and fixed defect.
 
@@ -97,7 +97,7 @@ npm run perf:lighthouse
 
 ---
 
-## 5. STLC Phase 5: Defect Management & Triage (docs/qa/DEFECT_MANAGEMENT.md)
+## 5. STLC Phase 5: Defect Management & Triage
 
 Classify all defects strictly by technical impact:
 - **`S1` (Critical):** Data corruption, cross-user IDOR access, persisted hallucinated factual entities, account erasure failure, credit double-spends.
@@ -118,7 +118,7 @@ A defect ticket may only be marked **CLOSED** when:
 
 Evaluate verification evidence against `docs/qa/RELEASE_QUALITY_GATES.md`:
 - **Gate 2 (Story DoD):** 0 lint/typecheck errors, colocated unit & integration tests pass with real execution output.
-- **Gate 4 (Beta SIT Gate):** multi-factor domain diagnostic rules, Job Matcher, and Admin console pass in Sandbox (`${DB_NAME}_sit`).
+- **Gate 4 (Beta SIT Gate):** critical business rules and authorized user journeys pass in the configured SIT environment.
 - **Gate 6 (Safety Gate):** Zero open S1/S2 vulnerabilities; AI Factuality benchmark achieves 100% zero-hallucination score.
 - **Gate 7 (RC Gate):** Master Golden Path E2E green in CI; migration baseline parity verified (12 canonical migrations).
 

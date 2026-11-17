@@ -47,7 +47,7 @@
 ## 2. WCAG 2.2 Level AA Accessibility Checklist
 - **Contrast (1.4.3):** Minimum 4.5:1 for normal text against its background, 3:1 for large text ($\ge 18\text{pt}$ or $\ge 14\text{pt}$ bold) and UI components.
 - **Focus Appearance (2.4.11):** Focus indicators must have a contrast ratio of $\ge 3:1$ against unfocused state and adjacent colors, with $\ge 2\text{px}$ perimeter area.
-- **Target Size (2.5.8):** Minimum target size of at least $24 \times 24\text{px}$ for all pointer inputs (recommend $44 \times 44\text{px}$ for mobile touch targets).
+- **Target Size:** Meet WCAG 2.2 SC 2.5.8 Level AA: pointer targets are at least 24 × 24 CSS pixels or satisfy a criterion exception, including its spacing exception. Prefer 44 × 44 CSS pixels for primary touch controls as a design target (SC 2.5.5 Level AAA).
 - **Icon-Only Buttons (1.1.1):** Must always have `aria-label` or `<span class="sr-only">Description</span>`.
 - **Form Controls (1.3.1, 4.1.2):** Every `<input>`, `<select>`, `<textarea>` must have an associated `<label>`.
 - **Headings (1.3.1):** Exactly one `<h1>` per page, followed by logical heading hierarchy (`<h2>`, `<h3>`).

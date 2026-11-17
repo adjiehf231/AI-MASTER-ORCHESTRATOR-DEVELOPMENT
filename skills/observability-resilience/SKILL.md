@@ -5,7 +5,7 @@ description: "Production-grade Site Reliability Engineering (SRE) and resilience
 
 # Observability, Telemetry & Production Resilience — ${PROJECT_NAME}
 
-Authoritative sources: `docs/process/RELEASE_GOVERNANCE.md`, `docs/qa/RELEASE_QUALITY_GATES.md` (Gate 8), the Enterprise Engineering Constitution (§11 & §12), and the Senior AI Engineering Core Rule.
+Repository references: `docs/qa/RELEASE_QUALITY_GATES.md`, `skills/release-management/SKILL.md`.
 
 A system is not production-ready merely because it runs in local development. High-level enterprise engineering demands **deep observability and intrinsic resilience**: the system must provide transparent diagnostic signals without leaking personal data, withstand external dependency degradation without cascading failures, and self-heal whenever transient faults occur.
 
@@ -46,7 +46,7 @@ Every log entry emitted by server-side code or background workers must be struct
 ```
 
 ### 2.2 Inviolable Privacy Invariant: PII Scrubbing
-Under Constitution §12 and Indonesian Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile), telemetry logs must **NEVER** contain:
+Under Constitution §12 and the project's applicable privacy requirements, telemetry logs must **NEVER** contain:
 - Raw document text or resume markdown.
 - Personal identity numbers (NIK), phone numbers, or physical addresses.
 - Cleartext email addresses (use hashed identifier or omit).

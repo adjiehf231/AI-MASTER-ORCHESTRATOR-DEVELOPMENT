@@ -5,7 +5,7 @@ description: "Adversarial application security review framework to Gate 6 standa
 
 # Adversarial Security Review — ${PROJECT_NAME} (Gate 6 Standard)
 
-Authoritative sources: `docs/qa/SECURITY_TEST_STRATEGY.md`, `docs/security/`, `docs/qa/RELEASE_QUALITY_GATES.md` (Gate 6), and `docs/qa/DEFECT_MANAGEMENT.md`.
+Repository references: `docs/qa/RELEASE_QUALITY_GATES.md`, `skills/threat-modeling/SKILL.md`, `skills/defect-lifecycle/SKILL.md`.
 
 Security is an integral implementation constraint, not a pre-release afterthought. Review posture: **The diff is guilty until proven secure by concrete evidence**. A single unmitigated S1 or S2 vulnerability blocks the release candidate from passing Gate 6.
 
@@ -17,7 +17,7 @@ Security is an integral implementation constraint, not a pre-release afterthough
 2. **Credit Concurrency Race Condition:** Deducting credits or updating user balances without wrapping the check, debit, and ledger append in an atomic transaction with pessimistic row locking (`SELECT ... FOR UPDATE`) = **SEVERITY S1 FINANCIAL INTEGRITY DEFECT**.
 3. **Hardcoded Secrets in Source / Commits:** Committing API keys, private keys, session secrets, or passwords into Git history or serializing them into client bundles = **CRITICAL SECURITY LEAK**.
 4. **Prompt Injection Executing as System Instruction:** Allowing user-supplied document text, portfolio URLs, or job descriptions to escape boundary tags and override system prompts = **SEVERITY S1 AI INJECTION DEFECT**.
-5. **Account Erasure Cascade Bypass (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile)):** Any user personal & sensitive data persisting in database tables after executing `DELETE /api/v1/user/account` ($< 30\text{s}$ SLA) = **STATUTORY COMPLIANCE VIOLATION**.
+5. **Account Erasure Cascade Bypass (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile)):** Any user personal & sensitive data persisting in database tables after the approved erasure deadline without lawful retention = **STATUTORY COMPLIANCE VIOLATION**.
 
 ---
 
@@ -25,7 +25,7 @@ Security is an integral implementation constraint, not a pre-release afterthough
 
 ### 2.1 Authorization & IDOR (The S1 Factory)
 - [ ] Server-side ownership verification executes **BEFORE** any data is fetched, updated, or deleted.
-- [ ] Jobseekers cannot access recruiter-owned applicant records and vice versa.
+- [ ] Users cannot read or modify another owner's records without an explicit authorized delegation.
 - [ ] Admin endpoints are gated by verified administrative role checks in server code (never frontend visibility).
 - [ ] Write-side operations (`PUT`, `PATCH`, `DELETE`) are guarded with the exact same rigor as read operations (`GET`).
 - [ ] The Existence Oracle Defense: Unauthorized resource access returns `404 Not Found` rather than `403 Forbidden` to prevent foreign resource enumeration.
@@ -76,7 +76,7 @@ Security is an integral implementation constraint, not a pre-release afterthough
 
 ## 3. Vulnerability Classification Standard (S1–S4)
 
-Map all security findings to `docs/qa/DEFECT_MANAGEMENT.md`:
+Record all security findings under the severity and evidence conventions in `docs/process/STLC.md`:
 - **`S1` (Critical):** Remote code execution, SQL injection, cross-user IDOR access, credit double-spend race condition, persisted hallucinated factual entities, account erasure failure.
 - **`S2` (High):** Stored XSS, SSRF to internal network, PII leakage into logs/telemetry, authentication brute-force vulnerability, unhandled PDF export crash.
 - **`S3` (Medium):** Missing rate limiting on non-sensitive endpoints, descriptive server error disclosures, minor CSRF misconfigurations.

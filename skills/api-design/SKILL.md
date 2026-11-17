@@ -5,7 +5,7 @@ description: "Contract-first REST API engineering standards — Zod request/resp
 
 # API Design & Contract Engineering — ${PROJECT_NAME}
 
-Authoritative sources: `docs/api/`, `docs/data/`, `docs/qa/API_TEST_STRATEGY.md`, and the Enterprise Engineering Constitution (§10).
+Repository references: `skills/api-documentation-contract/SKILL.md`, `docs/process/STLC.md`.
 
 APIs are permanent, public contracts. A poorly designed API leaks internal architecture, creates security vulnerabilities (IDOR), breaks client compatibility, and causes financial inconsistency. This skill provides the formal framework to engineer robust, version-stable, and secure REST APIs.
 
@@ -91,7 +91,7 @@ export type ItemResponse = z.infer<typeof ItemResponseSchema>;
 
 For every endpoint, specify the explicit role access matrix:
 
-| Endpoint | Jobseeker (Owner) | Jobseeker (Non-Owner) | Corporate Recruiter | Platform Admin | Anonymous |
+| Endpoint | Resource Owner | Other User | Delegated Operator | Platform Admin | Anonymous |
 |---|:---:|:---:|:---:|:---:|:---:|
 | `GET /api/v1/documents/:id` | 200 OK | 404 Not Found (IDOR Guard) | 403 Forbidden (Unless applicant) | 200 OK (Audited) | 401 Unauthorized |
 | `PUT /api/v1/documents/:id` | 200 OK | 404 Not Found (IDOR Guard) | 403 Forbidden | 403 Forbidden (Owner only) | 401 Unauthorized |
@@ -172,7 +172,7 @@ Every endpoint implementation must be accompanied by automated Vitest tests exec
 | **1** | **Nominal Happy Path** | Valid request payload with authenticated owner session | `200 OK` or `201 Created` + valid `ResponseSchema` |
 | **2** | **Malformed / Schema Failure** | Missing required fields, invalid types, unrecognized properties | `400 Bad Request` + field-level validation details |
 | **3** | **Unauthenticated Access** | Request with missing or expired session cookie | `401 Unauthorized` |
-| **4** | **Unauthorized Role** | Authenticated user possessing wrong role (e.g. Jobseeker accessing Admin) | `403 Forbidden` |
+| **4** | **Unauthorized Role** | Authenticated user possessing wrong role (e.g. standard user accessing an admin endpoint) | `403 Forbidden` |
 | **5** | **IDOR Probe (Foreign ID)** | Authenticated user passing an entity ID owned by another user | `404 Not Found` (Zero data leakage, zero existence oracle) |
 | **6** | **Boundary & Extremes** | Maximum length strings, empty arrays, multi-byte Unicode characters | Handled cleanly per schema without truncation or crash |
 | **7** | **Concurrent Idempotency** | Simultaneous duplicate requests on credit-consuming routes | Single atomic debit; duplicate returns cached response (`Idempotent-Replayed: true`) |

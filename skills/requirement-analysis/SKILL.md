@@ -5,7 +5,9 @@ description: "Master methodology for analyzing and specifying ${PROJECT_NAME} re
 
 # Requirement Analysis & Specification — ${PROJECT_NAME} (Gate 1: Definition of Ready)
 
-Authoritative sources: `docs/product/`, `docs/qa/RELEASE_QUALITY_GATES.md` (Gate 1), `docs/process/SDLC.md`, and the Enterprise Engineering Constitution (§1–§6).
+Repository references: `docs/process/SDLC.md`, `docs/qa/RELEASE_QUALITY_GATES.md`, `skills/nfr-governance/SKILL.md`.
+
+Target-project evidence: approved product requirements, acceptance criteria, and stakeholder decisions.
 
 A requirement is **READY FOR IMPLEMENTATION** only when it satisfies the statutory criteria of Gate 1: unambiguous business objectives, mathematically bounded acceptance criteria, strict Zod schemas, assigned business rule IDs, and explicit privacy impact assessments.
 
@@ -56,7 +58,7 @@ Every story must be:
 
 ### 4.2 Given/When/Then Gherkin Acceptance Criteria
 Acceptance criteria must assert **observable behavior**, not internal code mechanisms:
-- ✅ *Valid:* "Given a jobseeker with 0 credits, When they trigger document entity processing, Then the request is rejected with HTTP 422 and message 'Saldo kredit tidak mencukupi', and no credit ledger mutation occurs."
+- ✅ *Valid:* "Given a user with 0 processing credits, When they trigger document entity processing, Then the request is rejected with HTTP 422 and the product’s localized insufficient-credit message, and no credit ledger mutation occurs."
 - ❌ *Invalid:* "System checks user credits using CreditService and throws an exception." (Specifies internal implementation rather than contract behavior).
 
 Every story must include:

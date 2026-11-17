@@ -1,20 +1,11 @@
-# Test Pyramid & T1 Air-Gapped Fast-Path Standard
+# Test Pyramid & T1 Fast-Path Standard
 
-> **Authoritative Specification:** Governed by `skills/offline-unit-harness/SKILL.md` and `skills/test-architecture-design/SKILL.md`.
+Repository references: `skills/offline-unit-harness/SKILL.md` and `skills/test-architecture-design/SKILL.md`.
 
----
+| Tier | Scope | Environment |
+| --- | --- | --- |
+| T1 — Unit | Pure business logic, validation, state transitions, and local CLI fixtures | Repository test runner with deterministic inputs and an allowlisted environment. No external service or database dependency. |
+| T2 — Integration | Repository contracts, transactions, migration parity, and provider boundaries | Isolated test services and synthetic data. |
+| T3 — End-to-end | Critical user journeys and applicable accessibility checks | A target-project browser or device setup and a representative test environment. |
 
-## 1. Distribution Ratios
-
-- **Tier 1 (Air-Gapped Unit Tests):** 70% of total test count. Must execute in $< 10\text{s}$ with zero network or database dependencies.
-- **Tier 2 (Integration & Contract Tests):** 25% of total test count. Verifies database repositories, transactions, migrations, and provider boundaries.
-- **Tier 3 (E2E & Accessibility Tests):** 5% of total test count. Verifies top critical user journeys and automated WCAG 2.2 AA scans.
-
----
-
-## 2. Fast-Path Air-Gapped Invariants
-
-1. **Fail-Closed Network Guard:** Any external HTTP, socket, or database call triggered during T1 execution must immediately throw an unhandled exception and abort the suite.
-2. **Deterministic Execution:** No reliance on random seeds, real clock timers, or ambient environment credentials.
-3. **Colocation:** Unit tests live adjacent to the units they test (`*.test.ts` or `*.unit.test.ts`).
-
+Run T1 first. Verify the suite count and the process status. Measure duration against the project's agreed feedback budget. Keep network egress controls in the test infrastructure when isolation is required.

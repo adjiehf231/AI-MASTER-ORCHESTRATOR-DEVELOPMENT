@@ -7,10 +7,11 @@
 [![Enterprise Skills](https://img.shields.io/badge/Enterprise%20Skills-44%20Playbooks-10b981.svg?style=for-the-badge)](skills/)
 [![Frontend Standard](https://img.shields.io/badge/UI%2FUX-Anti--AI--Slop%20Craft-f43f5e.svg?style=for-the-badge)](skills/ui-ux-design-system/)
 [![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.2%20AA-a855f7.svg?style=for-the-badge)](skills/frontend-quality/)
-[![Tests Passing](https://img.shields.io/badge/Test%20Suites-13%2F13%20Passing-0ea5e9.svg?style=for-the-badge)](tests/)
+[![Quality Gate CI](https://github.com/adjiehf231/AI-MASTER-ORCHESTRATOR-DEVELOPMENT/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/adjiehf231/AI-MASTER-ORCHESTRATOR-DEVELOPMENT/actions/workflows/ci.yml)
 [![Platforms](https://img.shields.io/badge/Supported%20IDEs-Antigravity%20%7C%20Claude%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20Cline-f59e0b.svg?style=for-the-badge)](adapters/)
 
-**Transform your AI assistant into an autonomous, 32-role enterprise engineering council.**  
+**Instruksi, profil agen, dan playbook rekayasa untuk asisten AI.**
+
 *Operates at the technical judgment standard of a Principal Software Engineer & Autonomous Technical Director with 25+ years of multidisciplinary software engineering experience.*
 
 [Fitur Utama](#-fitur-utama--keunggulan) •
@@ -27,7 +28,7 @@
 </div>
 
 > [!NOTE]
-> **Project-Agnostic & Zero Vendor-Lock:** Sistem orkestrator ini bersifat sepenuhnya agnostik terhadap jenis proyek. Cukup konfigurasikan `PROJECT_CONTEXT.md`, dan seluruh 32 agen spesialis beserta 44 skill akan menyesuaikan nama sistem, arsitektur, database, dan aturan bisnis proyek Anda secara dinamis.
+> **Project-Agnostic & Zero Vendor-Lock:** Konfigurasikan `PROJECT_CONTEXT.md` untuk mengikat nilai yang dipakai adapter. Pilih aturan bisnis, arsitektur, dan verifikasi berdasarkan proyek aktif. Host AI menentukan apakah subagen, skill, dan alat terminal dapat digunakan.
 
 ---
 
@@ -92,22 +93,22 @@ Mulai dari **Solution Architect**, **System Analyst**, **Principal Frontend/Back
 Menegakkan keindahan visual tingkat tinggi:
 - **Obsidian/Slate Palette:** Token warna berlapis (`#0b0f19` canvas $\to$ `#111827` surface $\to$ `#161f33` elevated).
 - **Universal 6-State Matrix:** Wajib menangani 6 state pada setiap view: *Loading (CLS = 0)*, *Empty*, *Error*, *Success*, *Denied*, dan *Stale/Offline*.
-- **Aksesibilitas Universal:** Kontras $\ge 4.5:1$, fokus keyboard navigasi $\ge 3:1$, touch target minimum $44\times 44\text{px}$, dan kesiapan *Reduced Motion*.
+- **Aksesibilitas Universal:** Kontras $\ge 4.5:1$, fokus keyboard navigasi $\ge 3:1$, target pointer sesuai SC 2.5.8 dengan 24 × 24 CSS px atau pengecualian, serta target desain 44 × 44 untuk kontrol sentuh utama, dan kesiapan *Reduced Motion*.
 - **Headless Component Composition:** Menerapkan pola Radix/shadcn compound primitives (`Root`, `Trigger`, `Content`, `Portal`, `Overlay`) untuk mencegah *monolithic div-soup*.
 
 ### 3. Ekosistem Skills & Playbook Terlengkap (44 Enterprise Skills)
 Panduan rekayasa langkah demi langkah untuk arsitektur, basis data, keamanan, AI RAG, integrasi webhook, penanganan insiden, hingga pemulihan bencana (*Disaster Recovery & BCP*).
 
 ### 4. Single Source of Truth (SSOT) & Multi-Platform Compiler
-Tulis sekali dalam standar Markdown murni, lalu jalankan `npm run sync`. Sistem otomatis menghasilkan adapter resmi untuk **Claude Code**, **Cursor**, **Windsurf**, **Cline/OpenCode**, **Aider**, **Continue.dev**, **OpenRouter**, dan **Google Antigravity**.
+Edit sumber Markdown, lalu jalankan `npm run sync`. Generator menyiapkan adapter dan bundel instruksi untuk **Claude Code**, **Cursor**, **Windsurf**, **Cline/OpenCode**, **Aider**, **Continue.dev**, **OpenRouter**, dan **Google Antigravity**.
 
 ### 5. Tangga Verifikasi 4-Tingkat & Self-Healing Otonom
 Kode tidak pernah dianggap selesai sebelum melewati tangga verifikasi bertingkat:
-1. **Tier 0:** Static Hygiene & Compiler (`npm run lint`, `typecheck`).
-2. **Tier 1:** Fast Air-Gapped Zero-DB Unit Tests ($<10\text{s}$).
+1. **Tier 0:** Pemeriksaan sintaks, formatter, linter, dan compiler sesuai alat yang tersedia.
+2. **Tier 1:** Unit test cepat yang memakai fixture lokal dan berjalan tanpa dependensi layanan eksternal.
 3. **Tier 2:** Colocated Integration & Isolated Database Tests.
 4. **Tier 3:** End-to-End User Journeys dengan Automated Axe Accessibility Scans.
-Jika terjadi kegagalan, orkestrator melakukan siklus **Self-Healing otonom hingga 3 kali** sebelum meminta eskalasi manusia.
+Prompt memandu diagnosis dan percobaan ulang hingga tiga kali bila host dapat menjalankan alat yang diperlukan. Simpan bukti eksekusi dan eskalasikan kendala yang masih terbuka.
 
 ---
 
@@ -156,13 +157,13 @@ Orkestrator secara mutlak melarang pola desain murah yang umum dihasilkan AI gen
 • Metrik analitik palsu / dummy filler data       • Data produk nyata yang terstruktur & bermakna
 • Widescreen desktop sempit (max-w-4xl gutters)   • Fluid Responsive Grids (320px hingga 4K)
 • Dark mode hitam pekat terbalik (#000000)        • Hierarki Slate Tonal (#0b0f19 -> #111827 -> #161f33)
-• Hanya membuat state nominal (Happy path)        • Universal 6-State Component Matrix Lengkap
+• Hanya membuat state nominal (Happy path)        • Universal 6-State Matrix untuk view asinkron
 • Form tanpa label / vanishing placeholders       • Label permanen, aria-describedby, :user-invalid
 • Tombol sentuh sempit / animasi pemicu vertigo  • Target sentuh ≥ 44x44px & prefers-reduced-motion
 ```
 
-### Universal 6-State Component Matrix
-Setiap komponen dan tampilan dinamis wajib mengimplementasikan seluruh matriks 6 state:
+### Universal 6-State View Matrix
+Tampilan yang memuat data asinkron menggunakan state yang relevan dari enam kategori berikut. Kontrol seperti tombol atau input menggunakan state interaksi seperti fokus, aktif, dan nonaktif.
 
 ```mermaid
 stateDiagram-v2
@@ -210,14 +211,14 @@ Berikut adalah katalog lengkap 32 peran spesialis yang siap digerakkan oleh **Un
 | 16 | **`technical-writer`** | Staff Technical Writer | Kontrak OpenAPI 3.1, dokumentasi terstruktur kerangka Diátaxis, panduan pengembang, dan linting schema. |
 | 17 | **`mlops-engineer`** | Staff MLOps & Vector Engineer | Pipeline embedding, infrastruktur vector database (pgvector/Qdrant), indeks HNSW, dan evaluasi recall benchmark. |
 | 18 | **`compliance-auditor`**| Principal Compliance Auditor | Audit statutory enterprise: SOC 2 Type II, ISO 27001, PCI-DSS, audit log WORM tamper-evident, dan Separation of Duties. |
-| 19 | **`privacy-reviewer`** | Regulatory Privacy Officer | Kepatuhan privasi data (GDPR / UU PDP / CCPA), inventarisasi PII, tata kelola persetujuan, dan penghapusan akun (<30s). |
+| 19 | **`privacy-reviewer`** | Regulatory Privacy Officer | Kepatuhan privasi data (GDPR / UU PDP / CCPA), inventarisasi PII, tata kelola persetujuan, dan erasure sesuai SLA proyek. |
 | 20 | **`integration-engineer`**| Principal Integration Engineer | Integrasi antar sistem, keandalan webhook, OAuth 2.0, idempotency keys, dan retry exponential backoff dengan DLQ. |
 | 21 | **`ai-engineer`** | Principal AI/LLM Engineer | Zero-Hallucination standard, pipeline provenance (VERIFIED/INFERRED/SUGGESTED), filtering $N_{out} \subseteq N_{in}$, dan mock AI. |
 | 22 | **`mobile-engineer`** | Mobile Application Engineer | Aplikasi cross-platform (Flutter / React Native), offline-first sync, secure storage enclave, dan aksesibilitas mobile. |
 | 23 | **`performance-engineer`**| Performance Engineer | Penegakan anggaran NFR (API P95 < 300ms, Core Web Vitals, export < 3s, $O(n)$ algorithmic checks) via k6 & Lighthouse. |
 | 24 | **`qa-engineer`** | QA Automation Architect | Eksekusi STLC otomatis: Vitest unit/integration suites, Playwright E2E journeys dengan Axe scans, dan eliminasi flakiness. |
 | 25 | **`qa-manual`** | Principal Exploratory Tester | Pengujian manual eksploratif SIT/UAT: Session-Based Test Management (SBTM), cross-browser (Firefox/Safari/Mobile), dan UAT. |
-| 26 | **`test-architect`** | Enterprise Test Architect | Arsitektur piramida tes, fast-path T1 Air-Gapped Zero-DB unit test harness, dan pipeline data sintetis. |
+| 26 | **`test-architect`** | Enterprise Test Architect | Arsitektur piramida tes, fast-path T1 dengan fixture lokal, dan pipeline data sintetis. |
 | 27 | **`code-reviewer`** | Independent Code Reviewer | Adversarial review diff kode: mendeteksi regresi, inkonsistensi kontrak, dan memberi peringkat temuan (🔴 BLOCKING / 🟡 SHOULD FIX / 🔵 NIT). |
 | 28 | **`quality-auditor`** | Enterprise Quality Auditor | Penjaga gerbang Release Quality Gates (Gates 1–8), validasi kebenaran bukti uji, RTM traceability, dan sertifikasi rilis. |
 | 29 | **`release-manager`** | Release & Promotion Manager | Tata kelola promosi environment (Sandbox $\to$ UAT $\to$ Production), review CAB, dan protokol rollback deployment. |
@@ -269,160 +270,111 @@ KATEGORI SKILLS          DAFTAR SKILLS ENTERPRISE TERSEDIA
 
 ## 🚀 Panduan Instalasi & Penggunaan Cepat (Quick Start)
 
-### 1. Kloning Repositori
+### 1. Instalasi
 
-Untuk mengklon repositori ke direktori kerja Anda:
+Gunakan Node.js 22.18.0 atau lebih baru, npm, dan Git.
 
 ```bash
-# Klon ke direktori AI-MASTER-ORCHESTRATOR-DEVELOPMENT:
-git clone https://github.com/adjiehf231/AI-MASTER-ORCHESTRATOR-DEVELOPMENT.git AI-MASTER-ORCHESTRATOR-DEVELOPMENT
+git clone https://github.com/adjiehf231/AI-MASTER-ORCHESTRATOR-DEVELOPMENT.git
 cd AI-MASTER-ORCHESTRATOR-DEVELOPMENT
-
-# Atau jika Anda sudah berada di dalam folder proyek tujuan:
-git clone https://github.com/adjiehf231/AI-MASTER-ORCHESTRATOR-DEVELOPMENT.git .
+npm ci
 ```
 
-Perintah satu baris untuk setup instan:
-```bash
-git clone https://github.com/adjiehf231/AI-MASTER-ORCHESTRATOR-DEVELOPMENT.git AI-MASTER-ORCHESTRATOR-DEVELOPMENT && cd AI-MASTER-ORCHESTRATOR-DEVELOPMENT && npm run sync && npm run verify:gates
-```
+### 2. Konfigurasi proyek
 
-### 2. Konfigurasi Profil Proyek Anda
-Salin berkas template profil proyek:
-```bash
-cp PROJECT_CONTEXT.template.md PROJECT_CONTEXT.md
-```
-Buka `PROJECT_CONTEXT.md` dan definisikan parameter proyek Anda:
-```markdown
-# PROJECT CONTEXT CONFIGURATION
+Edit `PROJECT_CONTEXT.md` menggunakan format Markdown di `PROJECT_CONTEXT.template.md` atau format key-value berikut. Empat nilai pertama wajib. Nilai opsional menentukan direktori dan model OpenRouter.
 
+```text
 PROJECT_NAME: "MyEnterpriseApp"
 PROJECT_ID: "MEA"
-PRIMARY_LANGUAGE: "typescript"
-FRAMEWORK: "nextjs-16"
-DATABASE: "postgresql-16"
-ORM: "drizzle"
+PROJECT_DOMAIN: "myenterprise.example"
+DB_NAME: "myenterprise_db"
 SRC_DIR: "src"
 DOCS_DIR: "docs"
+OPENROUTER_MODEL: "openrouter/auto"
 ```
 
-### 3. Kompilasi Adapter Multi-Platform
-Jalankan skrip sinkronisasi agar seluruh instruksi terkompilasi untuk IDE dan alat AI Anda:
+Catat arsitektur, kebijakan, dan aturan bisnis yang disetujui pada bagian naratif konteks proyek.
+
+### 3. Sinkronisasi adapter
+
 ```bash
 npm run sync
+npm run sync -- --check
 ```
 
-### 4. Mulai Berpasangan (Pair-Programming)
-Buka IDE Anda (Antigravity, Cursor, Windsurf, VS Code + Cline, atau Claude Code). Cukup sampaikan kebutuhan bisnis Anda:
-> *"Terapkan fitur autentikasi dua faktor (2FA) lengkap dengan backup recovery codes dan verifikasi session."*
+`--check` memverifikasi keluaran terhadap sumber saat ini tanpa menulis berkas. `npm run sync:template` menghasilkan versi placeholder pada jalur adapter yang sama. Jalankan `npm run sync` kembali untuk memulihkan adapter aktif.
 
-Orkestrator akan:
-1. Membaca `docs/memory/` dan profil `PROJECT_CONTEXT.md`.
-2. Mengevaluasi premis dan blast radius perubahan.
-3. Mengaktifkan spesialis: `security-engineer` $\to$ `backend-engineer` $\to$ `frontend-engineer` $\to$ `qa-engineer`.
-4. Mengimplementasikan kode dengan standar Anti-AI-Slop & Zod contracts.
-5. Menjalankan tangga verifikasi (T0–T3) secara otomatis.
+### 4. Gunakan dari host AI
+
+Aktifkan adapter untuk host yang dipakai. Berikan permintaan yang mencantumkan target, batasan, dan hasil yang diharapkan. Prompt memandu host membaca konteks dan memori, memilih spesialis jika tersedia, menjalankan pemeriksaan yang cocok dengan proyek, dan melaporkan bukti.
 
 ---
 
 ## 🛠️ CLI Command Center & Manajemen Otomasi
 
-Kelola siklus hidup agen, skill, integrasi, dan audit langsung dari terminal Anda:
-
 ```bash
-# ==============================================================================
-# MANAJEMEN AGEN & SKILLS OTOMATIS
-# ==============================================================================
-
-# Membuat atau memperbarui Agen Spesialis baru dengan hard gates otomatis:
-npm run agent:add -- <agent-name> --title="Principal Title" --desc="Deskripsi peran mandatori..."
-
-# Membuat atau memperbarui Enterprise Skill playbook baru:
-npm run skill:add -- <skill-name> --title="Skill Title" --desc="Panduan playbook..."
-
-# Mengimpor agen atau skill dari repositori GitHub terpercaya atau berkas lokal:
-npm run import:extension -- --type=agent --name=<name> --url="https://raw.githubusercontent.com/.../agent.md"
-npm run import:extension -- --type=skill --name=<name> --file="./templates/skill.md"
-
-# Menampilkan daftar seluruh 32 agen dan 44 skills terdaftar:
+# Membuat atau memperbarui profil
+npm run agent:add -- <name> --title="Principal Title" --desc="Mandat agen"
+npm run agent:update -- <name> --desc="Mandat baru"
+npm run skill:add -- <name> --title="Skill Title" --desc="Panduan playbook"
+npm run skill:update -- <name> --desc="Mandat baru"
 npm run orchestrator:list
 
-# ==============================================================================
-# SINKRONISASI & DEPLOYMENT
-# ==============================================================================
+# Tinjau impor tanpa mengaktifkannya
+npm run import:extension -- --type=skill --name=my-skill --file=./templates/skill.md
 
-# Kompilasi ulang seluruh adapter multi-platform (Claude, Cursor, Windsurf, OpenCode, dll):
-npm run sync
+# Aktifkan setelah review
+npm run import:extension -- --type=skill --name=my-skill --file=./templates/skill.md --apply
 
-# Kompilasi adapter dalam mode template murni:
-npm run sync:template
-
-# Deploy langsung ke live Google Antigravity & Gemini plugin directory:
-npm run deploy:antigravity
-
-# ==============================================================================
-# VERIFIKASI KUALITAS & AUDIT INTEGRITAS
-# ==============================================================================
-
-# Menjalankan seluruh test suites unit dan integrasi (13 suites):
+# Verifikasi dan sinkronisasi
 npm test
-
-# Menjalankan fast-path T1 Air-Gapped Zero-DB Unit Test (<10 detik):
 npm run test:t1
-
-# Memeriksa penegakan Release Quality Gates (Gates 0, 1, 2):
 npm run verify:gates
-
-# Menjalankan audit menyeluruh Audit 360 (10/10 compliance checks):
 npm run audit
+npm run sync -- --check
+
+# Deploy plugin secara eksplisit
+npm run deploy:antigravity
 ```
+
+Untuk sumber HTTPS, jalankan preview dengan `--url`, tinjau konten dan salin digest SHA-256 yang ditampilkan. Aktivasi sumber HTTPS memerlukan `--apply --sha256=<digest>`. Penimpaan nama yang sudah ada memerlukan `--force`. Perubahan katalog menyinkronkan adapter di repositori; deploy plugin dijalankan sebagai perintah tersendiri. Gunakan `ANTIGRAVITY_PLUGIN_DIR` untuk menentukan tujuan deploy. Tinjau opsi CLI dengan `--help` sebelum memigrasikan instalasi yang sudah ada.
 
 ---
 
 ## 🌐 Kompatibilitas Multi-Platform (IDE & CLI)
 
-Universal AI Master Orchestrator dirancang dengan arsitektur **Single Source of Truth (SSOT)** yang dapat berjalan pada hampir seluruh ekosistem asisten AI modern:
+Adapter di bawah dihasilkan dari sumber yang sama. Cara host menerapkan instruksi dan menjalankan model bergantung pada versi dan konfigurasi host.
 
-| Platform / Alat AI | Berkas Adapter yang Digunakan | Cara Mengaktifkan |
-|---|---|---|
-| **Google Antigravity & Gemini** | `adapters/antigravity/plugin.json`, `rules/AGENTS.md` | Terinstal otomatis via `npm run deploy:antigravity`. |
-| **Claude Code (CLI & Desktop)** | `CLAUDE.md`, `.claude/agents/*.md` | Terbaca otomatis saat membuka root project di terminal Claude. |
-| **Cursor IDE** | `.cursorrules` | Terbaca otomatis oleh Cursor Agent di root workspace. |
-| **Windsurf IDE (Codeium)** | `.windsurfrules` | Terbaca otomatis oleh Cascade AI. |
-| **Cline / Roo-Code / OpenCode** | `.clinerules`, `.opencoderules`, `.opencode/agents/*.md` | Terdeteksi otomatis oleh ekstensi VS Code. |
-| **Aider CLI** | `CONVENTIONS.md`, `.aider.conf.yml` | Terbaca otomatis saat menjalankan perintah `aider`. |
-| **Continue.dev** | `.continue/rules/universal-orchestrator.md` | Terintegrasi ke sidebar Continue di VS Code / JetBrains. |
-| **OpenRouter / 9router / LiteLLM** | `adapters/openrouter/system-prompt.txt`, `payload.json` | Salin teks system prompt ke dashboard gateway atau via REST API. |
-| **ChatGPT / DeepSeek / Ollama** | `adapters/bundle/universal-system-prompt.md` | Bundel teks lengkap siap salin ke Custom Instructions / System Prompt. |
+| Platform | Berkas atau langkah |
+| --- | --- |
+| Google Antigravity | Siapkan plugin dengan `npm run deploy:antigravity`. Validasi direktori plugin dengan `agy plugin validate` pada instalasi Antigravity yang menyediakan perintah tersebut. |
+| Claude Code | Buka root repositori dengan `CLAUDE.md` dan profil di `.claude/agents/`. |
+| Cursor | `.cursorrules` memakai format legacy. Ikuti format Project Rules pada versi Cursor yang digunakan bila migrasi diperlukan. |
+| Windsurf | `.windsurfrules` memakai format legacy. Ikuti format Workspace Rules pada versi Windsurf yang digunakan bila migrasi diperlukan. |
+| Cline | `.clinerules` menyediakan aturan proyek dalam format satu berkas. |
+| Roo Code | Salin prompt `.clinerules` ke rules workspace sesuai versi Roo Code. |
+| OpenCode | `opencode.json` memilih agen utama `orchestrator` dan memuat `adapters/opencode/AGENTS.md`. Agen berada di `.opencode/agents/`. |
+| Aider | `.aider.conf.yml` merujuk `CONVENTIONS.md`. |
+| Continue | `.continue/rules/universal-orchestrator.md` menyediakan aturan workspace. |
+| OpenRouter | Konfigurasikan `OPENROUTER_MODEL` dan gunakan `adapters/openrouter/payload.json` sebagai dasar request. Tambahkan pesan pengguna dan autentikasi di klien. |
+| Host lain | Gunakan `adapters/bundle/universal-system-prompt.md` sebagai prompt sistem sesuai batas konteks dan fitur host. |
 
 ---
 
 ## 🛡️ Tangga Verifikasi Bertingkat & Release Quality Gates
 
-Kode tidak pernah dinyatakan selesai hanya karena "tidak muncul error". Setiap fitur wajib melewati tangga verifikasi:
+Untuk repositori ini, jalankan pemeriksaan berikut setelah `npm ci`.
 
 ```bash
-# Tier 0: Static Hygiene & Type Safety (<5s)
-npm run lint          # 0 ESLint errors, 0 warnings
-npm run typecheck     # 0 TypeScript compiler errors
-
-# Tier 1: Fast-Path T1 Air-Gapped Zero-DB Unit Suites (<10s) ⚡
-# Memvalidasi algoritma domain murni, provenance, dan aturan bisnis tanpa dependensi DB
-node scripts/qa-unit-offline.cjs
-# (atau: npm run test:t1)
-
-# Tier 2: Colocated Unit & Isolated PostgreSQL Integration Suites (<2m)
-npm test -- <path_to_suite>
-
-# Tier 3: User-Facing E2E Journeys with Accessibility Audits (<5m)
-npm run test:e2e      # Otomatisasi Playwright + @axe-core scans (0 violations)
-
-# Tier 4: Database Schema Parity (jika schema disentuh)
-npm run db:verify
+npm test
+npm run test:t1
+npm run verify:gates
+npm run audit
+npm run sync -- --check
 ```
 
-> [!IMPORTANT]
-> **Aturan Fail-Fast:** Jika pengujian Tier 1 (T1 Air-Gapped) gagal, orkestrator segera berhenti dalam $<10\text{s}$ dan memicu fase *Self-Healing*. Tidak akan ada container database atau browser E2E yang dijalankan jika algoritma inti belum lulus verifikasi!
+Gate lokal memeriksa kebersihan paket, validitas konteks, dan hasil tes yang benar-benar dijalankan. T1 menjalankan tes dengan lingkungan proses yang dibatasi ke variabel yang diperlukan. Pemeriksaan integrasi basis data, browser, lint, dan typecheck mengikuti perintah yang tersedia di proyek tujuan. Panduan gate rilis ada di [Release Quality Gates](docs/qa/RELEASE_QUALITY_GATES.md).
 
 ---
 
@@ -482,7 +434,7 @@ AI-MASTER-ORCHESTRATOR-DEVELOPMENT/
 │   ├── manage-orchestrator.js       # Lifecycle CLI untuk agen & skill
 │   ├── import-extension.js          # Importer extension dari GitHub/lokal
 │   ├── verify-gates.js              # Penegak Release Quality Gates (Gates 0-2)
-│   ├── qa-unit-offline.cjs          # Fast-path T1 Air-Gapped Zero-DB runner
+│   ├── qa-unit-offline.cjs          # Runner tes T1 dengan environment allowlist
 │   ├── audit-integrity.js           # Audit 360 integrity test suite (10/10)
 │   ├── deploy-antigravity.js        # Deploy live ke plugin Antigravity
 │   └── sync-adapters.js             # Multi-platform adapter compiler
@@ -494,8 +446,8 @@ AI-MASTER-ORCHESTRATOR-DEVELOPMENT/
 ├── CLAUDE.md                        # Native instruction file untuk Claude Code
 ├── .cursorrules                     # Native instruction file untuk Cursor IDE
 ├── .windsurfrules                   # Native instruction file untuk Windsurf IDE
-├── .clinerules                      # Native instruction file untuk Cline & OpenCode
-├── .opencoderules                   # Native instruction file untuk OpenCode
+├── .clinerules                      # Prompt kompatibilitas Cline
+├── .opencoderules                   # Prompt kompatibilitas OpenCode lama
 ├── CONVENTIONS.md                   # Native instruction file untuk Aider CLI
 ├── PROJECT_CONTEXT.template.md      # Template konfigurasi profil proyek
 ├── PROJECT_CONTEXT.md               # Konfigurasi aktif proyek workspace
@@ -516,10 +468,11 @@ Cukup gunakan perintah CLI:
 ```bash
 npm run import:extension -- --type=skill --name=my-skill --url="https://raw.githubusercontent.com/.../SKILL.md"
 ```
-Skrip otomatis memvalidasi struktur frontmatter, mengintegrasikannya ke registri, dan menyinkronkan seluruh adapter.
+Perintah tersebut menampilkan preview. Tinjau Markdown dan digest, lalu ulangi dengan `--apply --sha256=<digest>` untuk mengaktifkan impor HTTPS.
 
-### 3. Apa yang dimaksud dengan pengujian T1 Air-Gapped?
-Pengujian Tier 1 (`npm run test:t1`) adalah uji unit mandiri yang berjalan dalam isolasi total tanpa koneksi jaringan dan tanpa basis data nyata. Pengujian ini memastikan logika algoritma murni, validasi input Zod, dan perhitungan bisnis lulus dalam waktu $<10\text{ detik}$.
+### 3. Apa yang diperiksa oleh T1?
+
+`npm run test:t1` menjalankan tes lokal tanpa dependensi layanan eksternal dengan variabel lingkungan proses yang dibatasi. Cakupan isolasi jaringan ditentukan oleh lingkungan eksekusi, misalnya container dengan egress dinonaktifkan.
 
 ### 4. Apakah orkestrator melakukan deploy atau migrasi destruktif secara sepihak?
 **Tidak.** Berdasarkan aturan *Statutory Safety Boundary*, orkestrator **secara mutlak dilarang** melakukan tindakan destruktif irreversible (seperti menjatuhkan database produksi, menghapus data pengguna, atau force-push ke branch utama) tanpa persetujuan eksplisit dari manusia.

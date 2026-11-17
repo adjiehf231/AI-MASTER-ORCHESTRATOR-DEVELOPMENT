@@ -49,13 +49,13 @@ flowchart TD
 ### 3.2 Secure Data Layer Wiring
 - Ensure database queries utilize explicit parameterization and transactions.
 - Wire financial and credit-consuming actions to atomic database transactions with row-level locks (`SELECT ... FOR UPDATE`).
-- Guarantee that any new user-data table joins the statutory account erasure cascade (`DELETE /api/v1/user/account` $< 30\text{s}$ SLA).
+- Guarantee that any new user-data table joins the statutory account erasure cascade under the approved scope and SLA.
 
 ### 3.3 Complete Frontend Integration
 - Connect React 19 UI components to the real backend API route handlers.
 - Wire the complete state matrix:
   - *Loading:* Skeleton loader reserving exact layout space (`CLS = 0`).
-  - *Empty:* Actionable guidance in Bahasa Indonesia.
+  - *Empty:* Actionable guidance in the product’s supported locale.
   - *Error:* Field-level inline errors tied via `aria-describedby` + generic error banner with retry affordance.
   - *Success:* Clear visual feedback and accessible announcement.
   - *Denied:* Informative message without leaking sensitive internal IDs.

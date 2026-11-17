@@ -5,7 +5,7 @@ description: "Comprehensive UI/UX heuristic evaluation and digital accessibility
 
 # UI/UX Review & Accessibility Audit — Enterprise Heuristics & Standards
 
-Authoritative sources: `skills/ui-ux-design-system/`, `${DOCS_DIR}/ui/`, `docs/qa/ACCESSIBILITY_TEST_STRATEGY.md`, and the Enterprise Engineering Constitution.
+Repository references: `skills/ui-ux-design-system/SKILL.md`, `skills/ui-ux-design-system/references/accessibility-and-component-states.md`.
 
 A feature is not done merely because backend code executes. If an interface is confusing, excludes users with disabilities, conceals errors behind endless spinners, exhibits generic AI slop, or obscures transactional costs, it is an incomplete and defective delivery.
 
@@ -78,7 +78,7 @@ Audit compliance across all 4 accessibility principles:
 - [ ] Prominent, visible focus indicator on all focused elements ($\ge 3:1$ contrast).
 - [ ] Zero keyboard traps.
 - [ ] Modals trap focus inside while open and return focus to trigger button upon close.
-- [ ] Interactive touch targets achieve minimum size of $44 \times 44\text{px}$ (WCAG 2.2 SC 2.5.8).
+- [ ] Meet WCAG 2.2 SC 2.5.8 Level AA: pointer targets are at least 24 × 24 CSS pixels or satisfy a criterion exception, including its spacing exception. Prefer 44 × 44 CSS pixels for primary touch controls as a design target (SC 2.5.5 Level AAA).
 - [ ] Motion sensitivity: all decorative animations yield to `@media (prefers-reduced-motion: reduce)`.
 
 ### 3.3 Understandable

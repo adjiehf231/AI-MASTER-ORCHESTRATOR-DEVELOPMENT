@@ -5,7 +5,7 @@ description: "Enterprise inter-system integration standards (Framework §10) —
 
 # System Integration & Webhook Architecture — ${PROJECT_NAME}
 
-Authoritative sources: Master Framework (§10), `docs/integrations/`, and the Enterprise Engineering Constitution (§6, §8 & §11).
+Repository references: `skills/api-design/SKILL.md`, `skills/event-driven-architecture/SKILL.md`.
 
 In enterprise architecture, systems do not live in isolation. Seamless, secure, and resilient integration across internal modules and external third-party services is the bedrock of business continuity.
 
@@ -120,7 +120,7 @@ export async function processIdempotentEvent<T>(
 
 ## 4. Protocol 3: Resilient Outbound Calls, Bulkhead Isolation & Dead-Letter Queue (DLQ)
 
-When calling third-party services (LLMs, Payment Gateway (Stripe/Midtrans/PayPal), SMTP, recruiters):
+When calling third-party services (LLMs, Payment Gateway (Stripe/Midtrans/PayPal), SMTP, partner backends):
 1. **Bulkhead Pattern (Concurrency Throttling):**
    - Isolate downstream connection pools via semaphores (e.g. max 10 concurrent requests to AI provider, max 20 to payment gateway) so slow upstream services cannot exhaust the application server thread pool.
 2. **Timeout Budget:** Set explicit timeouts on all HTTP requests (default: $5000\text{ms}$).

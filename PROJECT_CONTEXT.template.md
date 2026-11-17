@@ -9,6 +9,7 @@
 - **Project Identifier (`${PROJECT_ID}`):** "ACME"
 - **Primary Domain (`${PROJECT_DOMAIN}`):** "acme.com"
 - **Database Name (`${DB_NAME}`):** "acme_db"
+- **OpenRouter Model (`${OPENROUTER_MODEL}`):** `openrouter/auto`
 - **Target Audience / Personas:** Enterprise B2B Administrators, Operations Managers, Developers
 - **Repository Type:** Monorepo / Polyrepo
 

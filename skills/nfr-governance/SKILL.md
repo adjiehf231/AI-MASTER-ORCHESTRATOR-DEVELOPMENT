@@ -5,7 +5,7 @@ description: "Enterprise Non-Functional Requirements (NFR) engineering and verif
 
 # Non-Functional Requirements & SRE Governance — ${PROJECT_NAME}
 
-Authoritative sources: Master Framework (§16), `docs/qa/RELEASE_QUALITY_GATES.md`, `docs/qa/PERFORMANCE_TEST_STRATEGY.md`, and the ${PROJECT_NAME} Constitution (§1, §11, §12).
+Repository references: `docs/qa/RELEASE_QUALITY_GATES.md`, `skills/performance-testing/SKILL.md`.
 
 A software system that satisfies all functional requirements can still fail catastrophically in production if non-functional requirements (NFRs) are neglected. High response latency drives away users; unavailability destroys trust; security breaches incur legal liability; and poor recoverability causes permanent data loss.
 

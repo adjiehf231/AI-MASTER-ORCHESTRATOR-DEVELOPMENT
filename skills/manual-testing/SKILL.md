@@ -5,7 +5,7 @@ description: "Enterprise manual and exploratory testing methodology for ${PROJEC
 
 # Manual & Exploratory Testing — ${PROJECT_NAME} (Exploratory Quality Engineering)
 
-Authoritative sources: `docs/qa/SIT_STRATEGY.md`, `docs/qa/UAT_STRATEGY.md`, `docs/qa/SMOKE_TEST_STRATEGY.md`, `docs/qa/REGRESSION_STRATEGY.md`, `docs/qa/TEST_EVIDENCE_STANDARD.md`, and `docs/qa/DEFECT_MANAGEMENT.md`.
+Repository references: `docs/process/STLC.md`, `skills/defect-lifecycle/SKILL.md`, `docs/qa/RELEASE_QUALITY_GATES.md`.
 
 Manual testing is not passive clicking; it is an active, investigative, and adversarial discipline. Automation verifies known assumptions; manual exploratory testing uncovers unknown edge cases, usability friction, visual defects, and complex concurrency races across browser tabs.
 
@@ -24,11 +24,11 @@ All exploratory testing must be organized into structured, timeboxed charters:
 - **Environment Tier:** Sandbox (`${DB_NAME}_sit`) | UAT (`${DB_NAME}_uat`).
 - **Data Persona:** Seeded multi-persona profile (`npm run seed:sit`).
 - **Tactical Tours Executed:**
-  1. *Persona Journey Tour:* Nominal workflow mimicking authentic jobseeker/recruiter behavior.
+  1. *Persona Journey Tour:* Nominal workflow mimicking representative end-user and operator behavior.
   2. *Hostile Input Tour:* Extreme inputs, boundary strings, emojis, malformed files.
   3. *Interruption & Recovery Tour:* Disconnecting network mid-operation, refreshing browser tab, back/forward button navigation.
   4. *Multi-Tab Concurrency Tour:* Triggering identical actions simultaneously across multiple browser tabs.
-  5. *Indonesian Copy Audit Tour:* Verifying linguistic clarity and emotional tone.
+  5. *Localization Audit Tour:* Verifying linguistic clarity and emotional tone.
 ```
 
 ---
@@ -57,20 +57,20 @@ Conduct rigorous, targeted probes against ${PROJECT_NAME}'s core architectural r
 - **No Silent Verification:** When a user accepts an AI suggestion, is the content integrated into the document draft without silently being promoted to `VERIFIED` status in the database?
 - **Rejection Integrity:** If a suggestion is rejected, does it disappear permanently from the active draft?
 
-### 3.3 Account Erasure Cascade (`DELETE /api/v1/user/account`)
+### 3.3 Account Erasure Cascade
 - **Password Re-Authentication:** Does the interface demand password confirmation before initiating account deletion?
 - **SLA Enforcement:** Does the deletion complete within $< 30\text{s}$?
-- **Complete Wipe:** Verify that subsequent login attempts fail with HTTP 401, and that associated documents, diagnostic reports, and credit balances are wiped from the database.
+- **Complete Wipe:** Verify that subsequent login attempts fail with HTTP 401, and that personal data follows the approved erasure and retention policy.
 
 ### 3.4 Real-World File Uploads & Parsing Stress
 - Upload messy, scanned PDFs lacking text layers (assert proper OCR guidance).
-- Upload 15MB oversized PDF files (assert immediate, graceful HTTP 422 rejection; zero server freeze).
+- Upload a file above the configured limit and verify the documented error and graceful recovery.
 - Upload Word documents (.docx) containing multi-level nested tables and embedded images.
 - Upload files with path-traversal filenames: `doc_../../etc/passwd.pdf`.
 
 ### 3.5 Multi-Factor Scoring Sanity
 - Submit resumes with missing dates, duplicate sections, or non-standard formatting.
-- Assert that diagnostic category radar charts and sub-scores render deterministically without division-by-zero or `NaN` errors.
+- Assert that numeric results handle empty inputs and zero denominators without exposing `NaN`.
 
 ---
 
@@ -84,7 +84,7 @@ Playwright CI tests only Desktop Chromium. Manual testing must walk the cross-br
 
 ---
 
-## 5. Defect Reporting Standard (docs/qa/DEFECT_MANAGEMENT.md)
+## 5. Defect Reporting Standard
 
 An unreproducible defect report is a defective report. Every report must contain:
 1. **Title:** `[Module] Summary of failure when action is executed under precondition`.
@@ -100,7 +100,7 @@ An unreproducible defect report is a defective report. Every report must contain
 
 - **UAT Facilitation (Gate 5):**
   - Guide the Human Product Owner through end-to-end business acceptance scenarios on `${DB_NAME}_uat`.
-  - Compile the formal sign-off package in `docs/governance/PROMPT_50_UAT_PRODUCT_OWNER_SIGNOFF.md`.
+  - Compile the formal sign-off package in the project's release evidence.
 - **Production Smoke Testing (Gate 8):**
   - Execute immediately upon production deployment (`${DB_NAME}_prod`).
   - Must complete in **$< 30\text{s}$**.

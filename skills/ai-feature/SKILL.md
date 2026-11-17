@@ -5,7 +5,7 @@ description: "Comprehensive generative AI engineering under the Zero-Hallucinati
 
 # AI Feature Engineering — ${PROJECT_NAME} (Zero-Hallucination Standard)
 
-Authoritative sources: `docs/qa/AI_EVALUATION_STRATEGY.md`, `docs/qa/AI_SAFETY_TEST_STRATEGY.md`, `docs/qa/AI_RED_TEAM_STRATEGY.md`, and the Enterprise Engineering Constitution (§5).
+Repository references: `docs/qa/RELEASE_QUALITY_GATES.md`, `skills/ml-experimentation-lifecycle/SKILL.md`.
 
 ${PROJECT_NAME} AI powers mission-critical decisions. Generative fluency must never compromise factual accuracy. Every feature must enforce provenance lineage, defensive input sanitization, strict output parsing, and deterministic benchmark evaluations.
 

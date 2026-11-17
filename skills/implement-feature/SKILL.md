@@ -69,7 +69,7 @@ Execute every tier in exact fail-fast order. A failure at any tier triggers auto
 npm run lint         # 0 ESLint errors, 0 warnings
 npm run typecheck    # 0 TypeScript compiler errors
 
-# Tier 1: Fast-Path T1 Air-Gapped Zero-DB Unit Verification (<10s) ⚡
+# Tier 1: Fast unit tests using local fixtures
 node scripts/qa-unit-offline.cjs
 # (OR: npx vitest run --config vitest.unit-no-db.config.ts)
 
@@ -103,7 +103,7 @@ Trigger specialized subagent reviews based on change surface:
 
 Update all artifacts invalidated by the change per the 15 Mandatory Documents Checklist:
 1. **API Contracts:** Update route specifications in `docs/api/`.
-2. **Data Models:** Update entity descriptions in `docs/data/DATA_DICTIONARY.md`.
+2. **Data Models:** Update entity descriptions in the active project's data dictionary.
 3. **Architecture Decisions:** Author ADR in `docs/architecture/` if module boundaries, persistent storage shapes, or dependencies were altered.
 4. **Project Memory & Debt:**
    - Record confirmed decisions in `docs/memory/DECISIONS.md`.

@@ -5,7 +5,7 @@ description: "Comprehensive frontend engineering and quality standards for moder
 
 # Frontend Quality & UI Architecture — Enterprise Standards
 
-Authoritative sources: `skills/ui-ux-design-system/`, `${DOCS_DIR}/ui/`, `docs/qa/ACCESSIBILITY_TEST_STRATEGY.md`, and the Enterprise Engineering Constitution.
+Repository references: `skills/ui-ux-design-system/SKILL.md`, `skills/ui-ux-design-system/references/accessibility-and-component-states.md`.
 
 Frontend engineering is not merely making a page render; it is delivering an accessible, resilient, lightning-fast, and universally inclusive digital experience across all devices and network conditions without succumbing to low-craft, generic "AI slop".
 
@@ -110,7 +110,7 @@ Digital accessibility is a non-negotiable release gate:
 - Never convey meaning through color alone (e.g. pair red error text with an alert icon).
 
 ### 4.4 Touch Target Minimums (WCAG 2.2 SC 2.5.8)
-- Interactive controls on touch viewports must maintain an area of at least $44 \times 44\text{px}$ (or minimum $24\times 24\text{px}$ with sufficient surrounding spacing) to prevent tap errors.
+- Meet WCAG 2.2 SC 2.5.8 Level AA: pointer targets are at least 24 × 24 CSS pixels or satisfy a criterion exception, including its spacing exception. Prefer 44 × 44 CSS pixels for primary touch controls as a design target (SC 2.5.5 Level AAA).
 
 ### 4.5 Vestibular & Reduced Motion Protection
 - All animations and transitions must strictly respect user OS accessibility preferences:

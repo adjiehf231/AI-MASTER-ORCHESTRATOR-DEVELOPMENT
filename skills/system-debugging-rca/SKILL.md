@@ -5,7 +5,7 @@ description: "Principal-grade forensic engineering methodology for diagnosing, i
 
 # Forensic System Debugging & Advanced Root Cause Analysis — ${PROJECT_NAME}
 
-Authoritative sources: `docs/qa/DEFECT_MANAGEMENT.md`, `docs/qa/REGRESSION_STRATEGY.md`, the Enterprise Engineering Constitution (§13), and the Senior AI Engineering Core Rule.
+Repository references: `docs/process/STLC.md`, `skills/defect-lifecycle/SKILL.md`, `skills/incident-response/SKILL.md`.
 
 Junior engineers "try things until it works." Senior Principal Engineers operate as forensic scientists: they construct hypotheses, design controlled experiments, isolate variables, disprove assumptions, and identify the singular physical root cause before modifying a single line of production code.
 

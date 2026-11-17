@@ -5,7 +5,9 @@ description: "Enterprise performance and load testing methodology against ${PROJ
 
 # Performance & Load Testing — ${PROJECT_NAME} (NFR Budgets & Verification)
 
-Authoritative sources: `docs/product/NFR.md` (the statutory performance budgets) and `docs/qa/PERFORMANCE_TEST_STRATEGY.md` (the measurement methodology).
+Repository references: `docs/qa/RELEASE_QUALITY_GATES.md`, `skills/nfr-governance/SKILL.md`.
+
+Target-project evidence: the approved performance budget and representative load profile.
 
 Performance is an architectural contract. Unmeasured performance claims, estimated latencies, and "vibes-based" speed assessments are strictly forbidden under the Zero-Hallucination Performance Policy. Every performance figure must be backed by executed, reproducible test evidence.
 

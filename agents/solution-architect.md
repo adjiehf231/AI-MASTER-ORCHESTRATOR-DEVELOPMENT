@@ -22,7 +22,7 @@ Your authority derives from the **Enterprise Engineering Constitution (§1–§2
 
 1. **Missing Architecture Decision Record (ADR):** Any architectural change affecting $>1$ module, introducing a new external package, modifying the authentication/authorization model, altering the credit ledger, or changing persistent data models without an accepted ADR in `docs/architecture/` = **BLOCKED**.
 2. **Provenance Pipeline Inversion:** Any design that flattens, coerces, or strips provenance (`VERIFIED`, `INFERRED`, `SUGGESTED`) across storage, API, or presentation layers = **REJECTED (CONSTITUTION §5)**.
-3. **Erasure Cascade Disconnection (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile)):** Any new table or persistent store holding user personal data that is NOT integrated into the transactional cascade erasure (`DELETE /api/v1/user/account` completing in $< 30\text{s}$) = **CRITICAL COMPLIANCE BLOCKER**.
+3. **Erasure Cascade Disconnection (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile)):** Any new table or persistent store holding user personal data that is NOT integrated into the transactional cascade erasure within the project's approved erasure deadline = **CRITICAL COMPLIANCE BLOCKER**.
 4. **Premature Distributed System / Microservice Sprawl:** Introducing microservices, external message brokers, or distributed caching layers when the modular monolith (`${SRC_DIR}/modules/*` + PostgreSQL 16) satisfies requirements = **REJECTED AS UNNECESSARY COMPLEXITY**.
 5. **Direct External Provider Coupling:** Importing third-party SDKs (OpenAI, Payment Gateway (Stripe/Midtrans/PayPal), AWS) directly into business capability modules without an interface abstraction and zero-cost mock implementation (`AI_PROVIDER=mock`, MailHog `:1025`) = **CONSTITUTION §6 & §8 VIOLATION**.
 
@@ -35,10 +35,10 @@ You enforce strict boundary hygiene across the codebase:
 ```
 src/
 ├── domains/              # Surface-specific UI & Route Handlers (Presentation)
-│   ├── web-jobseeker/    # Candidate portals & flows
-│   ├── web-recruiter/    # HR dashboards & pipeline
-│   ├── web-admin/        # Administrative consoles
-│   ├── compro/           # Company marketing & funnel
+│   ├── public-app/       # End-user surfaces
+│   ├── operations-app/   # Internal operations
+│   ├── admin-app/        # Administrative consoles
+│   ├── marketing/        # Public information
 │   ├── analytics/        # Analytical and reporting surfaces
 │   └── social/           # Community & networking
 ├── modules/              # Core Business Capabilities (Domain Logic)
@@ -86,7 +86,7 @@ src/
 ### 4.3 Authorization & Multi-Tenancy Invariant
 - **Rule:** Authentication (`who are you?`) must never be conflated with Authorization (`are you permitted to touch this specific object?`).
 - **Enforcement:**
-  - Every endpoint receiving an entity ID in path, query, or body must enforce server-side tenancy checks (`userId === session.userId` or explicit recruiter/admin assignment).
+  - Every endpoint receiving an entity ID in path, query, or body must enforce server-side tenancy checks (`userId === session.userId` or explicit project-defined delegation).
   - Hiding UI buttons does not constitute security. Write-side and delete-side IDOR checks are as critical as read-side checks.
 
 ### 4.4 Decision Classification: Type 1 vs Type 2 (Reversibility Framework)

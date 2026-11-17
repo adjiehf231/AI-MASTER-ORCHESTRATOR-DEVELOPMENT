@@ -25,14 +25,14 @@ Every test cycle follows six disciplined phases synchronized with the developmen
      /----\     - Golden path critical user journeys only.
     /      \    Tier 2: Colocated Unit & Isolated Integration Suites (Database & APIs) - ~25%
    /--------\   - Repository contracts, transaction boundaries, migrations.
-  /          \  Tier 1: Fast-Path Air-Gapped Zero-DB Unit Suites (<10s) - ~70% ⚡
+  /          \  Tier 1: Fast unit tests without external service dependencies
  /------------\ - Pure algorithmic domain scoring, state transitions, security ownership.
 ```
 
-### Tier 1 Fast-Path Invariants (Sub-10s Zero-DB)
-1. **Network Air-Gap:** Any network or external database I/O throws an unhandled exception.
-2. **Determinism:** Tests must never depend on real wall-clock time or external random seeds.
-3. **Fail-Fast Boundary:** If Tier 1 fails, the CI/CD pipeline aborts immediately before spinning up containers or browser runners.
+### Tier 1 Fast-Path Invariants
+1. **Local fixtures:** Use deterministic clocks, IDs, and test data. Replace real database and service dependencies at the boundary.
+2. **Environment:** Pass only the configuration the test process needs. Use separate network isolation when the target project requires it.
+3. **Fail-fast:** Investigate a failing test or runner startup before starting integration or browser checks.
 
 ---
 

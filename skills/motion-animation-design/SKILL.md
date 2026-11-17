@@ -115,9 +115,9 @@ Interactive controls must provide subtle, immediate physical response:
 
 ---
 
-## 4. Inviolable Digital Accessibility & Vestibular Safety (WCAG 2.2 AA)
+## 4. Digital Accessibility & Vestibular Safety
 
-Animations must never induce dizziness, nausea, or motion sickness in users with vestibular disorders (WCAG 2.2 SC 2.3.3 Animation from Interactions).
+Support reduced motion and let users disable nonessential animation triggered by interaction, in line with WCAG 2.2 SC 2.3.3 Level AAA. Check independent Level A and AA animation criteria where applicable.
 
 ### Mandatory Reduced-Motion Standards
 1. **Global CSS Reset:**

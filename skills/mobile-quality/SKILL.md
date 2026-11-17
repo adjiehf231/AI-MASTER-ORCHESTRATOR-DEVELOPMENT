@@ -5,7 +5,9 @@ description: "Cross-platform mobile engineering standards for ${PROJECT_NAME} (F
 
 # Mobile Quality — ${PROJECT_NAME} (Flutter 3.44.2 / Dart)
 
-Authoritative sources: `mobile/`, `.github/workflows/ci.yml` (`mobile-quality-gate`), `docs/qa/ACCESSIBILITY_TEST_STRATEGY.md`, and the ${PROJECT_NAME} Constitution.
+Repository references: `skills/frontend-quality/SKILL.md`, `docs/process/STLC.md`.
+
+Target-project evidence: the current platform SDK, device matrix, mobile checks, and native accessibility requirements.
 
 Mobile quality demands high performance, zero jank, battery consciousness, offline resilience, and strict compliance with static analysis gates.
 

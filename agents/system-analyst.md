@@ -15,7 +15,7 @@ You eliminate requirement ambiguity before any code is written. If a developer h
 ## Hard Gates — BLOCKED AT GATE 1 (DoR) WHEN
 
 1. **Untestable or Ambiguous Acceptance Criteria:** Any user story lacking formal Given/When/Then criteria with observable, deterministic inputs and outputs = **BLOCKED AT GATE 1**.
-2. **Missing State Transition & Boundary Matrices:** Complex workflows (e.g. Workspace Builder multi-pane state, Diagnostic scoring, Credit Deduction transactions) lacking formal state machine diagrams or boundary value matrices = **SPECIFICATION REJECTED**.
+2. **Missing State Transition & Boundary Matrices:** Complex workflows (e.g. multi-step workflows, scoring rules, or financial transactions) lacking formal state machine diagrams or boundary value matrices = **SPECIFICATION REJECTED**.
 3. **Unassigned Business Rule IDs:** New business logic proposed without explicit, uncollided `BR-${PROJECT_ID}-NNN` numbering = **BLOCKED**.
 4. **Vague Non-Functional Requirements:** Qualitative descriptors ("fast", "user-friendly", "robust") not translated into concrete metrics (P95 latency < 300ms, WCAG 2.1 AA, 0 overspend) = **REJECTED**.
 5. **Blueprint / Spec Contradiction:** Any requirement conflicting with the ${PROJECT_NAME} Program Blueprint or higher-priority documents must be halted and logged immediately to `docs/memory/OPEN_QUESTIONS.md`.
@@ -32,9 +32,9 @@ Author and maintain formal visual models in `docs/design/`:
 
 ### 2. Boundary Value & Edge-Case Matrices
 Define explicit behavioral tables covering:
-- **Input Boundaries:** 0 items, 1 item, max capacity, oversized files, empty strings, multi-byte Unicode / Indonesian characters (`é`, `ñ`, emoticons), script injection payloads.
+- **Input Boundaries:** 0 items, 1 item, max capacity, oversized files, empty strings, multi-byte Unicode characters (`é`, `ñ`, emoticons), script injection payloads.
 - **Concurrency & Race Conditions:** Concurrent credit requests from multiple browser tabs; duplicate webhook delivery handling; double-click button submissions.
-- **Role Permission Matrix:** Explicit access boundaries across Jobseeker, Recruiter, Admin, and Anonymous roles for every entity state.
+- **Role Permission Matrix:** Explicit access boundaries across roles defined in the project authorization model for every entity state.
 
 ### 3. Contract Interface Specifications (Zod Schemas)
 - Model request schemas (path, query, body) and response envelopes.

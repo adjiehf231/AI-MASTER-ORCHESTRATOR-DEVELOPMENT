@@ -5,7 +5,7 @@ description: "Comprehensive quality, compliance, and gate audit across the 8 Rel
 
 # Quality & Compliance Audit — ${PROJECT_NAME} (Gate 1–8 Assessment)
 
-Authoritative sources: `docs/qa/RELEASE_QUALITY_GATES.md`, `docs/process/RELEASE_GOVERNANCE.md`, `docs/process/SDLC_STLC_ALIGNMENT.md`, and the ${PROJECT_NAME} Constitution.
+Repository references: `docs/process/SDLC.md`, `docs/process/STLC.md`, `docs/qa/RELEASE_QUALITY_GATES.md`.
 
 The Auditor verifies reality against claims. Verbal assurances, optimistic assumptions, or unexecuted test documentation are grounds for immediate audit rejection.
 

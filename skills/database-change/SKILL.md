@@ -1,11 +1,13 @@
 ---
 name: database-change
-description: "Comprehensive PostgreSQL 16 and Drizzle ORM schema engineering — inspect-first workflow, reviewed generated DDL, expand/contract staging for zero-downtime evolution, erasure cascade parity (<30s SLA), EXPLAIN (ANALYZE, BUFFERS) indexing evidence, and multi-tier parity verification. Use when modifying schemas, creating migrations, or tuning queries."
+description: "Comprehensive PostgreSQL 16 and Drizzle ORM schema engineering — inspect-first workflow, reviewed generated DDL, expand/contract staging for zero-downtime evolution, erasure cascade parity (project-defined SLA), EXPLAIN (ANALYZE, BUFFERS) indexing evidence, and multi-tier parity verification. Use when modifying schemas, creating migrations, or tuning queries."
 ---
 
 # Database Change & Migration Engineering — ${PROJECT_NAME} (PostgreSQL 16 + Drizzle)
 
-Authoritative sources: `drizzle.config.ts`, `drizzle/`, `src/infrastructure/database/`, `docs/data/`, and the Enterprise Engineering Constitution (§9 & §18).
+Repository references: `skills/zero-downtime-database/SKILL.md`, `docs/qa/RELEASE_QUALITY_GATES.md`.
+
+Target-project evidence: the active database engine, schema definitions, migration tooling, and erasure policy.
 
 Database migrations permanently alter persistent production state. A flawed migration causes table locks, application downtime, data corruption, or irreversible data loss. This skill provides the formal engineering methodology to evolve schemas safely, deterministically, and with zero downtime.
 
@@ -17,7 +19,7 @@ Database migrations permanently alter persistent production state. A flawed migr
 2. **Review Generated SQL Line by Line:** Generated DDL from `npm run db:generate` must be inspected line by line before execution. Any unpredicted `DROP` or destructive `ALTER` requires an immediate stop and schema redesign.
 3. **Explicit Approval for Destructive DDL:** `DROP TABLE`, `DROP COLUMN`, `TRUNCATE`, type narrowing, or adding un-defaulted `NOT NULL` columns to populated tables requires explicit written human approval and a tested rollback plan (Constitution §18).
 4. **Zero-Downtime Expand/Contract Staging:** Destructive changes or column renames must be executed in staged phases across separate releases. Direct renames on populated tables are forbidden.
-5. **Erasure Cascade Parity (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile)):** Any new table containing user personal or sensitive domain data must be integrated into the transactional account erasure cascade (`DELETE /api/v1/user/account` completing in $< 30\text{s}$). Missing integration is an S1 Critical Defect.
+5. **Erasure Cascade Parity (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile)):** Any new table containing user personal or sensitive domain data must be integrated into the transactional account erasure cascade within the project's approved erasure deadline. Missing integration is an S1 Critical Defect.
 6. **No `db:push` Against Shared Tiers:** Never execute `drizzle-kit push` against shared, SIT, UAT, or Production databases. Enforced via `scripts/guard-db-push.ts`.
 7. **Query Plan Evidence for Indexes:** Every new index must be justified by an exact query and before/after `EXPLAIN (ANALYZE, BUFFERS)` evidence demonstrating sequential scan elimination.
 
@@ -115,15 +117,15 @@ Execution Time: 0.085 ms (99.8% reduction in latency)
 
 ---
 
-## 5. Account Erasure Cascade Standard (`DELETE /api/v1/user/account`)
+## 5. Account Erasure Cascade Standard
 
-Verify that the deletion cascade covers all user entities within the $< 30\text{s}$ SLA:
+Verify that the deletion cascade covers all user entities within the project's approved SLA:
 ```typescript
 // Transactional cascade erasure order
 await db.transaction(async (tx) => {
   // 1. Delete dependent leaf records
   await tx.delete(evalReports).where(eq(evalReports.userId, targetUserId));
-  await tx.delete(jobMatches).where(eq(jobMatches.userId, targetUserId));
+  await tx.delete(userRecords).where(eq(userRecords.userId, targetUserId));
   await tx.delete(documentSections).where(eq(documentSections.userId, targetUserId));
   await tx.delete(documents).where(eq(documents.userId, targetUserId));
   await tx.delete(userItems).where(eq(userItems.userId, targetUserId));

@@ -5,7 +5,9 @@ description: "Architecting and governing ${PROJECT_NAME} STLC test systems — t
 
 # Test Architecture Design — ${PROJECT_NAME} (STLC Engineering)
 
-Authoritative sources: `docs/qa/TEST_ARCHITECTURE.md`, `docs/qa/TEST_PYRAMID.md`, `docs/qa/QA_MASTER_STRATEGY.md`, and `docs/qa/TEST_DATA_STRATEGY.md`.
+Repository references: `docs/process/STLC.md`, `docs/qa/TEST_PYRAMID.md`, `skills/qa-verification/SKILL.md`.
+
+Target-project evidence: the configured test runners, supported integrations, and synthetic-data policy.
 
 Test architecture ensures that test suites run deterministically, fast, and maintainably without test pyramid inversion or flaky failures.
 
@@ -25,10 +27,10 @@ Maintain strict allocation across the testing pyramid:
   /_____________\
 ```
 
-- **Unit Layer (Fast, In-Memory):** Test pure business logic, Core domain scoring algorithms, date formatting, and input parsing. Execution speed target: `< 10ms` per unit test.
+- **Unit Layer (Fast, In-Memory):** Test pure business logic, domain algorithms, date formatting, and input parsing. Execution speed target: `< 10ms` per unit test.
 - **Integration Layer (Isolated Database):** Test Drizzle repository queries, transaction rollback behavior, and multi-service orchestration against Docker Postgres 16 (`${DB_NAME}_test`). Execution speed target: `< 100ms` per integration test.
 - **API & Contract Layer:** Test route handlers for HTTP error envelopes, Zod request/response validation, role-based authz, and IDOR prevention.
-- **E2E Layer (Golden Path Only):** Reserve Playwright browser automation strictly for top 5 critical user journeys (Identity login, Primary Workspace Builder, Core Diagnostic report generation, Job Matcher, and Account Deletion cascade).
+- **E2E Layer (Golden Path Only):** Reserve Playwright browser automation strictly for the critical user journeys that stakeholders identify, such as sign-in and a representative create/review flow.
 
 ---
 
@@ -54,8 +56,8 @@ Design test doubles that eliminate flaky external network dependencies:
 Per Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile), real customer data is strictly prohibited in testing environments.
 
 1. **Synthetic Persona Generators (`scripts/seed-sit.ts`):**
-   - Standardized test personas: Fresh Graduate, Experienced Engineer, Executive Recruiter, Super Admin.
-   - Realistic Indonesian names, synthetic education institutions, and mock employment histories.
+   - Standardized test personas: new user, established user, delegated operator, platform administrator.
+   - Synthetic records representative of the locales and business constraints under test.
 2. **Deterministic State Resetting:**
    - Every integration test suite must establish its own preconditions and clean up residual entities.
    - Never rely on the execution order of other test suites.

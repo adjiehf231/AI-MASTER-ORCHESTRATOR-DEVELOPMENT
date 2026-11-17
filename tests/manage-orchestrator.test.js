@@ -1,7 +1,11 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { spawnSync } = require('child_process');
+const fs = require('node:fs');
 const path = require('path');
+const { fixtureRepository } = require('./fixture-repository');
+const { parseFrontmatter } = require('../scripts/lib/frontmatter');
+const { applyFilePlan, withFileLock } = require('../scripts/lib/file-plan');
 
 const repoRoot = path.resolve(__dirname, '..');
 const manageScript = path.join(repoRoot, 'scripts', 'manage-orchestrator.js');
@@ -47,5 +51,50 @@ test('manage-orchestrator.js rejects non-kebab-case skill names', () => {
 
   assert.notEqual(res.status, 0, 'Command must fail for non-kebab-case identifier');
   assert.ok(res.stderr.includes('Invalid identifier') || res.stdout.includes('Invalid identifier'), 'Error message must note invalid identifier');
+});
+
+test('skill:update changes YAML safely while preserving body and synchronizing only in the repository', t => {
+  const fixture = fixtureRepository(t);
+  const relativePath = 'skills/fixture-skill/SKILL.md';
+  const original = `---\nname: fixture-skill\n# Keep author annotation.\ndescription: "Project's original"\n---\n\n# Body stays the same.\n`;
+  fixture.write(relativePath, original);
+  const description = `Project's new "Windows" file C:\\workspace\\fixture`;
+  const result = fixture.run('manage-orchestrator.js', ['skill:update', 'fixture-skill', `--desc=${description}`]);
+  assert.equal(result.status, 0, result.stderr);
+  const saved = fixture.read(relativePath);
+  assert.equal(parseFrontmatter(saved, relativePath).attributes.description, description);
+  assert.equal(parseFrontmatter(saved, relativePath).body, parseFrontmatter(original, relativePath).body);
+  assert.match(saved, /# Keep author annotation/);
+  assert.ok(fixture.read('CLAUDE.md').includes(description));
+  assert.equal(fs.existsSync(fixture.plugin), false);
+});
+
+test('a rejected component update preserves source and generated adapter files', t => {
+  const fixture = fixtureRepository(t);
+  let result = fixture.run('sync-adapters.js');
+  assert.equal(result.status, 0, result.stderr);
+  const file = 'agents/orchestrator.md';
+  const source = fixture.read(file);
+  const adapter = fixture.read('CLAUDE.md');
+  result = fixture.run('manage-orchestrator.js', ['agent:update', 'orchestrator', '--mode=subagent']);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /must support primary mode/);
+  assert.equal(fixture.read(file), source);
+  assert.equal(fixture.read('CLAUDE.md'), adapter);
+  assert.equal(fs.existsSync(fixture.plugin), false);
+});
+
+test('a failed multi-file write restores replaced files and removes new files', t => {
+  const fixture = fixtureRepository(t);
+  fixture.write('before.txt', 'original');
+  assert.throws(() => withFileLock(fixture.root, () => applyFilePlan(fixture.root, {
+    files: new Map([
+      ['before.txt', 'changed'],
+      ['temporary.txt', 'temporary'],
+      ['temporary.txt/invalid.txt', 'cannot create inside a file']
+    ])
+  })), /Unexpected file type/);
+  assert.equal(fixture.read('before.txt'), 'original');
+  assert.equal(fs.existsSync(path.join(fixture.root, 'temporary.txt')), false);
 });
 

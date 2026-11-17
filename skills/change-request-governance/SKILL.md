@@ -5,7 +5,7 @@ description: "Enterprise Change Request (CR) governance, the 9-stage CR lifecycl
 
 # Change Request Governance & Technical Debt Management — ${PROJECT_NAME}
 
-Authoritative sources: Master Framework (§15, §17, §18, §20), `docs/process/CHANGE_MANAGEMENT.md`, `docs/process/RELEASE_GOVERNANCE.md`, and the Enterprise Engineering Constitution.
+Repository references: `docs/process/CHANGE_MANAGEMENT.md`, `docs/qa/RELEASE_QUALITY_GATES.md`, `skills/release-management/SKILL.md`.
 
 In an enterprise software ecosystem, undocumented changes, uncontrolled scope creep, and untracked technical debt lead to system decay and production outages. **Every change must be traceable, reviewed, verified, approved, and auditable.**
 
@@ -56,16 +56,16 @@ Every major capability or release cycle must ensure the following 15 artifacts a
 | **2** | **System Requirements Specification (SRS)** | `docs/product/SRS/` | `system-analyst` |
 | **3** | **Functional & Non-Functional (NFR) Specs** | `docs/design/NFR/` | `system-analyst` / `solution-architect` |
 | **4** | **Architecture Document & Boundary Map** | `docs/architecture/` | `solution-architect` |
-| **5** | **ERD & Data Dictionary** | `docs/data/DATA_DICTIONARY.md` | `database-engineer` / `data-engineer` |
+| **5** | **ERD & Data Dictionary** | Project data dictionary | `database-engineer` / `data-engineer` |
 | **6** | **API Contracts (Zod / OpenAPI)** | `docs/api/` / `src/modules/*/contracts` | `backend-engineer` / `system-analyst` |
 | **7** | **UI/UX Design, Flow & Design System** | `docs/design/` / `src/components/` | `ux-engineer` / `frontend-engineer` |
 | **8** | **Test Plan & Test Cases (`TC-*`)** | `docs/qa/` / `tests/` | `test-architect` / `qa-engineer` |
-| **9** | **Defect / Open Ticket Log** | `docs/qa/DEFECT_MANAGEMENT.md` | `qa-manual` / `qa-engineer` |
-| **10** | **Change Request (CR) Register** | `docs/process/CR_REGISTER.md` | `release-manager` / `orchestrator` |
+| **9** | **Defect / Open Ticket Log** | Project defect tracker | `qa-manual` / `qa-engineer` |
+| **10** | **Change Request (CR) Register** | Project change register | `release-manager` / `orchestrator` |
 | **11** | **SIT & UAT Execution Reports** | `docs/reports/` | `qa-engineer` / `release-manager` |
-| **12** | **Deployment & Rollback Plan** | `docs/delivery/DEPLOYMENT_RUNBOOK.md` | `devops-engineer` / `release-manager` |
-| **13** | **Release Notes & Changelog** | `docs/memory/CHANGELOG.md` | `release-manager` |
-| **14** | **Runbook & Operational SOP** | `docs/operations/RUNBOOK.md` | `devops-engineer` / `sre-engineer` |
+| **12** | **Deployment & Rollback Plan** | Project deployment and rollback runbook | `devops-engineer` / `release-manager` |
+| **13** | **Release Notes & Changelog** | Project changelog | `release-manager` |
+| **14** | **Runbook & Operational SOP** | Project operations runbook | `devops-engineer` |
 | **15** | **ADR & Technical Debt Register** | `docs/architecture/ADR-*`, `docs/memory/TECHNICAL_DEBT.md` | `solution-architect` / `orchestrator` |
 
 ---

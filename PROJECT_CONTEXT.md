@@ -9,6 +9,7 @@
 - **Project Identifier (`${PROJECT_ID}`):** "AIMASTER"
 - **Primary Domain (`${PROJECT_DOMAIN}`):** "orchestrator.local"
 - **Database Name (`${DB_NAME}`):** "orchestrator_db"
+- **OpenRouter Model (`${OPENROUTER_MODEL}`):** `openrouter/auto`
 - **Target Audience / Personas:** Software Engineers, Tech Leads, QA Engineers, Product Architects
 - **Repository Type:** Polyglot Universal Orchestration System
 

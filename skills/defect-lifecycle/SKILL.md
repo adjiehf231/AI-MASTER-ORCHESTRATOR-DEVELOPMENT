@@ -5,7 +5,7 @@ description: "Standardized defect lifecycle management, S1–S4 severity vs P0�
 
 # Defect Lifecycle & Root Cause Analysis — ${PROJECT_NAME}
 
-Authoritative sources: `docs/qa/DEFECT_MANAGEMENT.md`, `docs/qa/REGRESSION_STRATEGY.md`, and the ${PROJECT_NAME} Constitution (§13 & §14).
+Repository references: `docs/process/STLC.md`, `skills/system-debugging-rca/SKILL.md`.
 
 A defect is a learning opportunity and a quality signal. Poor defect reports waste engineering time; premature defect closures cause production regressions.
 
@@ -124,7 +124,7 @@ test('reproduce DEF-042: concurrent balance deduction must not cause negative ba
 A defect may only be closed when:
 - [ ] Fix is verified on the target tier where the defect was discovered.
 - [ ] Automated regression test is executed green in CI.
-- [ ] Surrounding regression test set for the affected domain (`docs/qa/REGRESSION_STRATEGY.md`) passes 100%.
+- [ ] Surrounding regression test set for the affected domain passes according to the project's regression strategy.
 - [ ] Evidence of retest (terminal logs, screenshots) is attached to the defect report.
 
 ---

@@ -5,7 +5,9 @@ description: "Delivery pipeline engineering and multi-tier environment operation
 
 # CI/CD Pipeline & Environment Operations — ${PROJECT_NAME}
 
-Authoritative sources: `.github/workflows/ci.yml`, `docker-compose.yml`, `scripts/start-environment.ts`, `scripts/sync-uat-from-prod.ts`, `scripts/verify-all-environments.ts`, `.gitleaks.toml`, `docs/operations/`, and `docs/delivery/`.
+Repository references: `.github/workflows/ci.yml`, `docs/qa/RELEASE_QUALITY_GATES.md`, `skills/release-management/SKILL.md`.
+
+Target-project evidence: environment and rollout procedures, CI configuration, and deployment scripts that exist in the active project.
 
 The delivery pipeline is the statutory guardian of production stability. An automated pipeline that can be bypassed or that permits failing stages to be ignored is not an engineering control. Every release to production must traverse an unbroken chain of verified quality gates.
 
@@ -103,7 +105,7 @@ Per Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile), raw produ
 2. **Database Reversion (if migration was applied):**
    - If additive (expand phase): leave new columns in place (previous code is forward-compatible).
    - If contract phase: execute pre-tested down-migration script.
-3. **Incident Freeze:** Open incident log in `docs/operations/INCIDENT_LOG.md` and alert stakeholders.
+3. **Incident Freeze:** Open an entry in the project's incident log and alert stakeholders.
 
 ---
 

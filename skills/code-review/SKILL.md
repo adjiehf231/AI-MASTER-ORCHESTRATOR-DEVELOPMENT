@@ -5,7 +5,7 @@ description: "Adversarial code review methodology to merge-gate standards — bl
 
 # Adversarial Code Review — ${PROJECT_NAME} (Merge-Gate Standard)
 
-Authoritative sources: `docs/qa/RELEASE_QUALITY_GATES.md` (Gate 2), `docs/qa/SECURITY_TEST_STRATEGY.md`, and the Enterprise Engineering Constitution (§15).
+Repository references: `docs/qa/RELEASE_QUALITY_GATES.md`, `skills/security-review/SKILL.md`.
 
 The primary objective of code review is to **DISPROVE correctness**. A review that merely says "looks good to me (LGTM)" is an operational failure. Every pull request must be subjected to hostile inspection to identify edge-case failures, security vulnerabilities, requirement drift, and performance regressions before merging.
 

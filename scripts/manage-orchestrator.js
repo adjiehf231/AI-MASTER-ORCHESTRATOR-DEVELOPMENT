@@ -1,92 +1,26 @@
 #!/usr/bin/env node
-/**
- * Universal AI Master Orchestrator: Agent & Skill Management CLI
- * Automates creation, updating, scaffolding, and synchronization of Specialist Agents and Enterprise Skills.
- */
-
-const { spawnSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
+const { parseArgs } = require('node:util');
+const { saveComponent } = require('./lib/component-store');
+const { formatFrontmatter, validateComponent } = require('./lib/frontmatter');
 
 const repoRoot = path.resolve(__dirname, '..');
+const commands = {
+  'agent:create': ['agent', false],
+  'create:agent': ['agent', false],
+  'add:agent': ['agent', false],
+  'agent:update': ['agent', true],
+  'update:agent': ['agent', true],
+  'skill:create': ['skill', false],
+  'create:skill': ['skill', false],
+  'add:skill': ['skill', false],
+  'skill:update': ['skill', true],
+  'update:skill': ['skill', true]
+};
 
-// Helper to parse CLI arguments
-function parseArgs() {
-  const args = process.argv.slice(2);
-  const command = args[0];
-  const params = {};
-
-  for (let i = 1; i < args.length; i++) {
-    const arg = args[i];
-    if (arg.startsWith('--')) {
-      const eqIdx = arg.indexOf('=');
-      if (eqIdx !== -1) {
-        const key = arg.slice(2, eqIdx);
-        const val = arg.slice(eqIdx + 1);
-        params[key] = val;
-      } else {
-        const key = arg.slice(2);
-        const next = args[i + 1];
-        if (next && !next.startsWith('--')) {
-          params[key] = next;
-          i++;
-        } else {
-          params[key] = true;
-        }
-      }
-    } else if (!params.target) {
-      params.target = arg;
-    }
-  }
-
-  return { command, params };
-}
-
-// Helper to validate kebab-case naming
-function validateKebabCase(name) {
-  if (!name || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(name)) {
-    throw new Error(`Invalid identifier "${name}". Must be lowercase kebab-case (e.g. "cloud-architect", "threat-modeling").`);
-  }
-}
-
-// Trigger automatic multi-platform synchronization and live deployment
-function triggerSyncAndDeploy() {
-  console.log('\n-> Synchronizing multi-platform adapters...');
-  const syncRes = spawnSync('node', [path.join(repoRoot, 'scripts', 'sync-adapters.js')], { stdio: 'inherit', cwd: repoRoot });
-  if (syncRes.status !== 0) throw new Error('Adapter synchronization failed.');
-
-  console.log('-> Deploying updates to local Antigravity plugin...');
-  const deployRes = spawnSync('node', [path.join(repoRoot, 'scripts', 'deploy-antigravity.js')], { stdio: 'inherit', cwd: repoRoot });
-  if (deployRes.status !== 0) throw new Error('Antigravity deployment failed.');
-
-  console.log('-> Running integrity validation...');
-  const auditRes = spawnSync('node', [path.join(repoRoot, 'scripts', 'audit-integrity.js')], { stdio: 'inherit', cwd: repoRoot });
-  if (auditRes.status !== 0) throw new Error('Integrity audit failed.');
-}
-
-// 1. Create Agent
-function createAgent(params) {
-  const name = params.name || params.target;
-  validateKebabCase(name);
-
-  const title = params.title || name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-  const role = params.role || `Principal ${title} Engineer`;
-  const desc = params.desc || `${role} — governs \${PROJECT_NAME} systems, architecture, and verification.`;
-  const mode = params.mode || 'subagent';
-
-  const agentPath = path.join(repoRoot, 'agents', `${name}.md`);
-  if (fs.existsSync(agentPath) && !params.force) {
-    throw new Error(`Agent "${name}" already exists at ${path.relative(repoRoot, agentPath)}. Pass --force to overwrite.`);
-  }
-
-  const cleanDesc = desc.replace(/"/g, '\\"');
-  const content = `---
-name: ${name}
-description: "${cleanDesc}"
-mode: ${mode}
----
-
-# ${role.toUpperCase()} — \${PROJECT_NAME}
+function createAgent(attributes, role) {
+  const body = `# ${role.toUpperCase()} — \${PROJECT_NAME}
 
 ## 1. Identity & Role Mandate
 
@@ -130,62 +64,12 @@ Every response or deliverable must provide:
 - **CHANGES:** Concrete architectural and implementation modifications.
 - **FILES:** Affected files with exact paths.
 - **TESTS:** Executed terminal commands and exit codes.
-- **FINDINGS & RISKS:** Severity-ranked observations (🔴 S1 / 🟡 S2 / 🔵 S3).
-`;
-
-  fs.writeFileSync(agentPath, content, 'utf8');
-  console.log(`✅ Successfully created Agent: agents/${name}.md`);
-  triggerSyncAndDeploy();
+- **FINDINGS & RISKS:** Severity-ranked observations (🔴 S1 / 🟡 S2 / 🔵 S3).`;
+  return formatFrontmatter(attributes, body);
 }
 
-// 2. Update Agent
-function updateAgent(params) {
-  const name = params.name || params.target;
-  validateKebabCase(name);
-
-  const agentPath = path.join(repoRoot, 'agents', `${name}.md`);
-  if (!fs.existsSync(agentPath)) {
-    throw new Error(`Agent "${name}" not found at ${path.relative(repoRoot, agentPath)}.`);
-  }
-
-  let content = fs.readFileSync(agentPath, 'utf8');
-  if (params.desc) {
-    const cleanDesc = params.desc.replace(/"/g, '\\"');
-    content = content.replace(/^description:\s*["'][^"'\r\n]+["']/m, `description: "${cleanDesc}"`);
-  }
-  if (params.mode) {
-    content = content.replace(/^mode:\s*[^\r\n]+/m, `mode: ${params.mode}`);
-  }
-
-  fs.writeFileSync(agentPath, content, 'utf8');
-  console.log(`✅ Successfully updated Agent: agents/${name}.md`);
-  triggerSyncAndDeploy();
-}
-
-// 3. Create Skill
-function createSkill(params) {
-  const name = params.name || params.target;
-  validateKebabCase(name);
-
-  const title = params.title || name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-  const desc = params.desc || `Enterprise ${title} Playbook — standards, implementation patterns, and verification matrices for \${PROJECT_NAME}.`;
-
-  const skillDir = path.join(repoRoot, 'skills', name);
-  const skillFile = path.join(skillDir, 'SKILL.md');
-
-  if (fs.existsSync(skillFile) && !params.force) {
-    throw new Error(`Skill "${name}" already exists at ${path.relative(repoRoot, skillFile)}. Pass --force to overwrite.`);
-  }
-
-  if (!fs.existsSync(skillDir)) fs.mkdirSync(skillDir, { recursive: true });
-
-  const cleanDesc = desc.replace(/"/g, '\\"');
-  const content = `---
-name: ${name}
-description: "${cleanDesc}"
----
-
-# ${title} Playbook — \${PROJECT_NAME}
+function createSkill(attributes, title) {
+  const body = `# ${title} Playbook — \${PROJECT_NAME}
 
 Authoritative sources: \`docs/architecture/\`, \`docs/qa/\`, and the Enterprise Engineering Constitution (§1–§20).
 
@@ -222,109 +106,108 @@ This playbook defines mandatory technical standards, operational patterns, and v
 - [ ] Server-side authorization verified on every mutation.
 - [ ] Error handling implements structured error envelopes (no unhandled rejections).
 - [ ] Colocated unit tests added for both happy and negative paths.
-- [ ] Zero secret leaks or unmasked PII in logs/telemetry.
-`;
-
-  fs.writeFileSync(skillFile, content, 'utf8');
-  console.log(`✅ Successfully created Skill: skills/${name}/SKILL.md`);
-  triggerSyncAndDeploy();
+- [ ] Zero secret leaks or unmasked PII in logs/telemetry.`;
+  return formatFrontmatter(attributes, body);
 }
 
-// 4. Update Skill
-function updateSkill(params) {
-  const name = params.name || params.target;
-  validateKebabCase(name);
-
-  const skillFile = path.join(repoRoot, 'skills', name, 'SKILL.md');
-  if (!fs.existsSync(skillFile)) {
-    throw new Error(`Skill "${name}" not found at ${path.relative(repoRoot, skillFile)}.`);
-  }
-
-  let content = fs.readFileSync(skillFile, 'utf8');
-  if (params.desc) {
-    const cleanDesc = params.desc.replace(/"/g, '\\"');
-    content = content.replace(/^description:\s*["'][^"'\r\n]+["']/m, `description: "${cleanDesc}"`);
-  }
-
-  fs.writeFileSync(skillFile, content, 'utf8');
-  console.log(`✅ Successfully updated Skill: skills/${name}/SKILL.md`);
-  triggerSyncAndDeploy();
+function create(kind, name, options) {
+  const title = options.title ?? name.split('-').map(word => word[0].toUpperCase() + word.slice(1)).join(' ');
+  const role = options.role ?? `Principal ${title} Engineer`;
+  const description = options.desc ?? (kind === 'agent'
+    ? `${role} — governs \${PROJECT_NAME} systems, architecture, and verification.`
+    : `Enterprise ${title} Playbook — implementation patterns and verification for \${PROJECT_NAME}.`);
+  const attributes = { name, description };
+  if (kind === 'agent') attributes.mode = options.mode ?? 'subagent';
+  return kind === 'agent' ? createAgent(attributes, role) : createSkill(attributes, title);
 }
 
-// 5. List Agents & Skills
+function update(kind, name, options, original, filename) {
+  const { body, document } = validateComponent(original, name, kind, filename);
+  if (options.desc !== undefined) document.set('description', options.desc);
+  if (options.mode !== undefined) document.set('mode', options.mode);
+  return formatFrontmatter(document, body);
+}
+
+function listComponents(kind, entries, parent) {
+  const items = entries.map(({ name, filename }) => {
+    const { attributes } = validateComponent(fs.readFileSync(filename, 'utf8'), name, kind, filename);
+    const summary = attributes.description.replace(/\s+/g, ' ');
+    const description = summary.length > 75 ? `${summary.slice(0, 75)}...` : summary;
+    return { name, description };
+  });
+  console.log(`\n=== ${parent} ===`);
+  items.forEach(({ name, description }, index) => {
+    console.log(` ${String(index + 1).padStart(2, '0')}. ${name}: ${description}`);
+  });
+}
+
 function listAll() {
   const agentsDir = path.join(repoRoot, 'agents');
-  const agentFiles = fs.readdirSync(agentsDir).filter(f => f.endsWith('.md'));
-
+  const agents = fs.readdirSync(agentsDir, { withFileTypes: true })
+    .filter(entry => entry.isFile() && entry.name.endsWith('.md'))
+    .map(entry => ({ name: entry.name.slice(0, -3), filename: path.join(agentsDir, entry.name) }));
   const skillsDir = path.join(repoRoot, 'skills');
-  const skillDirs = fs.readdirSync(skillsDir).filter(f => fs.statSync(path.join(skillsDir, f)).isDirectory());
-
-  console.log(`\n=== Specialist Agents Council (${agentFiles.length} Roles) ===`);
-  agentFiles.forEach((file, idx) => {
-    const content = fs.readFileSync(path.join(agentsDir, file), 'utf8');
-    const m = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-    const descMatch = m ? m[1].match(/description:\s*["']?([^"'\r\n]+)/) : null;
-    const desc = descMatch ? descMatch[1].slice(0, 75) + '...' : 'No description';
-    console.log(` ${String(idx + 1).padStart(2, '0')}. \x1b[36m${file.replace('.md', '')}\x1b[0m: ${desc}`);
-  });
-
-  console.log(`\n=== Enterprise Skills Directory (${skillDirs.length} Playbooks) ===`);
-  skillDirs.forEach((dir, idx) => {
-    const skillPath = path.join(skillsDir, dir, 'SKILL.md');
-    let desc = 'No description';
-    if (fs.existsSync(skillPath)) {
-      const content = fs.readFileSync(skillPath, 'utf8');
-      const m = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-      const descMatch = m ? m[1].match(/description:\s*["']?([^"'\r\n]+)/) : null;
-      desc = descMatch ? descMatch[1].slice(0, 75) + '...' : 'No description';
-    }
-    console.log(` ${String(idx + 1).padStart(2, '0')}. \x1b[32m${dir}\x1b[0m: ${desc}`);
-  });
-  console.log('');
+  const skills = fs.readdirSync(skillsDir, { withFileTypes: true }).filter(entry => entry.isDirectory())
+    .map(entry => ({ name: entry.name, filename: path.join(skillsDir, entry.name, 'SKILL.md') }))
+    .filter(entry => fs.existsSync(entry.filename));
+  listComponents('agent', agents, `Specialist Agents Council (${agents.length} Roles)`);
+  listComponents('skill', skills, `Enterprise Skills Directory (${skills.length} Playbooks)`);
 }
 
-// Main Router
-const { command, params } = parseArgs();
-
-switch (command) {
-  case 'agent:create':
-  case 'create:agent':
-  case 'add:agent':
-    createAgent(params);
-    break;
-  case 'agent:update':
-  case 'update:agent':
-    updateAgent(params);
-    break;
-  case 'skill:create':
-  case 'create:skill':
-  case 'add:skill':
-    createSkill(params);
-    break;
-  case 'skill:update':
-  case 'update:skill':
-    updateSkill(params);
-    break;
-  case 'list':
-  case 'status':
-    listAll();
-    break;
-  default:
-    console.log(`Universal AI Master Orchestrator: Agent & Skill Management CLI
+function printHelp() {
+  console.log(`Universal AI Master Orchestrator: Agent & Skill Management CLI
 
 Usage:
-  node scripts/manage-orchestrator.js <command> [options]
+  node scripts/manage-orchestrator.js agent:create <name> [--title="..."] [--role="..."] [--desc="..."] [--mode="all|primary|subagent"] [--force]
+  node scripts/manage-orchestrator.js agent:update <name> [--desc="..."] [--mode="all|primary|subagent"]
+  node scripts/manage-orchestrator.js skill:create <name> [--title="..."] [--desc="..."] [--force]
+  node scripts/manage-orchestrator.js skill:update <name> --desc="..."
+  node scripts/manage-orchestrator.js list
 
-Commands:
-  agent:create <name>  [--title="..."] [--role="..."] [--desc="..."] [--mode="all|subagent"]
-  agent:update <name>  [--desc="..."] [--mode="..."]
-  skill:create <name>  [--title="..."] [--desc="..."]
-  skill:update <name>  [--desc="..."]
-  list                 Display all registered agents and skills
-
-Examples:
-  node scripts/manage-orchestrator.js agent:create cloud-architect --desc="Governs cloud topologies and IaC."
-  node scripts/manage-orchestrator.js skill:create threat-modeling --desc="STRIDE threat modeling standards."
-`);
+Creation and update synchronize adapters in this repository. Antigravity deployment is a separate command.`);
 }
 
+function main(args) {
+  const [command, ...options] = args;
+  if (!command || command === '--help' || command === 'help' || options.includes('--help')) {
+    printHelp();
+    return;
+  }
+  if ((command === 'list' || command === 'status') && options.length === 0) {
+    listAll();
+    return;
+  }
+  if (!Object.hasOwn(commands, command)) throw new Error(`Unknown command: ${command}`);
+  const [kind, isUpdate] = commands[command];
+  const allowed = { name: { type: 'string' }, desc: { type: 'string' } };
+  if (kind === 'agent') allowed.mode = { type: 'string' };
+  if (!isUpdate) {
+    allowed.title = { type: 'string' };
+    allowed.force = { type: 'boolean' };
+    if (kind === 'agent') allowed.role = { type: 'string' };
+  }
+  const { values, positionals } = parseArgs({ args: options, options: allowed, allowPositionals: true });
+  if (positionals.length > 1 || (values.name && positionals.length)) {
+    throw new Error('Specify one component name.');
+  }
+  if (isUpdate && values.desc === undefined && values.mode === undefined) {
+    throw new Error('Specify a description or agent mode to update.');
+  }
+  for (const label of ['title', 'role']) {
+    if (values[label] !== undefined && (!values[label].trim() || /[\r\n]/.test(values[label]))) {
+      throw new Error(`--${label} must be a nonempty line.`);
+    }
+  }
+  const name = values.name ?? positionals[0];
+  const result = saveComponent(repoRoot, kind, name, { update: isUpdate, force: values.force }, (original, filename) => (
+    isUpdate ? update(kind, name, values, original, filename) : create(kind, name, values)
+  ));
+  console.log(`${isUpdate ? 'Updated' : 'Created'} ${result} and synchronized adapters.`);
+}
+
+try {
+  main(process.argv.slice(2));
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+}
