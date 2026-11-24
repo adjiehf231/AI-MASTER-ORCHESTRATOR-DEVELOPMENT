@@ -55,8 +55,8 @@ function git(root, args) {
 }
 
 function resolveWorkspace(directory) {
-  const root = fs.realpathSync(directory);
-  const gitRoot = fs.realpathSync(git(root, ['rev-parse', '--show-toplevel']).trim());
+  const root = fs.realpathSync.native(directory);
+  const gitRoot = fs.realpathSync.native(git(root, ['rev-parse', '--show-toplevel']).trim());
   if (path.relative(root, gitRoot)) throw new Error('--workspace must name the Git workspace root');
   return root;
 }

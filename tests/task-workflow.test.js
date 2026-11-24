@@ -5,6 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const workflow = require('../scripts/lib/task-workflow');
+const { shortDirectoryAlias } = require('./windows-path-alias');
 
 const repo = path.resolve(__dirname, '..');
 
@@ -47,6 +48,18 @@ function task(root, checks = ['probe']) {
     check: checks
   }, workflow.snapshot(root));
 }
+
+test('task workspace accepts a Windows short path for the same Git root and rejects a nested directory', {
+  skip: process.platform !== 'win32'
+}, t => {
+  const { root } = fixture(t);
+  const alias = shortDirectoryAlias(root);
+  if (!alias) return t.skip('The fixture filesystem does not provide Windows short path aliases.');
+  assert.equal(workflow.resolveWorkspace(alias), fs.realpathSync.native(root));
+  const nested = path.join(root, 'nested');
+  fs.mkdirSync(nested);
+  assert.throws(() => workflow.resolveWorkspace(nested), /Git workspace root/);
+});
 
 test('task completion requires executed checks at the current source and scope', t => {
   const { root, write } = fixture(t);

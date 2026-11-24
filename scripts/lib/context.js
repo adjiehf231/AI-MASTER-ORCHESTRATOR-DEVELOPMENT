@@ -64,8 +64,8 @@ function git(root, args, allowed = [0]) {
 function workspace(root) {
   const stats = fs.lstatSync(root);
   if (!stats.isDirectory() || stats.isSymbolicLink()) throw new Error('Expected a regular workspace directory.');
-  const canonical = fs.realpathSync(root);
-  const gitRoot = fs.realpathSync(git(canonical, ['rev-parse', '--show-toplevel']).trim());
+  const canonical = fs.realpathSync.native(root);
+  const gitRoot = fs.realpathSync.native(git(canonical, ['rev-parse', '--show-toplevel']).trim());
   if (path.relative(canonical, gitRoot)) throw new Error('The context workspace must be the Git repository root.');
   const revision = git(canonical, ['rev-parse', '--verify', '--quiet', 'HEAD'], [0, 1]).trim() || null;
   return { root: canonical, identity: { id: digest(canonical), revision } };

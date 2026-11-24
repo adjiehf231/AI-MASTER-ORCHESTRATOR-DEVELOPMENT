@@ -6,6 +6,7 @@ const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const { createHash } = require('node:crypto');
 const { searchContext, readContext, getTaskContext } = require('../scripts/lib/context');
+const { shortDirectoryAlias } = require('./windows-path-alias');
 
 function fixture(t) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'context-fixture-'));
@@ -30,6 +31,26 @@ function fixture(t) {
 function size(value) {
   return Buffer.byteLength(JSON.stringify(value));
 }
+
+test('Windows short directory aliases resolve to the same context workspace', { skip: process.platform !== 'win32' }, t => {
+  const { root } = fixture(t);
+  const alias = shortDirectoryAlias(root);
+  if (alias === null) {
+    t.skip('The fixture filesystem does not expose a different Windows short-name alias.');
+    return;
+  }
+  assert.equal(fs.realpathSync.native(alias), fs.realpathSync.native(root));
+  const throughAlias = searchContext(alias, { query: 'sample', paths: ['src'] });
+  const throughOriginal = searchContext(root, { query: 'sample', paths: ['src'] });
+  assert.deepEqual(throughAlias.workspace, throughOriginal.workspace);
+  assert.equal(readContext(root, { ref: throughAlias.entries[0].ref }).content,
+    fs.readFileSync(path.join(root, 'src/example.js'), 'utf8'));
+});
+
+test('context rejects a nested directory even when it belongs to a valid repository', t => {
+  const { root } = fixture(t);
+  assert.throws(() => searchContext(path.join(root, 'src'), { query: 'sample' }), /Git repository root/);
+});
 
 test('context search returns source proofs and reads exact UTF-8 text and line ranges', t => {
   const { root } = fixture(t);
