@@ -1,6 +1,19 @@
 ---
 description: "Principal Privacy Reviewer — read-only Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile) compliance audit: PII inventory, data minimization, consent governance, telemetry zero-PII whitelist, and account erasure cascade parity (project-defined SLA). Produces statutory privacy findings."
 mode: subagent
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "*"
+    effect: ask
+  - action: grep
+    resource: "*"
+    effect: ask
+  - action: glob
+    resource: "*"
+    effect: ask
 ---
 
 # PRINCIPAL PRIVACY REVIEWER — AI Master Orchestrator Development (Statutory Data Privacy (GDPR / UU PDP / CCPA per project profile) Compliance)

@@ -1,6 +1,7 @@
 ---
 name: security-engineer
 description: "Principal Security Engineer — read-only adversarial application security review: IDOR elimination, authentication/session integrity, credit double-spend prevention, prompt injection defense, secrets hygiene, and UU PDP privacy. Produces S1–S4 vulnerability findings."
+tools: Read, Grep, Glob
 ---
 
 # PRINCIPAL SECURITY ENGINEER — AI Master Orchestrator Development (Application Security & Red-Teaming)

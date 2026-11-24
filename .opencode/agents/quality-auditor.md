@@ -1,6 +1,19 @@
 ---
 description: Quality & Compliance Auditor — independent adversarial audit of SDLC/STLC artifacts, evidence veracity, Release Quality Gates 1–8, RTM traceability, and UU PDP compliance. BLOCKS unverified claims and gate circumvention.
 mode: subagent
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "*"
+    effect: ask
+  - action: grep
+    resource: "*"
+    effect: ask
+  - action: glob
+    resource: "*"
+    effect: ask
 ---
 
 # QUALITY & COMPLIANCE AUDITOR — AI Master Orchestrator Development (Independent Gatekeeper)

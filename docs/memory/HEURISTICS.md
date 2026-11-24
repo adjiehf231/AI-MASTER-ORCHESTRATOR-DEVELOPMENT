@@ -69,6 +69,7 @@
 - **Evidence / Origin:** Unit test stabilization for `scripts/manage-orchestrator.js`.
 
 ### [HEUR-YAML-001] Folded Scalar & Escaped Quote Resilience in Frontmatter Parsers
+- **Status:** SUPERSEDED by HEUR-YAML-002 on 2026-11-24.
 - **Context:** Reading multi-line descriptions or quoted strings in agent and skill frontmatter.
 - **Observed Behavior:** Simple regex parsers break when frontmatter uses PyYAML 6.0.3 folded scalars (`>-`) or colons inside quoted strings (`description: "Role: ..."`).
 - **Expert Heuristic:** Custom frontmatter parsers must support multiline folded scalar blocks (`>-`, `|`) and clean unescaping of surrounding double-quotes to guarantee cross-parser compatibility without external dependencies.
@@ -81,7 +82,23 @@
 - **Evidence / Origin:** `skills/rag-vector-engineering/SKILL.md`.
 
 ### [HEUR-FINOPS-001] Prompt Prefix Stability for Maximum LLM Cache Discounts
+- **Status:** SUPERSEDED by HEUR-FINOPS-002 on 2026-11-24.
 - **Context:** Designing system prompts and few-shot examples for Anthropic, Gemini, and OpenAI APIs.
 - **Observed Behavior:** Putting dynamic timestamps or session IDs at the head of system prompts invalidates the entire prefix cache, multiplying token inference costs.
 - **Expert Heuristic:** Maintain an immutable, static prefix (identity, static rules, tool schemas) at the top of prompts exceeding 1,024 tokens. Always append dynamic session state and user queries at the end to achieve 60–80% prompt caching cost savings.
 - **Evidence / Origin:** `skills/finops-cost-governance/SKILL.md`.
+
+### [HEUR-YAML-002] Parse and Serialize Metadata with the YAML Library
+- **Status:** ACTIVE, reviewed 2026-11-24.
+- **Supersedes:** HEUR-YAML-001.
+- **Context:** Creating, updating, importing, or exporting agent and skill frontmatter.
+- **Observed Behavior:** Quote and folded-scalar parsing affect actual catalog behavior. The repository now uses the `yaml` dependency.
+- **Expert Heuristic:** Use the shared parser and serializer, reject duplicate keys and invalid component fields, and run mutation regressions before accepting metadata changes.
+- **Evidence:** `scripts/lib/frontmatter.js` and metadata/CLI tests.
+
+### [HEUR-FINOPS-002] Measure Cache and Context Benefits
+- **Status:** ACTIVE, reviewed 2026-11-24.
+- **Supersedes:** HEUR-FINOPS-001.
+- **Context:** Reducing repeated instructions and retrieved context.
+- **Expert Heuristic:** Keep stable instructions compact and measure actual input, output, cached input, and total task cost where available. Report text byte counts as byte counts when provider usage is unavailable. Verify correctness before promoting a configuration.
+- **Evidence:** The generator source and the task-specific measured results. Historical savings percentages from HEUR-FINOPS-001 are not a validated benchmark for this repository.

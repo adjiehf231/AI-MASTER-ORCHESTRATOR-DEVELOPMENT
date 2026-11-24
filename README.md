@@ -3,8 +3,8 @@
 <div align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
-[![Specialist Agents](https://img.shields.io/badge/Specialist%20Agents-32%20Roles-6366f1.svg?style=for-the-badge)](agents/)
-[![Enterprise Skills](https://img.shields.io/badge/Enterprise%20Skills-44%20Playbooks-10b981.svg?style=for-the-badge)](skills/)
+[![Specialist Agents](https://img.shields.io/badge/Specialist%20Agents-33%20Roles-6366f1.svg?style=for-the-badge)](agents/)
+[![Enterprise Skills](https://img.shields.io/badge/Enterprise%20Skills-45%20Playbooks-10b981.svg?style=for-the-badge)](skills/)
 [![Frontend Standard](https://img.shields.io/badge/UI%2FUX-Anti--AI--Slop%20Craft-f43f5e.svg?style=for-the-badge)](skills/ui-ux-design-system/)
 [![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.2%20AA-a855f7.svg?style=for-the-badge)](skills/frontend-quality/)
 [![Quality Gate CI](https://github.com/adjiehf231/AI-MASTER-ORCHESTRATOR-DEVELOPMENT/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/adjiehf231/AI-MASTER-ORCHESTRATOR-DEVELOPMENT/actions/workflows/ci.yml)
@@ -17,8 +17,8 @@
 [Fitur Utama](#-fitur-utama--keunggulan) •
 [Arsitektur SDLC](#-arsitektur--siklus-otonom-sdlc-10-tahap) •
 [Anti-AI-Slop](#-standar-anti-ai-slop--desain-frontend-craft) •
-[Daftar 32 Agen](#-direktori-32-specialist-agents) •
-[Daftar 44 Skills](#-katalog-44-enterprise-skills) •
+[Daftar 33 Agen](#-direktori-33-specialist-agents) •
+[Daftar 45 Skills](#-katalog-45-enterprise-skills) •
 [Panduan Memulai](#-panduan-instalasi--penggunaan-cepat-quick-start) •
 [CLI Otomasi](#-cli-command-center--manajemen-otomasi) •
 [Multi-Platform](#-kompatibilitas-multi-platform-ide--cli)
@@ -32,14 +32,29 @@
 
 ---
 
+## Efisiensi konteks dan workflow task
+
+Gunakan skill `context-efficient-development` untuk eksplorasi sumber dan agen `context-engineer` untuk investigasi besar yang memerlukan handoff terfokus. Prompt utama memakai katalog yang dibaca saat diperlukan. Adapter tersedia untuk skill native Codex, Claude Code, OpenCode, dan paket Antigravity.
+
+```bash
+npm run orchestrator:context -- search --query "buildAdapters" --path scripts
+npm run orchestrator:context -- task --path scripts
+npm run orchestrator:context -- audit --baseline 6c15c79
+npm run orchestrator:context -- config --host codex --workspace "<absolute-project-root>"
+```
+
+MCP lokal menyediakan tiga tool baca saja dengan sumber berversi, pagination, dan batas keluaran. Perintah `config` mencetak konfigurasi untuk digabung ke host yang dipakai. Laporan ukuran instruksi mengukur byte dan kata. Penggunaan token model diukur pada pilot per host. Panduan ada di [Context Efficiency](docs/process/CONTEXT_EFFICIENCY.md).
+
+Setiap task memakai TODO, bukti pemeriksaan, dan report dengan ID yang sama. Gunakan [Task Workflow](docs/process/TASK_WORKFLOW.md) dan [Memory Guide](docs/memory/MEMORY_GUIDE.md) untuk melanjutkan sesi serta mengambil memori yang sesuai scope.
+
 ## 📖 Daftar Isi
 
 1. [💡 Mengapa Membutuhkan Universal AI Master Orchestrator?](#-mengapa-membutuhkan-universal-ai-master-orchestrator)
 2. [✨ Fitur Utama & Keunggulan](#-fitur-utama--keunggulan)
 3. [🏛️ Arsitektur & Siklus Otonom SDLC 10-Tahap](#-arsitektur--siklus-otonom-sdlc-10-tahap)
 4. [🎨 Standar Anti-AI-Slop & Desain Frontend Craft](#-standar-anti-ai-slop--desain-frontend-craft)
-5. [👥 Direktori 32 Specialist Agents](#-direktori-32-specialist-agents)
-6. [📚 Katalog 44 Enterprise Skills](#-katalog-44-enterprise-skills)
+5. [👥 Direktori 33 Specialist Agents](#-direktori-33-specialist-agents)
+6. [📚 Katalog 45 Enterprise Skills](#-katalog-45-enterprise-skills)
 7. [🚀 Panduan Instalasi & Penggunaan Cepat (Quick Start)](#-panduan-instalasi--penggunaan-cepat-quick-start)
 8. [🛠️ CLI Command Center & Manajemen Otomasi](#-cli-command-center--manajemen-otomasi)
 9. [🌐 Kompatibilitas Multi-Platform (IDE & CLI)](#-kompatibilitas-multi-platform-ide--cli)
@@ -70,7 +85,7 @@ Tradisional AI Assistant                       Universal Master Orchestrator
 ┌─────────────────────────┐                   ┌──────────────────────────────────────────────┐
 │ Autocomplete Kode Acak  │                   │ Phase 0: Ingest Memory & Living Heuristics   │
 │ (Happy path saja,       │                   │ Phase 1: Critical Premise Evaluation & Scope │
-│  tanpa validasi arsitek)│                   │ Phase 2: Dispatch 32 Spesialis & 44 Skills   │
+│  tanpa validasi arsitek)│                   │ Phase 2: Pilih Spesialis & Skill Relevan   │
 └───────────┬─────────────┘                   │ Phase 3: Eksekusi Tangga Verifikasi T0 - T3  │
             ▼                                 │ Phase 4: Self-Healing Otomatis jika Gagal    │
 ┌─────────────────────────┐                   │ Phase 5: Distilasi Pembelajaran Permanen     │
@@ -86,7 +101,7 @@ Tradisional AI Assistant                       Universal Master Orchestrator
 
 ## ✨ Fitur Utama & Keunggulan
 
-### 1. 32 Peran Rekayasa Perangkat Lunak Spesialis
+### 1. 33 Peran Rekayasa Perangkat Lunak Spesialis
 Mulai dari **Solution Architect**, **System Analyst**, **Principal Frontend/Backend**, **Database DBA**, **DevSecOps**, **Cybersecurity Analyst**, **Data Analyst**, **Data Scientist**, **FinOps**, **Statutory Privacy Reviewer**, hingga **QA Manual/Automation**—berkolaborasi layaknya dewan teknis senior.
 
 ### 2. Standar Desain Anti-AI-Slop & WCAG 2.2 AA
@@ -96,7 +111,7 @@ Menegakkan keindahan visual tingkat tinggi:
 - **Aksesibilitas Universal:** Kontras $\ge 4.5:1$, fokus keyboard navigasi $\ge 3:1$, target pointer sesuai SC 2.5.8 dengan 24 × 24 CSS px atau pengecualian, serta target desain 44 × 44 untuk kontrol sentuh utama, dan kesiapan *Reduced Motion*.
 - **Headless Component Composition:** Menerapkan pola Radix/shadcn compound primitives (`Root`, `Trigger`, `Content`, `Portal`, `Overlay`) untuk mencegah *monolithic div-soup*.
 
-### 3. Ekosistem Skills & Playbook Terlengkap (44 Enterprise Skills)
+### 3. Ekosistem Skills & Playbook Terlengkap (45 Enterprise Skills)
 Panduan rekayasa langkah demi langkah untuk arsitektur, basis data, keamanan, AI RAG, integrasi webhook, penanganan insiden, hingga pemulihan bencana (*Disaster Recovery & BCP*).
 
 ### 4. Single Source of Truth (SSOT) & Multi-Platform Compiler
@@ -187,9 +202,9 @@ stateDiagram-v2
 
 ---
 
-## 👥 Direktori 32 Specialist Agents
+## 👥 Direktori 33 Specialist Agents
 
-Berikut adalah katalog lengkap 32 peran spesialis yang siap digerakkan oleh **Universal Master Orchestrator**:
+Berikut adalah katalog lengkap 33 peran spesialis yang siap digerakkan oleh **Universal Master Orchestrator**:
 
 | # | Agent ID | Peran Spesialis | Hard Gates & Mandat Utama |
 |---|---|---|---|
@@ -225,10 +240,13 @@ Berikut adalah katalog lengkap 32 peran spesialis yang siap digerakkan oleh **Un
 | 30 | **`cybersecurity-analyst`** | Principal Cybersecurity Analyst | Adversary emulation (MITRE ATT&CK), audit pentest non-destruktif, verifikasi PoC celah keamanan, dan red-teaming sistem agen LLM. |
 | 31 | **`data-analyst`** | Principal Data Analyst & BI Specialist | Menerjemahkan kebutuhan analitik ke query SQL tervalidasi, tata kelola metrik semantik, analisis EDA, visualisasi data anti-AI-slop. |
 | 32 | **`data-scientist`** | Principal Data Scientist & ML Specialist | Desain pipeline statistical learning, rekayasa fitur zero-leakage, validasi silang (cross-validation), benchmark baseline, dan interpretabilitas SHAP. |
+| 33 | **`context-engineer`** | Context Engineer | Pemilihan sumber dan handoff dengan path, revisi, cakupan, serta bukti. |
 
 ---
 
-## 📚 Katalog 44 Enterprise Skills
+## 📚 Katalog 45 Enterprise Skills
+
+Skill `context-efficient-development` menambahkan pencarian terfokus, pembacaan bertahap, dan handoff berbasis bukti. Lihat [skill](skills/context-efficient-development/SKILL.md).
 
 Setiap skill merupakan buku pedoman rekayasa formal dengan standarisasi, pola kode, skrip bantuan, dan kriteria penerimaan yang terperinci:
 
@@ -350,6 +368,7 @@ Adapter di bawah dihasilkan dari sumber yang sama. Cara host menerapkan instruks
 | --- | --- |
 | Google Antigravity | Siapkan plugin dengan `npm run deploy:antigravity`. Validasi direktori plugin dengan `agy plugin validate` pada instalasi Antigravity yang menyediakan perintah tersebut. |
 | Claude Code | Buka root repositori dengan `CLAUDE.md` dan profil di `.claude/agents/`. |
+| Codex | `AGENTS.md` menghubungkan workflow utama; skill berada di `.agents/skills/` dan agen konteks di `.codex/agents/`. Ikuti [panduan MCP lokal](docs/process/CONTEXT_EFFICIENCY.md) untuk mengaktifkan tool pada workspace. |
 | Cursor | `.cursorrules` memakai format legacy. Ikuti format Project Rules pada versi Cursor yang digunakan bila migrasi diperlukan. |
 | Windsurf | `.windsurfrules` memakai format legacy. Ikuti format Workspace Rules pada versi Windsurf yang digunakan bila migrasi diperlukan. |
 | Cline | `.clinerules` menyediakan aturan proyek dalam format satu berkas. |
@@ -415,14 +434,14 @@ AI-MASTER-ORCHESTRATOR-DEVELOPMENT/
 │   ├── opencode/                    # OpenCode V2 native adapter
 │   ├── openrouter/                  # OpenRouter system prompt & request payload
 │   └── bundle/                      # Universal prompt bundle (Codex, DeepSeek, Ollama)
-├── agents/                          # 32 Specialist Agents Generalized (SSOT)
+├── agents/                          # 33 Specialist Agents Generalized (SSOT)
 │   ├── orchestrator.md              # Master SDLC Director & Dispatch Matrix
 │   ├── solution-architect.md        # Arsitektur sistem & ADR
 │   ├── frontend-engineer.md         # Anti-AI-Slop, Accessible Frontend Architect
 │   ├── backend-engineer.md          # Contract-first, ACID Backend Architect
 │   ├── ux-engineer.md               # Nielsen heuristics, Cognitive UX Laws, a11y
 │   └── ...                          # 27 agen spesialis lainnya
-├── skills/                          # 44 Enterprise SDLC Skills (SSOT)
+├── skills/                          # 45 Enterprise SDLC Skills (SSOT)
 │   ├── ui-ux-design-system/         # Standar desain Anti-AI-slop, token & layout
 │   ├── frontend-quality/            # 6-state matrix, zero CLS, WCAG 2.2 AA
 │   ├── uiux-review/                 # 7-step evaluator walkthrough & cognitive probes

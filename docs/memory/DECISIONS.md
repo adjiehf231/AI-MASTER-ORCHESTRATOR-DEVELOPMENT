@@ -2,7 +2,7 @@
 
 > **Living Memory Document:** Binding architectural, product, and engineering decisions.
 > **Format:** Context, Decision, Rationale, Trade-offs, and Consequences.
-> Inviolable: If instructions contradict approved decisions, agents must halt and log the conflict.
+> Compare implementation facts with current source and executed checks. Record material conflicts with approved decisions and resolve them through the task owner.
 
 ---
 
@@ -51,7 +51,7 @@
 ---
 
 ## [ADR-005] Universal Extension Lifecycle CLI & Multi-Tier Enterprise Expansion (Waves 1–3)
-- **Status:** APPROVED
+- **Status:** SUPERSEDED by ADR-006 on 2026-11-24
 - **Date:** 2026-11-08
 - **Context:** Teams need to rapidly create, customize, or import specialized domain agents and skills (FinOps, MLOps, GRC, RAG, Event-Driven) without manual boilerplate or vendor lock-in.
 - **Decision:** Build automated CLI lifecycle tools (`manage-orchestrator.js` and `import-extension.js`) and scale out the core organization with 6 new specialist roles and 8 enterprise skill playbooks across FinOps, RAG, DocOps, Event-Driven, and Disaster Recovery.
@@ -59,3 +59,10 @@
   - Standardized agent and skill scaffolding with auto-injected Statutory Hard Gates.
   - Single-command multi-platform synchronization and live Antigravity plugin deployment.
   - Zero-effort ingestion of trusted external tools with automatic sanitization and decoupling.
+
+## [ADR-006] Explicit Extension Activation and Deployment
+- **Status:** APPROVED implementation contract, reviewed 2026-11-24.
+- **Supersedes:** ADR-005.
+- **Decision:** Validate local catalog changes before transactional source and adapter writes. Preview imported content and require the reviewed digest for remote activation. Run plugin deployment as a separate explicit command.
+- **Evidence:** `scripts/manage-orchestrator.js`, `scripts/import-extension.js`, `scripts/lib/component-store.js`, and `scripts/deploy-antigravity.js`.
+- **Consequences:** A source digest identifies reviewed input. Host permissions and task authorization still determine allowed behavior.

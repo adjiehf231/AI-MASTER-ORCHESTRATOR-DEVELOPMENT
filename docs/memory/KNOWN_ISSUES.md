@@ -5,7 +5,9 @@
 
 ---
 
-## 1. Active Known Issues
+## 1. Historical resolved issues
+
+The rows below record prior issues and their implemented remedies. Use current source and tests when investigating a recurrence.
 
 | Issue ID | Component / Area | Trigger Condition | Symptom | Verified Workaround | Tracking / Resolution Plan |
 |---|---|---|---|---|---|

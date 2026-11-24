@@ -73,7 +73,7 @@ test('sync binds actual context values in prompts, YAML and gateway payloads', t
   for (const filename of [
     'CLAUDE.md', '.cursorrules', '.windsurfrules', '.clinerules', '.opencoderules',
     'CONVENTIONS.md', '.continue/rules/universal-orchestrator.md',
-    'adapters/opencode/AGENTS.md', 'adapters/openrouter/system-prompt.txt',
+    'adapters/openrouter/system-prompt.txt',
     'adapters/bundle/universal-system-prompt.md', 'adapters/antigravity/rules/AGENTS.md',
     '.claude/agents/orchestrator.md', '.opencode/agents/orchestrator.md',
   ]) {
@@ -85,7 +85,11 @@ test('sync binds actual context values in prompts, YAML and gateway payloads', t
   assert.equal(claude.attributes.description, 'Builds Beta "Lab" $& Workspace in C:\\workspace\\fixtures');
   const openCode = parseFrontmatter(read('.opencode/agents/orchestrator.md'), 'OpenCode');
   assert.equal(openCode.attributes.mode, 'primary');
-  assert.match(read('CLAUDE.md'), /Help Beta "Lab" \$& Workspace validate its outputs\./);
+  assert.doesNotMatch(read('CLAUDE.md'), /Help Beta "Lab" \$& Workspace validate its outputs\./);
+  const catalog = JSON.parse(read('adapters/component-catalog.json'));
+  assert.equal(catalog.skills[0].description, 'Help Beta "Lab" $& Workspace validate its outputs.');
+  assert.doesNotMatch(read('adapters/opencode/AGENTS.md'), /Canonical marker/);
+  assert.match(read('adapters/opencode/AGENTS.md'), /primary `orchestrator` profile/);
   const continued = parseFrontmatter(read('.continue/rules/universal-orchestrator.md'), 'Continue');
   assert.equal(continued.attributes.name, 'Universal Master Orchestrator');
   const payload = JSON.parse(read('adapters/openrouter/payload.json'));
@@ -96,7 +100,8 @@ test('sync binds actual context values in prompts, YAML and gateway payloads', t
 test('sync check is read-only, supports CRLF inputs, and keeps template placeholders', t => {
   const { root, read, write } = fixture(t);
   const script = path.join('scripts', 'sync-adapters.js');
-  for (const file of [script, 'scripts/lib/file-plan.js', 'scripts/lib/frontmatter.js', 'scripts/lib/project-context.js']) {
+  for (const file of [script, 'scripts/lib/file-plan.js', 'scripts/lib/frontmatter.js',
+    'scripts/lib/project-context.js', 'scripts/lib/agent-permissions.js']) {
     write(file, fs.readFileSync(path.join(repoRoot, file), 'utf8'));
   }
   const invoke = args => spawnSync(process.execPath, [script, ...args], {
@@ -120,6 +125,69 @@ test('sync check is read-only, supports CRLF inputs, and keeps template placehol
   assert.match(read('.claude/agents/orchestrator.md'), /\$\{PROJECT_NAME\}/);
   assert.equal(invoke(['--template', '--check']).status, 0);
   assert.equal(invoke(['--check']).status, 1);
+});
+
+test('sync creates native skill resources and protects managed resources from user edits', t => {
+  const { root, write, read } = fixture(t);
+  write('skills/test-skill/references/details.md', '# Contract\r\nExact validation rule.\r\n');
+  write('skills/test-skill/assets/example.bin', Buffer.from([0, 255, 127, 32]));
+  sync(root);
+  for (const prefix of ['.agents/skills', '.claude/skills']) {
+    const skill = parseFrontmatter(read(`${prefix}/test-skill/SKILL.md`), prefix);
+    assert.equal(skill.attributes.name, 'test-skill');
+    assert.equal(skill.attributes.description, 'Help Beta "Lab" $& Workspace validate its outputs.');
+    assert.equal(read(`${prefix}/test-skill/references/details.md`), '# Contract\nExact validation rule.\n');
+    assert.deepEqual(fs.readFileSync(path.join(root, prefix, 'test-skill/assets/example.bin')), Buffer.from([0, 255, 127, 32]));
+  }
+  write('.agents/skills/test-skill/references/details.md', '# Local override\n');
+  assert.throws(() => sync(root), /unmanaged or locally modified/);
+  assert.equal(read('.agents/skills/test-skill/references/details.md'), '# Local override\n');
+  write('skills/test-skill/references/corrupt.md', Buffer.from([0xff, 0xfe]));
+  assert.throws(() => buildAdapters(root), /encoded data was not valid/);
+});
+
+test('sync maps read-only source permissions into Claude and OpenCode native metadata', t => {
+  const { root, write, read } = fixture(t);
+  write('agents/reviewer.md', [
+    '---', 'name: reviewer', 'description: Review source evidence.', 'mode: subagent',
+    'permissions:', '  - action: edit', '    resource: "*"', '    effect: deny',
+    '  - action: shell', '    resource: "*"', '    effect: deny', '---', '# Reviewer\n'
+  ].join('\n'));
+  sync(root);
+  const claude = parseFrontmatter(read('.claude/agents/reviewer.md'), 'Claude reviewer');
+  assert.equal(claude.attributes.tools, 'Read, Grep, Glob');
+  const openCode = parseFrontmatter(read('.opencode/agents/reviewer.md'), 'OpenCode reviewer');
+  assert.deepEqual(openCode.attributes.permissions, [
+    { action: '*', resource: '*', effect: 'deny' },
+    { action: 'read', resource: '*', effect: 'ask' },
+    { action: 'grep', resource: '*', effect: 'ask' },
+    { action: 'glob', resource: '*', effect: 'ask' }
+  ]);
+});
+
+test('MCP templates contain a shared stdio runtime with explicit source and workspace selection', t => {
+  const { root, read, write } = fixture(t);
+  write('agents/context-engineer.md', [
+    '---', 'name: context-engineer', 'description: Select source context.', 'mode: subagent',
+    'permissions:', '  - action: edit', '    resource: "*"', '    effect: deny', '---', '# Context engineer\n'
+  ].join('\n'));
+  sync(root);
+  const claude = JSON.parse(read('adapters/claude/mcp.json')).mcpServers['orchestrator-context'];
+  assert.equal(claude.command, 'node');
+  assert.deepEqual(claude.args, ['__ORCHESTRATOR_SOURCE_ROOT__/scripts/context-mcp.js', '--workspace', '__WORKSPACE_ROOT__']);
+  const openCode = JSON.parse(read('adapters/opencode/mcp.json')).mcp.servers['orchestrator-context'];
+  assert.deepEqual(openCode.command, ['node', ...claude.args]);
+  assert.equal(openCode.type, 'local');
+  assert.equal(openCode.cwd, '__WORKSPACE_ROOT__');
+  const antigravity = JSON.parse(read('adapters/antigravity/mcp_config.json')).mcpServers['orchestrator-context'];
+  assert.deepEqual(antigravity.enabledTools, ['get_task_context', 'search_context', 'read_context']);
+  assert.match(read('adapters/codex/config.toml'), /\[mcp_servers\.orchestrator-context\]/);
+  const codexAgent = read('.codex/agents/context-engineer.toml');
+  assert.match(codexAgent, /name = "context-engineer"/);
+  assert.match(codexAgent, /developer_instructions = "# Context engineer"/);
+  assert.match(codexAgent, /shell_tool = false/);
+  assert.doesNotMatch(codexAgent, /sandbox_mode =/);
+  assert.equal(fs.existsSync(path.join(root, '.mcp.json')), false);
 });
 
 test('simple project keys are supported and malformed context fails before sync', t => {

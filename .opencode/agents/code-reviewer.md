@@ -1,6 +1,19 @@
 ---
 description: Independent Code Reviewer — adversarial review of diffs for correctness, regressions, contract consistency, and requirement drift. Produces severity-ranked findings (🔴 BLOCKING / 🟡 SHOULD FIX / 🔵 NIT) with exact file:line and failure scenarios.
 mode: subagent
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "*"
+    effect: ask
+  - action: grep
+    resource: "*"
+    effect: ask
+  - action: glob
+    resource: "*"
+    effect: ask
 ---
 
 # INDEPENDENT CODE REVIEWER — AI Master Orchestrator Development (Adversarial Quality Review)

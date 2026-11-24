@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "orchestrator-context": {
+      "command": "node",
+      "args": [
+        "__ORCHESTRATOR_SOURCE_ROOT__/scripts/context-mcp.js",
+        "--workspace",
+        "__WORKSPACE_ROOT__"
+      ],
+      "cwd": "__WORKSPACE_ROOT__",
+      "enabledTools": [
+        "get_task_context",
+        "search_context",
+        "read_context"
+      ]
+    }
+  }
+}

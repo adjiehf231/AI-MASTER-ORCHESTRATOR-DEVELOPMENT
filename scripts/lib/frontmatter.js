@@ -1,4 +1,5 @@
 const YAML = require('yaml');
+const { validateAgentPermissions } = require('./agent-permissions');
 
 const componentName = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const agentModes = new Set(['all', 'primary', 'subagent']);
@@ -53,6 +54,10 @@ function validateComponent(content, expectedName, kind, filename) {
   }
   if (kind === 'agent' && attributes.mode !== undefined && !agentModes.has(attributes.mode)) {
     throw new Error(`${filename}: invalid agent mode (use all, primary, or subagent)`);
+  }
+  if (kind === 'agent') validateAgentPermissions(attributes.permissions, filename);
+  if (kind === 'skill' && (expectedName.length > 64 || attributes.description.length > 1024)) {
+    throw new Error(`${filename}: skill names support up to 64 characters and descriptions up to 1024 characters`);
   }
   if (!body.trim()) throw new Error(`${filename}: expected a nonempty Markdown body`);
   return component;

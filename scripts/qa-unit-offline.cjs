@@ -20,12 +20,12 @@ function runUnitTests(root, { files, executable = process.execPath, stdio = 'inh
   for (const name of runtimeVariables) {
     if (process.env[name] !== undefined) env[name] = process.env[name];
   }
-  const result = spawnSync(executable, ['--test', ...suite.map(file => path.join(directory, file))], {
+  const result = spawnSync(executable, ['--test', '--test-concurrency=4', ...suite.map(file => path.join(directory, file))], {
     cwd: root,
     env,
     encoding: 'utf8',
     stdio,
-    timeout: 60_000,
+    timeout: 180_000,
     windowsHide: true
   });
 

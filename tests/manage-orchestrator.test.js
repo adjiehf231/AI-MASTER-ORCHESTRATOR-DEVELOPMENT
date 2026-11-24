@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const path = require('path');
 const { fixtureRepository } = require('./fixture-repository');
 const { parseFrontmatter } = require('../scripts/lib/frontmatter');
+const { saveComponent } = require('../scripts/lib/component-store');
 const { applyFilePlan, withFileLock } = require('../scripts/lib/file-plan');
 
 const repoRoot = path.resolve(__dirname, '..');
@@ -53,6 +54,16 @@ test('manage-orchestrator.js rejects non-kebab-case skill names', () => {
   assert.ok(res.stderr.includes('Invalid identifier') || res.stdout.includes('Invalid identifier'), 'Error message must note invalid identifier');
 });
 
+test('invalid component identifiers are rejected before acquiring a repository lock', t => {
+  const fixture = fixtureRepository(t);
+  const unavailableRoot = fixture.write('unavailable-root', 'not a directory');
+  for (const [kind, name] of [['agent', 'Invalid_Agent_Name'], ['skill', 'BadSkillName']]) {
+    assert.throws(() => saveComponent(unavailableRoot, kind, name, {}, () => {
+      assert.fail('Invalid identifiers must not reach content generation');
+    }), /Invalid identifier/);
+  }
+});
+
 test('skill:update changes YAML safely while preserving body and synchronizing only in the repository', t => {
   const fixture = fixtureRepository(t);
   const relativePath = 'skills/fixture-skill/SKILL.md';
@@ -65,7 +76,9 @@ test('skill:update changes YAML safely while preserving body and synchronizing o
   assert.equal(parseFrontmatter(saved, relativePath).attributes.description, description);
   assert.equal(parseFrontmatter(saved, relativePath).body, parseFrontmatter(original, relativePath).body);
   assert.match(saved, /# Keep author annotation/);
-  assert.ok(fixture.read('CLAUDE.md').includes(description));
+  const catalog = JSON.parse(fixture.read('adapters/component-catalog.json'));
+  assert.equal(catalog.skills.find(skill => skill.id === 'fixture-skill').description, description);
+  assert.equal(parseFrontmatter(fixture.read('.claude/skills/fixture-skill/SKILL.md'), 'native skill').attributes.description, description);
   assert.equal(fs.existsSync(fixture.plugin), false);
 });
 

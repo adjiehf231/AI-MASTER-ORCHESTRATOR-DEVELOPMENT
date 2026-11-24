@@ -1,15 +1,13 @@
-# Project Living State & Runtime Reality
-
-Update this file when verified facts, decisions, and open items change.
+# Project Living State
 
 ## Current project
 
-- **[FACT]** AI Master Orchestrator is a Markdown instruction library with Node.js tooling for context binding, adapter generation, catalog management, and validation.
-- **[FACT]** The source catalog contains 32 agent profiles, including the orchestrator, and 44 skill playbooks. Run `npm run orchestrator:list` for the current inventory.
-- **[FACT]** The repository has its own syntax, metadata, integrity, adapter, and CLI checks. The target-project gates in `docs/qa/RELEASE_QUALITY_GATES.md` describe project evidence and sign-offs.
-- **[DECISION]** Edit the canonical sources in `agents/`, `skills/`, and `PROJECT_CONTEXT.md`. Use the generator to refresh the tracked outputs.
+- **FACT** The repository contains canonical agent and skill Markdown plus Node.js tooling for adapters, local task records, scoped memory, and repository validation.
+- **FACT** Use `npm run orchestrator:list` to inspect the current catalog and `npm run sync -- --check` to inspect generated output parity.
+- **DECISION** Canonical instructions live in `agents/` and `skills/`. The memory index selects applicable entries by project, branch, paths, tags, and status.
+- **DECISION** Local catalog changes synchronize repository adapters. Plugin deployment is an explicit command.
+- **UNKNOWN** A platform configuration can load successfully while task quality remains unmeasured. Report actual host, model, revision, and verification coverage.
 
-## Deployment and compatibility
+## Source freshness
 
-- **[DECISION]** Local catalog changes synchronize the workspace artifacts. Plugin deployment is a separate command.
-- **[UNKNOWN]** Host IDE execution depends on host version, active configuration, permissions, and model behavior. Validate the workflows used in the deployment environment.
+Current source and executed checks establish implementation facts. Approved policies remain explicit decisions. When the implementation and a decision differ, record the discrepancy and resolve it before relying on the disputed behavior.

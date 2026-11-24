@@ -52,7 +52,9 @@ test('local import previews without mutation and normalizes metadata only on exp
   assert.equal(attributes.name, 'new-name');
   assert.equal(attributes.description, 'Upstream guide for ${PROJECT_NAME} users.');
   assert.match(body, /^# \$\{PROJECT_NAME\} walkthrough$/m);
-  assert.match(fixture.read('CLAUDE.md'), /new-name\/SKILL\.md/);
+  const catalog = JSON.parse(fixture.read('adapters/component-catalog.json'));
+  assert.equal(catalog.skills.find(skill => skill.id === 'new-name').filename, 'skills/new-name/SKILL.md');
+  assert.match(fixture.read('.claude/skills/new-name/SKILL.md'), /name: new-name/);
   assert.equal(fs.existsSync(fixture.plugin), false);
 
   const collision = fixture.run('import-extension.js', [...args, '--apply', '--desc=Different']);

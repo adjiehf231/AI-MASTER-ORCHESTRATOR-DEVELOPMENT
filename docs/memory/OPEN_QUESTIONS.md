@@ -9,7 +9,7 @@
 
 | ID | Topic / Module | Question & Context | Impact | Owner | Target Resolution |
 |---|---|---|---|---|---|
-| *None* | - | No active unresolved questions at present. | - | - | - |
+| **Q-003** | Host runtime | Which host versions pass native discovery, tool calls, and representative development cases? | High | Orchestrator owner | Token-efficiency pilot |
 
 ---
 

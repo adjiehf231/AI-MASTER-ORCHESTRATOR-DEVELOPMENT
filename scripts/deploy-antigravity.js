@@ -8,6 +8,7 @@ const { buildAdapters } = require('./sync-adapters');
 const { applyFilePlan, inspectFile, withFileLock } = require('./lib/file-plan');
 const { formatFrontmatter, validateComponent } = require('./lib/frontmatter');
 const { bindProjectContext, loadProjectContext } = require('./lib/project-context');
+const { antigravityPermissions } = require('./lib/agent-permissions');
 
 const repoRoot = path.resolve(__dirname, '..');
 const manifestPath = 'plugin.json';
@@ -31,11 +32,11 @@ function readDirectory(root, relativePath) {
 function renderComponent(root, relativePath, name, kind, context) {
   const source = mustRead(root, relativePath).toString('utf8');
   const { attributes, body } = validateComponent(source, name, kind, relativePath);
-  const { mode = 'subagent', ...metadata } = attributes;
+  const { mode = 'subagent', permissions, ...metadata } = attributes;
   const description = bindProjectContext(metadata.description, context, relativePath);
   const bound = { ...metadata, description };
   if (kind === 'agent') {
-    Object.assign(bound, { mainAgent: mode !== 'subagent', subagent: mode !== 'primary' });
+    Object.assign(bound, { mainAgent: mode !== 'subagent', subagent: mode !== 'primary' }, antigravityPermissions(permissions));
   }
   return Buffer.from(formatFrontmatter(bound, bindProjectContext(body, context, relativePath)), 'utf8');
 }
@@ -50,7 +51,7 @@ function copySkillResources(root, relativePath, files) {
   }
 }
 
-function buildPlugin(root) {
+function buildPlugin(root, workspace) {
   const sourceFiles = new Map();
   const adapterScope = 'adapters/antigravity';
   const expected = buildAdapters(root).files;
@@ -63,6 +64,20 @@ function buildPlugin(root) {
     }
     sourceFiles.set(relativePath, content);
   }
+  const runtime = path.join(root, 'scripts', 'context-mcp.js');
+  mustRead(root, 'scripts/context-mcp.js');
+  const mcpConfig = {
+    mcpServers: {
+      'orchestrator-context': {
+        command: process.execPath,
+        args: [runtime, '--workspace', workspace],
+        cwd: workspace,
+        enabledTools: ['get_task_context', 'search_context', 'read_context']
+      }
+    }
+  };
+  sourceFiles.set('mcp_config.json', Buffer.from(JSON.stringify(mcpConfig, null, 2) + '\n'));
+  sourceFiles.set('adapters/component-catalog.json', mustRead(root, 'adapters/component-catalog.json'));
 
   const manifest = JSON.parse(sourceFiles.get(manifestPath).toString('utf8'));
   if (manifest.name !== 'universal-orchestrator' || typeof manifest.version !== 'string'
@@ -94,7 +109,7 @@ function loadDeploymentState(root) {
 
   const entries = Object.entries(state.files);
   for (const [relativePath, hash] of entries) {
-    const ownedNamespace = relativePath === manifestPath || relativePath === rulesPath
+    const ownedNamespace = [manifestPath, rulesPath, 'mcp_config.json', 'adapters/component-catalog.json'].includes(relativePath)
       || /^agents\/[a-z0-9-]+\.md$/.test(relativePath)
       || /^skills\/[a-z0-9-]+\/.+$/.test(relativePath);
     if (!ownedNamespace || !/^[a-f0-9]{64}$/.test(hash)) {
@@ -152,17 +167,21 @@ function validateTarget(root, target) {
 }
 
 function main(args) {
-  const { values } = parseArgs({ args, options: { force: { type: 'boolean' }, help: { type: 'boolean' } } });
+  const { values } = parseArgs({ args, options: {
+    force: { type: 'boolean' }, help: { type: 'boolean' }, workspace: { type: 'string' }
+  } });
   if (values.help) {
-    console.log('Usage: npm run deploy:antigravity -- [--force]\nSet ANTIGRAVITY_PLUGIN_DIR to override the default plugin folder.');
+    console.log('Usage: npm run deploy:antigravity -- [--force] [--workspace <project-root>]\nSet ANTIGRAVITY_PLUGIN_DIR to override the plugin folder. ORCHESTRATOR_WORKSPACE supplies the default project root. The MCP runtime remains linked to this source installation.');
     return;
   }
   const root = fs.realpathSync(repoRoot);
   const target = path.resolve(process.env.ANTIGRAVITY_PLUGIN_DIR
     || path.join(os.homedir(), '.gemini', 'config', 'plugins', 'universal-orchestrator'));
+  const workspace = fs.realpathSync(values.workspace ?? process.env.ORCHESTRATOR_WORKSPACE ?? root);
+  if (!fs.statSync(workspace).isDirectory()) throw new Error('Workspace must be a directory.');
   validateTarget(root, target);
   withFileLock(root, () => {
-    const files = buildPlugin(root);
+    const files = buildPlugin(root, workspace);
     fs.mkdirSync(target, { recursive: true });
     withFileLock(target, () => deployPlugin(target, files, values.force));
   });

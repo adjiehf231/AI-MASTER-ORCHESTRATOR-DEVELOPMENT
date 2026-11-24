@@ -1,0 +1,17 @@
+{
+  "mcp": {
+    "servers": {
+      "orchestrator-context": {
+        "type": "local",
+        "command": [
+          "node",
+          "__ORCHESTRATOR_SOURCE_ROOT__/scripts/context-mcp.js",
+          "--workspace",
+          "__WORKSPACE_ROOT__"
+        ],
+        "cwd": "__WORKSPACE_ROOT__",
+        "codemode": false
+      }
+    }
+  }
+}

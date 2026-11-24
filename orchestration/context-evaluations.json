@@ -1,0 +1,128 @@
+{
+  "version": 1,
+  "mode": "advisory",
+  "baseline": "6c15c79",
+  "protocol": "Run baseline, skill-only, skill+MCP, and context-agent variants on the same fixture/host/model. Record every model call including retries. No result is prefilled.",
+  "cases": [
+    {
+      "id": "routine-docs",
+      "route": "documentation",
+      "risk": "low",
+      "tags": [
+        "docs"
+      ],
+      "task": "A short documentation update",
+      "requiredEvidence": "One lead, a short TODO and source-backed report"
+    },
+    {
+      "id": "backend-validation",
+      "route": "backend",
+      "risk": "medium",
+      "tags": [
+        "backend"
+      ],
+      "task": "Fix a route input boundary",
+      "requiredEvidence": "Caller contract, invalid input and tests"
+    },
+    {
+      "id": "authorization",
+      "route": "security",
+      "risk": "high",
+      "tags": [
+        "authorization"
+      ],
+      "task": "Fix tenant authorization",
+      "requiredEvidence": "Server enforcement and allow/deny matrix"
+    },
+    {
+      "id": "webhook",
+      "route": "integration",
+      "risk": "medium",
+      "tags": [
+        "webhook"
+      ],
+      "task": "Handle a duplicate callback",
+      "requiredEvidence": "Idempotency and retry evidence"
+    },
+    {
+      "id": "database",
+      "route": "database",
+      "risk": "high",
+      "tags": [
+        "migration"
+      ],
+      "task": "Change a database schema",
+      "requiredEvidence": "Migration safety and old-data behavior"
+    },
+    {
+      "id": "ui",
+      "route": "frontend",
+      "risk": "medium",
+      "tags": [
+        "ui"
+      ],
+      "task": "Repair an interactive UI flow",
+      "requiredEvidence": "Rendered behavior and relevant view states"
+    },
+    {
+      "id": "long-log",
+      "route": "incident",
+      "risk": "medium",
+      "tags": [
+        "regression"
+      ],
+      "task": "Investigate a long failing CI log",
+      "requiredEvidence": "Failing status remains visible with exact source refs"
+    },
+    {
+      "id": "stale-ref",
+      "route": "domain",
+      "risk": "low",
+      "tags": [
+        "algorithm"
+      ],
+      "task": "Continue after uncommitted source edit",
+      "requiredEvidence": "Reject stale references and repeat search"
+    },
+    {
+      "id": "handoff",
+      "route": "feature",
+      "risk": "medium",
+      "tags": [
+        "feature"
+      ],
+      "task": "Resume an interrupted task",
+      "requiredEvidence": "Open TODOs, decisions, source fingerprint and failed checks"
+    },
+    {
+      "id": "memory-conflict",
+      "route": "compliance",
+      "risk": "high",
+      "tags": [
+        "privacy"
+      ],
+      "task": "Read changed or superseded memory",
+      "requiredEvidence": "Select active applicable entries and flag stale evidence"
+    },
+    {
+      "id": "missing-tool",
+      "route": "testing",
+      "risk": "medium",
+      "tags": [
+        "testing"
+      ],
+      "task": "Verify with an unavailable browser",
+      "requiredEvidence": "Equivalent authorized fallback or BLOCKED / NOT_RUN"
+    },
+    {
+      "id": "large-repo",
+      "route": "reliability",
+      "risk": "medium",
+      "tags": [
+        "performance"
+      ],
+      "task": "Explore a large source tree",
+      "requiredEvidence": "Coverage and skipped files are explicit"
+    }
+  ]
+}

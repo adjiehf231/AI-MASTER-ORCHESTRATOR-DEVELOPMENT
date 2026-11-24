@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 const path = require('node:path');
+const fs = require('node:fs');
 const checks = require('./lib/verification.js');
+const { checkMemory } = require('./lib/memory.js');
 
 function checkHygiene(root) {
   checks.checkTrackedFilenames(root);
@@ -13,6 +15,7 @@ function checkReadiness(root) {
   checks.checkActiveContext(root);
   checks.checkRepositoryReferences(root);
   checks.checkDispatchReferences(root);
+  if (fs.existsSync(path.join(root, 'docs/memory'))) checkMemory(root);
 }
 
 function checkCompletion(root) {

@@ -1,0 +1,221 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "MEM-STATE-001",
+      "type": "state",
+      "status": "active",
+      "scope": {},
+      "source": {
+        "path": "docs/memory/PROJECT_STATE.md"
+      },
+      "evidence": [
+        {
+          "path": "package.json"
+        }
+      ],
+      "verifiedOn": "2026-11-24"
+    },
+    {
+      "id": "MEM-HANDOFF-001",
+      "type": "handoff",
+      "status": "active",
+      "scope": {
+        "branch": "main"
+      },
+      "source": {
+        "path": "docs/memory/SESSION_HANDOFF.md",
+        "section": "Foundation integration — 24 November 2026"
+      },
+      "evidence": [
+        {
+          "path": "scripts/task-workflow.js"
+        },
+        {
+          "path": "scripts/memory.js"
+        }
+      ],
+      "verifiedOn": "2026-11-24",
+      "revision": "6c15c79ac1361e3ce14009424b69ba85cd1a51e4"
+    },
+    {
+      "id": "ADR-SSOT-001",
+      "type": "decision",
+      "status": "active",
+      "scope": {},
+      "source": {
+        "path": "docs/memory/DECISIONS.md",
+        "section": "ADR-001"
+      },
+      "evidence": [
+        {
+          "path": "scripts/sync-adapters.js"
+        }
+      ],
+      "verifiedOn": "2026-11-24",
+      "topic": "source-of-truth"
+    },
+    {
+      "id": "ADR-EXTENSION-OLD",
+      "type": "decision",
+      "status": "superseded",
+      "scope": {
+        "tags": [
+          "extensions",
+          "tooling"
+        ]
+      },
+      "source": {
+        "path": "docs/memory/DECISIONS.md",
+        "section": "ADR-005"
+      },
+      "evidence": [
+        {
+          "path": "scripts/manage-orchestrator.js"
+        }
+      ],
+      "verifiedOn": "2026-11-08",
+      "topic": "extension-lifecycle"
+    },
+    {
+      "id": "ADR-EXTENSION-001",
+      "type": "decision",
+      "status": "active",
+      "scope": {
+        "tags": [
+          "extensions",
+          "tooling"
+        ]
+      },
+      "source": {
+        "path": "docs/memory/DECISIONS.md",
+        "section": "ADR-006"
+      },
+      "evidence": [
+        {
+          "path": "scripts/import-extension.js"
+        },
+        {
+          "path": "scripts/deploy-antigravity.js"
+        }
+      ],
+      "verifiedOn": "2026-11-24",
+      "topic": "extension-lifecycle",
+      "supersedes": "ADR-EXTENSION-OLD"
+    },
+    {
+      "id": "HEUR-YAML-OLD",
+      "type": "heuristic",
+      "status": "superseded",
+      "scope": {
+        "tags": [
+          "yaml",
+          "tooling"
+        ]
+      },
+      "source": {
+        "path": "docs/memory/HEURISTICS.md",
+        "section": "HEUR-YAML-001"
+      },
+      "evidence": [
+        {
+          "path": "scripts/lib/frontmatter.js"
+        }
+      ],
+      "verifiedOn": "2026-11-08",
+      "topic": "yaml-metadata"
+    },
+    {
+      "id": "HEUR-YAML-002",
+      "type": "heuristic",
+      "status": "active",
+      "scope": {
+        "tags": [
+          "yaml",
+          "tooling"
+        ]
+      },
+      "source": {
+        "path": "docs/memory/HEURISTICS.md",
+        "section": "HEUR-YAML-002"
+      },
+      "evidence": [
+        {
+          "path": "scripts/lib/frontmatter.js"
+        }
+      ],
+      "verifiedOn": "2026-11-24",
+      "topic": "yaml-metadata",
+      "supersedes": "HEUR-YAML-OLD"
+    },
+    {
+      "id": "HEUR-FINOPS-OLD",
+      "type": "heuristic",
+      "status": "superseded",
+      "scope": {
+        "tags": [
+          "context",
+          "cost",
+          "tokens"
+        ]
+      },
+      "source": {
+        "path": "docs/memory/HEURISTICS.md",
+        "section": "HEUR-FINOPS-001"
+      },
+      "evidence": [
+        {
+          "path": "scripts/sync-adapters.js"
+        }
+      ],
+      "verifiedOn": "2026-11-08",
+      "topic": "context-cost"
+    },
+    {
+      "id": "HEUR-FINOPS-002",
+      "type": "heuristic",
+      "status": "active",
+      "scope": {
+        "tags": [
+          "context",
+          "cost",
+          "tokens"
+        ]
+      },
+      "source": {
+        "path": "docs/memory/HEURISTICS.md",
+        "section": "HEUR-FINOPS-002"
+      },
+      "evidence": [
+        {
+          "path": "scripts/sync-adapters.js"
+        }
+      ],
+      "verifiedOn": "2026-11-24",
+      "topic": "context-cost",
+      "supersedes": "HEUR-FINOPS-OLD"
+    },
+    {
+      "id": "MEM-QUESTION-003",
+      "type": "question",
+      "status": "active",
+      "scope": {
+        "tags": [
+          "hosts",
+          "context",
+          "extensions"
+        ]
+      },
+      "source": {
+        "path": "docs/memory/OPEN_QUESTIONS.md",
+        "section": "1. Active Open Questions"
+      },
+      "evidence": [
+        {
+          "path": "docs/memory/PROJECT_STATE.md"
+        }
+      ],
+      "verifiedOn": "2026-11-24"
+    }
+  ]
+}

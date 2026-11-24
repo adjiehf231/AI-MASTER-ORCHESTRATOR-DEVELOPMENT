@@ -1,10 +1,10 @@
 # Session Continuity & Handoff
 
-## 17 November 2026 — Audit 360 remediation
+## Foundation integration — 24 November 2026
 
-The recheck at `4979aa9` found invalid context binding, a false-positive gate test, fragile catalog mutations, and a GitHub Actions scan blocked by shallow history. The follow-up addresses these issues and aligns repository references, platform configuration, and documentation with the implemented features.
+The current branch began at `6c15c79`. The task workflow and indexed memory services are part of the local token-efficiency implementation. Recheck the working tree and the current test results before relying on this handoff.
 
-- The canonical catalog has 32 agent profiles and 44 skill playbooks.
-- Use `npm ci` before verifying a clean checkout. Run `npm test`, `npm run verify:gates`, `npm run audit`, and `npm run sync -- --check`.
-- Preview extension imports before applying them. Run Antigravity deployment separately when the destination is ready.
-- Use the GitHub Actions run for the actual commit as CI evidence. For model-driven workflows, capture the platform version and direct runtime observations.
+- Resume an existing task through `npm run orchestrator:task -- resume --id <UUID>`. The task retains TODO ownership, decisions, evidence, and the source fingerprint.
+- Run `npm run orchestrator:memory -- context` with the relevant path or tag. Inspect omitted counts and expand context when needed.
+- Create a report for complete, incomplete, and blocked tasks. A source or scope change reopens completed items whose evidence is outdated.
+- Validate generated output and the full test suite after canonical instructions change.

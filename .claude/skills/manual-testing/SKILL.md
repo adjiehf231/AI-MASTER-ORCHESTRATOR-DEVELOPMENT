@@ -1,0 +1,119 @@
+---
+name: manual-testing
+description: Enterprise manual and exploratory testing methodology for AI Master Orchestrator Development — Session-Based Test Management (SBTM), persona tours, hostile-input stress probes, cross-browser/device coverage beyond Chromium, defect filing with complete reproduction packages, regression suites, and UAT facilitation. Use when conducting manual exploratory sessions or validating fixes.
+---
+
+# Manual & Exploratory Testing — AI Master Orchestrator Development (Exploratory Quality Engineering)
+
+Repository references: `docs/process/STLC.md`, `skills/defect-lifecycle/SKILL.md`, `docs/qa/RELEASE_QUALITY_GATES.md`.
+
+Manual testing is not passive clicking; it is an active, investigative, and adversarial discipline. Automation verifies known assumptions; manual exploratory testing uncovers unknown edge cases, usability friction, visual defects, and complex concurrency races across browser tabs.
+
+---
+
+## 1. Session-Based Test Management (SBTM) Framework
+
+All exploratory testing must be organized into structured, timeboxed charters:
+
+```markdown
+### SBTM CHARTER EXECUTION TEMPLATE
+- **Charter Identifier:** `SBT-<AREA>-NNN`
+- **Target Mission:** [Specific capability, persona, and targeted failure modes]
+  - Example: "Explore the Primary Workspace Builder under low-bandwidth network throttling and multi-tab editing to discover state desynchronization and credit debit flaws."
+- **Timebox:** 45–60 minutes (Strictly enforced; never exceed 60 minutes per charter).
+- **Environment Tier:** Sandbox (`orchestrator_db_sit`) | UAT (`orchestrator_db_uat`).
+- **Data Persona:** Seeded multi-persona profile (`npm run seed:sit`).
+- **Tactical Tours Executed:**
+  1. *Persona Journey Tour:* Nominal workflow mimicking representative end-user and operator behavior.
+  2. *Hostile Input Tour:* Extreme inputs, boundary strings, emojis, malformed files.
+  3. *Interruption & Recovery Tour:* Disconnecting network mid-operation, refreshing browser tab, back/forward button navigation.
+  4. *Multi-Tab Concurrency Tour:* Triggering identical actions simultaneously across multiple browser tabs.
+  5. *Localization Audit Tour:* Verifying linguistic clarity and emotional tone.
+```
+
+---
+
+## 2. Environment & Synthetic Fixture Discipline
+
+1. **Environment Verification:** Execute `npm run verify:tiers` before testing to confirm that services and databases are healthy.
+2. **Synthetic Data Prohibition on PII:** Never use real production customer data in testing environments. Seed synthetic personas via `npm run seed:sit`.
+3. **Destructive Flow Boundary:** Testing destructive operations (account erasure cascade, credit depletion, bulk candidate rejection) is strictly restricted to **Sandbox (`orchestrator_db_sit`)**. UAT is reserved for business validation; Production receives only non-destructive smoke checks.
+4. **Email Flow Verification:** Monitor transactional emails and OTP tokens via MailHog web interface on `http://localhost:8025`.
+
+---
+
+## 3. High-Priority AI Master Orchestrator Development Exploratory Probes
+
+Conduct rigorous, targeted probes against AI Master Orchestrator Development's core architectural risk centers:
+
+### 3.1 Financial & Credit Ledger Integrity
+- **Pre-Debit Disclosure:** Does the interface clearly inform the user of the credit cost before the transaction occurs?
+- **Balance Consistency:** Does the credit balance update immediately and accurately in the header without requiring a manual page refresh?
+- **Double-Click Defense:** Does rapid double-clicking on credit-consuming buttons trigger multiple debits?
+- **Insufficient Balance State:** When balance is 0, is the user presented with an informative, actionable error message rather than a generic 500 failure?
+
+### 3.2 AI Provenance Lineage
+- **Visible Badging:** Are AI recommendations clearly marked with the *Saran AI* visual badge?
+- **No Silent Verification:** When a user accepts an AI suggestion, is the content integrated into the document draft without silently being promoted to `VERIFIED` status in the database?
+- **Rejection Integrity:** If a suggestion is rejected, does it disappear permanently from the active draft?
+
+### 3.3 Account Erasure Cascade
+- **Password Re-Authentication:** Does the interface demand password confirmation before initiating account deletion?
+- **SLA Enforcement:** Does the deletion complete within $< 30\text{s}$?
+- **Complete Wipe:** Verify that subsequent login attempts fail with HTTP 401, and that personal data follows the approved erasure and retention policy.
+
+### 3.4 Real-World File Uploads & Parsing Stress
+- Upload messy, scanned PDFs lacking text layers (assert proper OCR guidance).
+- Upload a file above the configured limit and verify the documented error and graceful recovery.
+- Upload Word documents (.docx) containing multi-level nested tables and embedded images.
+- Upload files with path-traversal filenames: `doc_../../etc/passwd.pdf`.
+
+### 3.5 Multi-Factor Scoring Sanity
+- Submit resumes with missing dates, duplicate sections, or non-standard formatting.
+- Assert that numeric results handle empty inputs and zero denominators without exposing `NaN`.
+
+---
+
+## 4. Cross-Browser & Device Responsiveness Matrix
+
+Playwright CI tests only Desktop Chromium. Manual testing must walk the cross-browser matrix and report explicit coverage and gaps:
+
+- **Desktop Firefox (Gecko):** Form validation bubbles, CSS Grid alignment, scrollbar behaviors.
+- **Desktop Safari / WebKit:** Native date pickers, canvas rendering, CSS backdrop filters.
+- **Mobile Viewports ($\le 380\text{px}$):** Safe-area notch handling, responsive hamburger menus, touch targets ($\ge 44\text{px}$), horizontal scroll elimination.
+
+---
+
+## 5. Defect Reporting Standard
+
+An unreproducible defect report is a defective report. Every report must contain:
+1. **Title:** `[Module] Summary of failure when action is executed under precondition`.
+2. **Severity (`S1–S4`) & Priority (`P0–P2`):** Decoupled impact and urgency ratings.
+3. **Preconditions:** Persona, environment tier, seeded data state.
+4. **Step-by-Step Reproduction:** Numbered, unambiguous sequence of actions.
+5. **Observed vs Expected:** Verbatim error messages, visual screenshots, and expected behavior.
+6. **Attached Evidence:** Browser console logs, network HAR exports, MailHog email links, or video captures.
+
+---
+
+## 6. UAT Facilitation & Production Smoke Protocol
+
+- **UAT Facilitation (Gate 5):**
+  - Guide the Human Product Owner through end-to-end business acceptance scenarios on `orchestrator_db_uat`.
+  - Compile the formal sign-off package in the project's release evidence.
+- **Production Smoke Testing (Gate 8):**
+  - Execute immediately upon production deployment (`orchestrator_db_prod`).
+  - Must complete in **$< 30\text{s}$**.
+  - Walk Golden Path: Login $\to$ Fetch Master Profile $\to$ Non-destructive health ping $\to$ Logout. Zero residual test data mutation.
+
+---
+
+## Output Contract
+
+STATUS: DONE / PARTIAL / BLOCKED
+- **CHARTERS EXECUTED:** List of `SBT-*` charters and session durations.
+- **CROSS-BROWSER COVERAGE:** Browsers and viewports walked, plus explicit gaps.
+- **DEFECTS FILED / RETESTED:** Formal defect tickets with reproduction evidence.
+- **PROBE FINDINGS:** Results of credit, provenance, upload, and erasure probes.
+- **GATE ASSESSMENT:** Recommendation for Gate 4 (SIT), Gate 5 (UAT), or Gate 8 (Smoke).
+- **NEXT ACTIONS:** Defect remediation or release sign-off handoff.

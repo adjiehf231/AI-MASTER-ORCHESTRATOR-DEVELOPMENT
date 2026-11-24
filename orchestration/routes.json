@@ -1,0 +1,565 @@
+{
+  "version": 1,
+  "routes": [
+    {
+      "id": "general",
+      "label": "General maintenance",
+      "lead": "fullstack-engineer",
+      "reviewers": [
+        "code-reviewer"
+      ],
+      "skills": [
+        "implement-feature",
+        "qa-verification"
+      ],
+      "needs": [
+        "workspace-read"
+      ],
+      "tags": []
+    },
+    {
+      "id": "feature",
+      "label": "Cross-module feature",
+      "lead": "fullstack-engineer",
+      "reviewers": [
+        "product-manager",
+        "solution-architect",
+        "qa-engineer",
+        "quality-auditor"
+      ],
+      "skills": [
+        "requirement-analysis",
+        "implement-feature",
+        "qa-verification",
+        "architecture-decision"
+      ],
+      "needs": [
+        "workspace-read"
+      ],
+      "tags": [
+        "feature",
+        "epic"
+      ]
+    },
+    {
+      "id": "domain",
+      "label": "Domain logic",
+      "lead": "backend-engineer",
+      "reviewers": [
+        "qa-engineer",
+        "code-reviewer"
+      ],
+      "skills": [
+        "offline-unit-harness",
+        "qa-verification",
+        "implement-feature"
+      ],
+      "needs": [
+        "workspace-read",
+        "terminal"
+      ],
+      "tags": [
+        "domain",
+        "algorithm"
+      ]
+    },
+    {
+      "id": "cloud",
+      "label": "Cloud architecture and infrastructure",
+      "lead": "cloud-architect",
+      "reviewers": [
+        "secops-engineer",
+        "code-reviewer"
+      ],
+      "skills": [
+        "architecture-decision",
+        "ci-cd-deployment",
+        "threat-modeling"
+      ],
+      "needs": [
+        "workspace-read"
+      ],
+      "tags": [
+        "cloud",
+        "iac",
+        "infra",
+        "terraform"
+      ],
+      "minRisk": "medium"
+    },
+    {
+      "id": "finops",
+      "label": "FinOps and cost",
+      "lead": "finops-engineer",
+      "reviewers": [
+        "cloud-architect",
+        "code-reviewer"
+      ],
+      "skills": [
+        "finops-cost-governance",
+        "nfr-governance",
+        "performance-testing"
+      ],
+      "needs": [
+        "workspace-read"
+      ],
+      "tags": [
+        "finops",
+        "cost"
+      ]
+    },
+    {
+      "id": "rag",
+      "label": "Vector search and retrieval",
+      "lead": "mlops-engineer",
+      "reviewers": [
+        "ai-engineer",
+        "qa-engineer"
+      ],
+      "skills": [
+        "rag-vector-engineering",
+        "ai-feature",
+        "database-change"
+      ],
+      "needs": [
+        "workspace-read"
+      ],
+      "tags": [
+        "rag",
+        "vector",
+        "retrieval"
+      ]
+    },
+    {
+      "id": "events",
+      "label": "Event-driven messaging",
+      "lead": "integration-engineer",
+      "reviewers": [
+        "backend-engineer",
+        "qa-engineer"
+      ],
+      "skills": [
+        "event-driven-architecture",
+        "system-integration",
+        "observability-resilience"
+      ],
+      "needs": [
+        "workspace-read",
+        "terminal"
+      ],
+      "tags": [
+        "event",
+        "events",
+        "messaging",
+        "queue"
+      ]
+    },
+    {
+      "id": "documentation",
+      "label": "Documentation and API contracts",
+      "lead": "technical-writer",
+      "reviewers": [
+        "backend-engineer",
+        "quality-auditor"
+      ],
+      "skills": [
+        "api-documentation-contract",
+        "requirement-analysis",
+        "api-design"
+      ],
+      "needs": [
+        "workspace-read"
+      ],
+      "tags": [
+        "docs",
+        "documentation",
+        "openapi",
+        "contract"
+      ]
+    },
+    {
+      "id": "compliance",
+      "label": "Compliance and privacy",
+      "lead": "compliance-auditor",
+      "reviewers": [
+        "privacy-reviewer",
+        "quality-auditor"
+      ],
+      "skills": [
+        "privacy-review",
+        "quality-audit",
+        "security-review"
+      ],
+      "needs": [
+        "workspace-read"
+      ],
+      "tags": [
+        "compliance",
+        "privacy",
+        "retention",
+        "erasure"
+      ],
+      "minRisk": "high"
+    },
+    {
+      "id": "recovery",
+      "label": "Disaster recovery and continuity",
+      "lead": "devops-engineer",
+      "reviewers": [
+        "cloud-architect",
+        "qa-manual"
+      ],
+      "skills": [
+        "disaster-recovery-bcp",
+        "observability-resilience",
+        "incident-response"
+      ],
+      "needs": [
+        "workspace-read"
+      ],
+      "tags": [
+        "disaster-recovery",
+        "continuity"
+      ],
+      "minRisk": "high"
+    },
+    {
+      "id": "integration",
+      "label": "Integration and webhooks",
+      "lead": "integration-engineer",
+      "reviewers": [
+        "qa-engineer",
+        "security-engineer"
+      ],
+      "skills": [
+        "system-integration",
+        "qa-verification",
+        "event-driven-architecture",
+        "observability-resilience"
+      ],
+      "needs": [
+        "workspace-read",
+        "terminal"
+      ],
+      "tags": [
+        "integration",
+        "webhook",
+        "webhooks"
+      ]
+    },
+    {
+      "id": "security",
+      "label": "Defensive security and authorization",
+      "lead": "backend-engineer",
+      "reviewers": [
+        "security-engineer",
+        "qa-engineer",
+        "secops-engineer"
+      ],
+      "skills": [
+        "security-review",
+        "threat-modeling",
+        "qa-verification"
+      ],
+      "needs": [
+        "workspace-read",
+        "terminal"
+      ],
+      "tags": [
+        "authorization",
+        "authentication",
+        "access-control",
+        "security",
+        "auth",
+        "rbac"
+      ],
+      "minRisk": "high"
+    },
+    {
+      "id": "analytics",
+      "label": "Data analytics and reporting",
+      "lead": "data-analyst",
+      "reviewers": [
+        "data-engineer",
+        "privacy-reviewer"
+      ],
+      "skills": [
+        "exploratory-data-analysis",
+        "database-change",
+        "privacy-review"
+      ],
+      "needs": [
+        "workspace-read"
+      ],
+      "tags": [
+        "analytics",
+        "bi",
+        "reporting"
+      ]
+    },
+    {
+      "id": "machine-learning",
+      "label": "Machine learning and modeling",
+      "lead": "data-scientist",
+      "reviewers": [
+        "data-engineer",
+        "ai-engineer"
+      ],
+      "skills": [
+        "ml-experimentation-lifecycle",
+        "ai-feature",
+        "rag-vector-engineering"
+      ],
+      "needs": [
+        "workspace-read"
+      ],
+      "tags": [
+        "ml",
+        "machine-learning",
+        "modeling"
+      ]
+    },
+    {
+      "id": "data",
+      "label": "Data pipelines",
+      "lead": "data-engineer",
+      "reviewers": [
+        "qa-engineer",
+        "privacy-reviewer"
+      ],
+      "skills": [
+        "database-change",
+        "qa-verification",
+        "observability-resilience"
+      ],
+      "needs": [
+        "workspace-read",
+        "terminal"
+      ],
+      "tags": [
+        "data",
+        "etl",
+        "pipeline"
+      ]
+    },
+    {
+      "id": "mobile",
+      "label": "Mobile application",
+      "lead": "mobile-engineer",
+      "reviewers": [
+        "qa-engineer",
+        "code-reviewer"
+      ],
+      "skills": [
+        "mobile-quality",
+        "implement-feature",
+        "offline-unit-harness"
+      ],
+      "needs": [
+        "workspace-read"
+      ],
+      "tags": [
+        "mobile",
+        "flutter",
+        "android",
+        "ios"
+      ]
+    },
+    {
+      "id": "testing",
+      "label": "Test strategy and QA",
+      "lead": "test-architect",
+      "reviewers": [
+        "qa-manual",
+        "qa-engineer"
+      ],
+      "skills": [
+        "test-architecture-design",
+        "manual-testing",
+        "qa-verification",
+        "defect-lifecycle"
+      ],
+      "needs": [
+        "workspace-read",
+        "terminal"
+      ],
+      "tags": [
+        "qa",
+        "testing",
+        "tests"
+      ]
+    },
+    {
+      "id": "release",
+      "label": "Release governance",
+      "lead": "release-manager",
+      "reviewers": [
+        "devops-engineer",
+        "quality-auditor"
+      ],
+      "skills": [
+        "release-management",
+        "ci-cd-deployment",
+        "quality-audit"
+      ],
+      "needs": [
+        "workspace-read",
+        "ci"
+      ],
+      "tags": [
+        "release",
+        "deployment",
+        "deploy",
+        "production"
+      ],
+      "minRisk": "high"
+    },
+    {
+      "id": "backend",
+      "label": "API and backend",
+      "lead": "backend-engineer",
+      "reviewers": [
+        "qa-engineer",
+        "code-reviewer"
+      ],
+      "skills": [
+        "api-design",
+        "qa-verification",
+        "implement-feature"
+      ],
+      "needs": [
+        "workspace-read",
+        "terminal"
+      ],
+      "tags": [
+        "api",
+        "backend",
+        "server",
+        "route",
+        "routes"
+      ]
+    },
+    {
+      "id": "database",
+      "label": "Database schema and migrations",
+      "lead": "database-engineer",
+      "reviewers": [
+        "qa-engineer",
+        "backend-engineer"
+      ],
+      "skills": [
+        "database-change",
+        "zero-downtime-database",
+        "qa-verification",
+        "privacy-review"
+      ],
+      "needs": [
+        "workspace-read",
+        "terminal"
+      ],
+      "tags": [
+        "database",
+        "db",
+        "migration",
+        "migrations",
+        "schema"
+      ],
+      "minRisk": "high"
+    },
+    {
+      "id": "ai",
+      "label": "AI application",
+      "lead": "ai-engineer",
+      "reviewers": [
+        "qa-engineer",
+        "privacy-reviewer"
+      ],
+      "skills": [
+        "ai-feature",
+        "qa-verification",
+        "privacy-review"
+      ],
+      "needs": [
+        "workspace-read"
+      ],
+      "tags": [
+        "ai",
+        "llm",
+        "model"
+      ]
+    },
+    {
+      "id": "frontend",
+      "label": "UI and accessibility",
+      "lead": "frontend-engineer",
+      "reviewers": [
+        "ux-engineer",
+        "qa-engineer"
+      ],
+      "skills": [
+        "frontend-quality",
+        "ui-ux-design-system",
+        "qa-verification",
+        "uiux-review"
+      ],
+      "needs": [
+        "workspace-read",
+        "browser"
+      ],
+      "tags": [
+        "ui",
+        "ux",
+        "frontend",
+        "components",
+        "styles"
+      ]
+    },
+    {
+      "id": "incident",
+      "label": "Incident and root cause analysis",
+      "lead": "devops-engineer",
+      "reviewers": [
+        "qa-engineer",
+        "code-reviewer"
+      ],
+      "skills": [
+        "system-debugging-rca",
+        "defect-lifecycle",
+        "incident-response",
+        "qa-verification"
+      ],
+      "needs": [
+        "workspace-read",
+        "terminal"
+      ],
+      "tags": [
+        "bug",
+        "incident",
+        "regression"
+      ]
+    },
+    {
+      "id": "reliability",
+      "label": "Reliability and performance",
+      "lead": "performance-engineer",
+      "reviewers": [
+        "devops-engineer",
+        "security-engineer"
+      ],
+      "skills": [
+        "performance-testing",
+        "observability-resilience",
+        "nfr-governance"
+      ],
+      "needs": [
+        "workspace-read",
+        "terminal"
+      ],
+      "tags": [
+        "performance",
+        "reliability",
+        "sre"
+      ]
+    }
+  ]
+}

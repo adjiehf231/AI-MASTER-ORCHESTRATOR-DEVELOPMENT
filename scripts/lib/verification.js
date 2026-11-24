@@ -4,6 +4,8 @@ const path = require('node:path');
 const { parseFrontmatter, validateComponent } = require('./frontmatter.js');
 const { loadProjectContext } = require('./project-context.js');
 const { runUnitTests } = require('../qa-unit-offline.cjs');
+const { checkRepositoryReferences } = require('./repository-references');
+const { readRoutes } = require('./routing');
 
 function git(root, args, { expected = [0], input } = {}) {
   const result = spawnSync('git', args, { cwd: root, encoding: 'utf8', input, windowsHide: true });
@@ -85,29 +87,8 @@ function checkLegacyTerms(root) {
   }
 }
 
-const REFERENCE_LABEL = /^\s*(?:[-*]\s+)?(?:\*\*)?(?:Repository references|Authoritative (?:sources|references|artifacts|standards)|Source of truth(?: references)?)\s*(?:\*\*)?:/i;
-const REPOSITORY_PATH = /^(?:\.\/)?(?:docs|skills|agents|scripts|tests|adapters|\.github)\//;
-const ROOT_FILE = /^(?:\.\/)?[\w.-]+\.[\w-]+$/;
-
-function checkRepositoryReferences(root) {
-  const missing = [];
-  for (const file of componentMarkdown(root)) {
-    const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/);
-    lines.forEach((line, index) => {
-      if (!REFERENCE_LABEL.test(line)) return;
-      for (const match of line.matchAll(/\x60([^\x60]+)\x60/g)) {
-        const reference = match[1].split('#')[0];
-        if (!REPOSITORY_PATH.test(reference) && !ROOT_FILE.test(reference)) continue;
-        if (reference.split('/').includes('..') || !fs.existsSync(path.join(root, reference))) {
-          missing.push(path.relative(root, file) + ':' + (index + 1) + ' -> ' + reference);
-        }
-      }
-    });
-  }
-  if (missing.length > 0) throw new Error('Unresolved repository references:\n' + missing.join('\n'));
-}
-
 function checkDispatchReferences(root) {
+  if (fs.existsSync(path.join(root, 'orchestration/routes.json'))) return readRoutes(root).length;
   const relative = 'agents/orchestrator.md';
   const lines = fs.readFileSync(path.join(root, relative), 'utf8').split(/\r?\n/);
   const header = lines.findIndex(line => /^\|\s*Workstream\s*\|\s*(?:Autonomous|Specialist) Dispatch Chain\s*\|/i.test(line));

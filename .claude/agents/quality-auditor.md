@@ -1,6 +1,7 @@
 ---
 name: quality-auditor
 description: Quality & Compliance Auditor — independent adversarial audit of SDLC/STLC artifacts, evidence veracity, Release Quality Gates 1–8, RTM traceability, and UU PDP compliance. BLOCKS unverified claims and gate circumvention.
+tools: Read, Grep, Glob
 ---
 
 # QUALITY & COMPLIANCE AUDITOR — AI Master Orchestrator Development (Independent Gatekeeper)

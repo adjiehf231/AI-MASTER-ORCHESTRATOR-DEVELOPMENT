@@ -4,9 +4,10 @@ const { createHash } = require('node:crypto');
 const { applyFilePlan, inspectFile, withFileLock } = require('./lib/file-plan');
 const { formatFrontmatter, normalizeLines, validateComponent } = require('./lib/frontmatter');
 const { bindProjectContext, loadProjectContext } = require('./lib/project-context');
+const { claudePermissions, openCodePermissions } = require('./lib/agent-permissions');
 
 const manifestPath = 'adapters/native-profiles.json';
-const nativeProfilePath = /^\.(?:claude|opencode)\/agents\/[a-z0-9]+(?:-[a-z0-9]+)*\.md$/;
+const nativeProfilePath = /^(?:\.(?:claude|opencode)\/agents\/[a-z0-9]+(?:-[a-z0-9]+)*\.md|\.codex\/agents\/[a-z0-9]+(?:-[a-z0-9]+)*\.toml|\.(?:agents|claude)\/skills\/[a-z0-9]+(?:-[a-z0-9]+)*\/[A-Za-z0-9_.\/-]+)$/;
 
 function readFile(repoRoot, filename) {
   const { target, stats } = inspectFile(repoRoot, filename);
@@ -43,6 +44,8 @@ function loadComponents(repoRoot, overrides, bind) {
       filename,
       description: bind(attributes.description, filename),
       mode: attributes.mode ?? 'subagent',
+      permissions: attributes.permissions,
+      attributes,
       body: bind(body, filename).trim(),
     };
   }
@@ -53,26 +56,13 @@ function loadComponents(repoRoot, overrides, bind) {
 
 function corePrompt(orchestrator, agents, skills, platform) {
   const header = `Target Platform: **${platform}**`;
-  const agentCatalog = agents.map(agent => {
-    const title = /^#\s+(.+)$/m.exec(agent.body)?.[1] ?? agent.id;
-    const description = agent.description.trim().replace(/\n+/g, ' ');
-    return `- **\`${agent.id}\`** — ${title}\n  *Mandate:* ${description}`;
-  });
-  const skillCatalog = skills.map(skill => {
-    const description = skill.description.trim().replace(/\n+/g, ' ');
-    return `- **\`${skill.filename}\`** (${skill.id}): ${description}`;
-  });
   return [
     header,
     orchestrator.body,
     '---',
-    `## 5. Master Specialist Agent Directory (${agents.length} Roles)`,
-    `You can embody or dispatch any of the following ${agents.length} specialist roles:`,
-    agentCatalog.join('\n'),
-    '---',
-    `## 6. Enterprise Skill Directory (${skills.length} Skills)`,
-    'Invoke or reference these specialized skill playbooks:',
-    skillCatalog.join('\n'),
+    `The catalog contains ${agents.length} agent profiles and ${skills.length} skills.`,
+    'Use native skill discovery or search `adapters/component-catalog.json` for relevant names and source paths. Read selected playbooks and references when needed.',
+    'Run `npm run orchestrator:list` for the full local catalog. Keep source evidence and report verification outcomes.',
   ].join('\n\n') + '\n';
 }
 
@@ -80,8 +70,11 @@ function json(value) {
   return JSON.stringify(value, null, 2) + '\n';
 }
 
-function digest(markdown) {
-  return createHash('sha256').update(normalizeLines(markdown)).digest('hex');
+function digest(contents, filename) {
+  const textFile = /\.(?:md|txt|json|ya?ml|toml|js|mjs|cjs|ts|tsx|jsx|py|sh|ps1|css|html)$/i.test(filename);
+  const text = Buffer.isBuffer(contents) && textFile ? new TextDecoder('utf-8', { fatal: true }).decode(contents) : contents;
+  const normalized = Buffer.isBuffer(text) ? text : normalizeLines(text);
+  return createHash('sha256').update(normalized).digest('hex');
 }
 
 function loadProfileManifest(repoRoot) {
@@ -100,6 +93,7 @@ function loadProfileManifest(repoRoot) {
     if (!nativeProfilePath.test(filename) || typeof hash !== 'string' || !/^[a-f0-9]{64}$/.test(hash)) {
       throw new Error(`${manifestPath}: invalid native profile entry ${filename}`);
     }
+    inspectFile(repoRoot, filename);
   }
   return profiles;
 }
@@ -108,10 +102,11 @@ function planNativeProfiles(repoRoot, files, profiles) {
   const previous = loadProfileManifest(repoRoot);
   const current = {};
   for (const [filename, profile] of profiles) {
-    const existing = readFile(repoRoot, filename);
-    const nextHash = digest(profile);
+    const { target, stats } = inspectFile(repoRoot, filename);
+    const existing = stats && fs.readFileSync(target);
+    const nextHash = digest(profile, filename);
     const ownedHashes = [previous[filename], nextHash];
-    if (existing !== undefined && !ownedHashes.includes(digest(existing))) {
+    if (existing && !ownedHashes.includes(digest(existing, filename))) {
       throw new Error(`${filename}: native profile is unmanaged or locally modified; move your copy before syncing`);
     }
     files.set(filename, profile);
@@ -120,12 +115,53 @@ function planNativeProfiles(repoRoot, files, profiles) {
 
   const removals = Object.entries(previous).filter(([filename, hash]) => {
     if (Object.hasOwn(current, filename)) return false;
-    const existing = readFile(repoRoot, filename);
-    return existing !== undefined && digest(existing) === hash;
+    const { target, stats } = inspectFile(repoRoot, filename);
+    return stats && digest(fs.readFileSync(target), filename) === hash;
   }).map(([filename]) => filename).sort();
 
   files.set(manifestPath, json(Object.fromEntries(Object.entries(current).sort())));
   return removals;
+}
+
+function skillResources(repoRoot, relativeDir) {
+  if (!fs.existsSync(path.join(repoRoot, relativeDir))) return [];
+  const resources = [];
+  for (const entry of fs.readdirSync(path.join(repoRoot, relativeDir), { withFileTypes: true })) {
+    if (entry.name.startsWith('.') || /\.(?:pem|key|p12|pfx)$/i.test(entry.name)) continue;
+    const relative = relativeDir + '/' + entry.name;
+    if (entry.isDirectory() && !entry.isSymbolicLink()) resources.push(...skillResources(repoRoot, relative));
+    else if (entry.name !== 'SKILL.md') {
+      const { target, stats } = inspectFile(repoRoot, relative);
+      if (stats) {
+        const bytes = fs.readFileSync(target);
+        resources.push([relative, /\.(?:md|txt|json|ya?ml|toml|js|mjs|cjs|ts|tsx|jsx|py|sh|ps1|css|html)$/i.test(relative)
+          ? normalizeLines(new TextDecoder('utf-8', { fatal: true }).decode(bytes)) : bytes]);
+      }
+    }
+  }
+  return resources;
+}
+
+function mcpTemplates() {
+  const args = ['__ORCHESTRATOR_SOURCE_ROOT__/scripts/context-mcp.js', '--workspace', '__WORKSPACE_ROOT__'];
+  const enabledTools = ['get_task_context', 'search_context', 'read_context'];
+  return new Map([
+    ['adapters/claude/mcp.json', json({ mcpServers: { 'orchestrator-context': { command: 'node', args } } })],
+    ['adapters/opencode/mcp.json', json({ mcp: { servers: { 'orchestrator-context': {
+      type: 'local', command: ['node', ...args], cwd: '__WORKSPACE_ROOT__', codemode: false
+    } } } })],
+    ['adapters/antigravity/mcp_config.json', json({ mcpServers: { 'orchestrator-context': {
+      command: 'node', args, cwd: '__WORKSPACE_ROOT__', enabledTools
+    } } })],
+    ['adapters/codex/config.toml', [
+      '# Merge after replacing the source and workspace placeholders with absolute paths.',
+      '[mcp_servers.orchestrator-context]',
+      'command = "node"',
+      'args = ' + JSON.stringify(args),
+      'enabled_tools = ' + JSON.stringify(enabledTools),
+      ''
+    ].join('\n')]
+  ]);
 }
 
 function buildAdapters(repoRoot, { template = false, sourceOverrides = new Map() } = {}) {
@@ -147,7 +183,7 @@ function buildAdapters(repoRoot, { template = false, sourceOverrides = new Map()
     ['.windsurfrules', promptFor('Windsurf IDE (Cascade)')],
     ['.clinerules', promptFor('Cline / Roo Code')],
     ['.opencoderules', promptFor('OpenCode (legacy rules file)')],
-    ['adapters/opencode/AGENTS.md', promptFor('OpenCode V2')],
+    ['adapters/opencode/AGENTS.md', '# OpenCode Project Guidance\n\nThe primary `orchestrator` profile carries the project workflow. Use native skills and search `adapters/component-catalog.json` for relevant source paths. Record TODO, evidence, and report outcomes.\n'],
     ['CONVENTIONS.md', promptFor('Aider & Polyglot Coding Agents')],
     ['.aider.conf.yml', 'read: CONVENTIONS.md\nauto-commits: false\nattribute-author: false\n'],
     ['.continue/rules/universal-orchestrator.md', formatFrontmatter(
@@ -162,6 +198,12 @@ function buildAdapters(repoRoot, { template = false, sourceOverrides = new Map()
       author: 'Antigravity Engineering Council',
     })],
   ]);
+  files.set('adapters/component-catalog.json', json({
+    agents: agents.map(({ id, filename, description, mode }) => ({ id, filename, description, mode })),
+    skills: skills.map(({ id, filename, description }) => ({ id, filename, description }))
+  }));
+  files.set('adapters/codex/AGENTS.md', promptFor('Codex'));
+  for (const [filename, content] of mcpTemplates()) files.set(filename, content);
 
   const openrouterPrompt = promptFor('OpenRouter / 9router / OneRouter / Gateway Models');
   files.set('adapters/openrouter/system-prompt.txt', openrouterPrompt);
@@ -173,16 +215,48 @@ function buildAdapters(repoRoot, { template = false, sourceOverrides = new Map()
   }));
 
   const profiles = new Map();
-  for (const { id, description, mode, body } of agents) {
-    profiles.set(`.claude/agents/${id}.md`, formatFrontmatter({ name: id, description }, body));
-    profiles.set(`.opencode/agents/${id}.md`, formatFrontmatter({ description, mode }, body));
+  for (const { id, description, mode, permissions, body } of agents) {
+    profiles.set(`.claude/agents/${id}.md`, formatFrontmatter({ name: id, description, ...claudePermissions(permissions) }, body));
+    profiles.set(`.opencode/agents/${id}.md`, formatFrontmatter({ description, mode, ...openCodePermissions(permissions) }, body));
+    if (id === 'context-engineer') {
+      profiles.set('.codex/agents/context-engineer.toml', [
+        '# Host permissions are inherited. Run the parent session in read-only mode for enforced write isolation.',
+        'name = "context-engineer"',
+        'description = ' + JSON.stringify(description),
+        'developer_instructions = ' + JSON.stringify(body),
+        '',
+        '[features]',
+        'shell_tool = false',
+        'apps = false',
+        'plugins = false',
+        ''
+      ].join('\n'));
+    }
+  }
+  for (const skill of skills) {
+    const { name, license, compatibility, metadata } = skill.attributes;
+    const attributes = { name, description: skill.description };
+    for (const [key, value] of Object.entries({ license, compatibility, metadata })) {
+      if (value !== undefined) attributes[key] = value;
+    }
+    const markdown = formatFrontmatter(attributes, skill.body);
+    const resources = skillResources(repoRoot, `skills/${skill.id}`);
+    for (const base of ['.agents/skills', '.claude/skills']) {
+      profiles.set(`${base}/${skill.id}/SKILL.md`, markdown);
+      for (const [filename, content] of resources) {
+        profiles.set(`${base}/${filename.slice('skills/'.length)}`, content);
+      }
+    }
   }
   const removals = planNativeProfiles(repoRoot, files, profiles);
   return { files, removals };
 }
 
 function checkAdapters(repoRoot, plan = buildAdapters(repoRoot)) {
-  const drift = [...plan.files].filter(([filename, contents]) => readFile(repoRoot, filename) !== contents)
+  const drift = [...plan.files].filter(([filename, contents]) => {
+    const { target, stats } = inspectFile(repoRoot, filename);
+    return !stats || !fs.readFileSync(target).equals(Buffer.from(contents));
+  })
     .map(([filename]) => filename);
   drift.push(...plan.removals);
   if (drift.length) {

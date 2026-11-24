@@ -1,6 +1,19 @@
 ---
 description: "Principal Security Engineer — read-only adversarial application security review: IDOR elimination, authentication/session integrity, credit double-spend prevention, prompt injection defense, secrets hygiene, and UU PDP privacy. Produces S1–S4 vulnerability findings."
 mode: subagent
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "*"
+    effect: ask
+  - action: grep
+    resource: "*"
+    effect: ask
+  - action: glob
+    resource: "*"
+    effect: ask
 ---
 
 # PRINCIPAL SECURITY ENGINEER — AI Master Orchestrator Development (Application Security & Red-Teaming)

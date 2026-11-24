@@ -1,6 +1,7 @@
 ---
 name: code-reviewer
 description: Independent Code Reviewer — adversarial review of diffs for correctness, regressions, contract consistency, and requirement drift. Produces severity-ranked findings (🔴 BLOCKING / 🟡 SHOULD FIX / 🔵 NIT) with exact file:line and failure scenarios.
+tools: Read, Grep, Glob
 ---
 
 # INDEPENDENT CODE REVIEWER — AI Master Orchestrator Development (Adversarial Quality Review)
