@@ -6,6 +6,7 @@ const { spawnSync } = require('node:child_process');
 const { fixture } = require('./updater-fixture');
 const { publishFromCheckout } = require('../scripts/publish-updater-release');
 const { verifyRelease } = require('../scripts/lib/updater/release');
+const { shortDirectoryAlias } = require('./windows-path-alias');
 
 test('publisher signs only an exact clean checkout and authenticates the resulting artifact', t => {
   const f = fixture(t);
@@ -37,14 +38,12 @@ test('publisher signs only an exact clean checkout and authenticates the resulti
 
 test('publisher rejects an output inside its checkout through a Windows short directory alias', { skip: process.platform !== 'win32' }, t => {
   const f = fixture(t);
-  const script = '[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new($false);$f=New-Object -ComObject Scripting.FileSystemObject;[Console]::Write($f.GetFolder($env:ORCH_ALIAS_PATH).ShortPath)';
-  const alias = spawnSync(path.join(process.env.SystemRoot, 'System32/WindowsPowerShell/v1.0/powershell.exe'),
-    ['-NoProfile', '-NonInteractive', '-EncodedCommand', Buffer.from(script, 'utf16le').toString('base64')],
-    { env: { ...process.env, ORCH_ALIAS_PATH: f.source }, encoding: 'utf8', windowsHide: true, timeout: 15000 });
-  assert.equal(alias.status, 0, alias.stderr);
-  const shortSource = alias.stdout.trim();
+  const shortSource = shortDirectoryAlias(f.source);
+  if (!shortSource || path.basename(shortSource).toLowerCase() === path.basename(f.source).toLowerCase()) {
+    t.skip('The filesystem does not expose a distinct short alias for the checkout directory.');
+    return;
+  }
   assert.equal(fs.realpathSync.native(shortSource), f.source);
-  if (shortSource.toLowerCase() === f.source.toLowerCase()) { t.skip('Short directory aliases are unavailable on this volume'); return; }
   for (const args of [['init', '--quiet'], ['add', '.'], ['-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.test', 'commit', '--quiet', '-m', 'publisher fixture']]) {
     const result = spawnSync('git', args, { cwd: f.source, encoding: 'utf8', windowsHide: true });
     assert.equal(result.status, 0, result.stderr);
