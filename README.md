@@ -36,6 +36,8 @@
 
 Gunakan skill `context-efficient-development` untuk eksplorasi sumber dan agen `context-engineer` untuk investigasi besar yang memerlukan handoff terfokus. Prompt utama memakai katalog yang dibaca saat diperlukan. Adapter tersedia untuk skill native Codex, Claude Code, OpenCode, dan paket Antigravity.
 
+Updater proyek tersedia melalui `npm run orchestrator:update -- --help`. Alurnya memakai rilis pasif bertanda tangan, adopsi baseline, plan yang ditinjau, backup terverifikasi, serta pemulihan yang melindungi edit baru pengguna. Baca [Safe updater](docs/process/SAFE_UPDATER.md) sebelum memperbarui instalasi lama. Konfigurasi host bersama dan aktivasi native tetap memerlukan integrasi terpisah.
+
 ```bash
 npm run orchestrator:context -- search --query "buildAdapters" --path scripts
 npm run orchestrator:context -- task --path scripts

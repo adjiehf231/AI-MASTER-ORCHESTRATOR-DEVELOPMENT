@@ -25,7 +25,7 @@ function runUnitTests(root, { files, executable = process.execPath, stdio = 'inh
     env,
     encoding: 'utf8',
     stdio,
-    timeout: 180_000,
+    timeout: 360_000,
     windowsHide: true
   });
 

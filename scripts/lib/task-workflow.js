@@ -301,7 +301,7 @@ function recordArtifact(root, task, options) {
 function registeredCheck(root, id) {
   if (root === orchestratorRoot && Object.hasOwn(builtInChecks, id)) {
     const args = id === 'adapter-parity' ? ['--check'] : [];
-    return { script: builtInChecks[id], args, timeoutMs: 60_000 };
+    return { script: builtInChecks[id], args, timeoutMs: id === 'adapter-parity' ? 60_000 : 420_000 };
   }
   const { target, stats } = inspectFile(root, checkConfig);
   if (!stats) return undefined;

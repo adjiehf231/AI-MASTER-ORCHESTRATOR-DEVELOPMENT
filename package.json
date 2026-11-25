@@ -20,6 +20,7 @@
     "orchestrator:task": "node scripts/task-workflow.js",
     "orchestrator:memory": "node scripts/memory.js",
     "orchestrator:context": "node scripts/context.js",
+    "orchestrator:update": "node scripts/update-orchestrator.js",
     "mcp:context": "node scripts/context-mcp.js",
     "import:extension": "node scripts/import-extension.js"
   },

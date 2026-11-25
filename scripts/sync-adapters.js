@@ -3,24 +3,28 @@ const path = require('node:path');
 const { createHash } = require('node:crypto');
 const { applyFilePlan, inspectFile, withFileLock } = require('./lib/file-plan');
 const { formatFrontmatter, normalizeLines, validateComponent } = require('./lib/frontmatter');
-const { bindProjectContext, loadProjectContext } = require('./lib/project-context');
+const { bindProjectContext, loadProjectContext, parseProjectContext } = require('./lib/project-context');
 const { claudePermissions, openCodePermissions } = require('./lib/agent-permissions');
 
 const manifestPath = 'adapters/native-profiles.json';
 const nativeProfilePath = /^(?:\.(?:claude|opencode)\/agents\/[a-z0-9]+(?:-[a-z0-9]+)*\.md|\.codex\/agents\/[a-z0-9]+(?:-[a-z0-9]+)*\.toml|\.(?:agents|claude)\/skills\/[a-z0-9]+(?:-[a-z0-9]+)*\/[A-Za-z0-9_.\/-]+)$/;
 
-function readFile(repoRoot, filename) {
+function readFile(repoRoot, filename, sourceFiles) {
+  if (sourceFiles) {
+    const bytes = sourceFiles.get(filename);
+    return bytes === undefined ? undefined : new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  }
   const { target, stats } = inspectFile(repoRoot, filename);
   return stats && fs.readFileSync(target, 'utf8');
 }
 
-function sourcePaths(repoRoot, overrides) {
-  const agentPaths = new Set(
+function sourcePaths(repoRoot, overrides, sourceFiles) {
+  const agentPaths = new Set(sourceFiles ? [...sourceFiles.keys()].filter(filename => /^agents\/[^/]+\.md$/.test(filename)) :
     fs.readdirSync(path.join(repoRoot, 'agents'), { withFileTypes: true })
       .filter(entry => !entry.isDirectory() && entry.name.endsWith('.md'))
       .map(entry => 'agents/' + entry.name)
   );
-  const skillPaths = new Set(
+  const skillPaths = new Set(sourceFiles ? [...sourceFiles.keys()].filter(filename => /^skills\/[^/]+\/SKILL\.md$/.test(filename)) :
     fs.readdirSync(path.join(repoRoot, 'skills'), { withFileTypes: true })
       .filter(entry => entry.isDirectory() && !entry.isSymbolicLink())
       .map(entry => 'skills/' + entry.name + '/SKILL.md')
@@ -34,10 +38,10 @@ function sourcePaths(repoRoot, overrides) {
   return { agentPaths: [...agentPaths].sort(), skillPaths: [...skillPaths].sort() };
 }
 
-function loadComponents(repoRoot, overrides, bind) {
-  const { agentPaths, skillPaths } = sourcePaths(repoRoot, overrides);
+function loadComponents(repoRoot, overrides, bind, sourceFiles) {
+  const { agentPaths, skillPaths } = sourcePaths(repoRoot, overrides, sourceFiles);
   function load(filename, id, kind) {
-    const source = overrides.get(filename) ?? readFile(repoRoot, filename);
+    const source = overrides.get(filename) ?? readFile(repoRoot, filename, sourceFiles);
     const { attributes, body } = validateComponent(source, id, kind, filename);
     return {
       id,
@@ -54,15 +58,18 @@ function loadComponents(repoRoot, overrides, bind) {
   return { agents, skills };
 }
 
-function corePrompt(orchestrator, agents, skills, platform) {
+function corePrompt(orchestrator, agents, skills, platform, referencePrefix = '') {
   const header = `Target Platform: **${platform}**`;
+  const prefix = referencePrefix ? referencePrefix + '/' : '';
   return [
     header,
     orchestrator.body,
     '---',
     `The catalog contains ${agents.length} agent profiles and ${skills.length} skills.`,
-    'Use native skill discovery or search `adapters/component-catalog.json` for relevant names and source paths. Read selected playbooks and references when needed.',
-    'Run `npm run orchestrator:list` for the full local catalog. Keep source evidence and report verification outcomes.',
+    `Use native skill discovery or search \`${prefix}adapters/component-catalog.json\` for relevant names and source paths. Read selected playbooks and references when needed.`,
+    referencePrefix
+      ? 'Resolve library references from the project root. Application, memory, architecture and delivery paths remain project scoped; use project-approved tool wiring and verification commands.'
+      : 'Run `npm run orchestrator:list` for the full local catalog. Keep source evidence and report verification outcomes.',
   ].join('\n\n') + '\n';
 }
 
@@ -123,7 +130,17 @@ function planNativeProfiles(repoRoot, files, profiles) {
   return removals;
 }
 
-function skillResources(repoRoot, relativeDir) {
+function skillResources(repoRoot, relativeDir, sourceFiles) {
+  if (sourceFiles) {
+    return [...sourceFiles].filter(([filename]) => filename.startsWith(relativeDir + '/'))
+      .filter(([filename]) => {
+        const parts = filename.slice(relativeDir.length + 1).split('/');
+        return !parts.some(part => part.startsWith('.')) && parts.at(-1) !== 'SKILL.md'
+          && !/\.(?:pem|key|p12|pfx)$/i.test(parts.at(-1));
+      }).sort(([a], [b]) => a.localeCompare(b, 'en')).map(([filename, bytes]) => [filename,
+        /\.(?:md|txt|json|ya?ml|toml|js|mjs|cjs|ts|tsx|jsx|py|sh|ps1|css|html)$/i.test(filename)
+          ? normalizeLines(new TextDecoder('utf-8', { fatal: true }).decode(bytes)) : bytes]);
+  }
   if (!fs.existsSync(path.join(repoRoot, relativeDir))) return [];
   const resources = [];
   for (const entry of fs.readdirSync(path.join(repoRoot, relativeDir), { withFileTypes: true })) {
@@ -164,26 +181,97 @@ function mcpTemplates() {
   ]);
 }
 
-function buildAdapters(repoRoot, { template = false, sourceOverrides = new Map() } = {}) {
-  if (!inspectFile(repoRoot, 'PROJECT_CONTEXT.template.md').stats) {
+// Pure rendering: only this installed, trusted implementation runs. sourceRoot supplies data,
+// never executable modules. Ownership and target mutation belong to the calling planner.
+function buildArtifacts(repoRoot, { template = false, sourceOverrides = new Map(), contextRoot = repoRoot,
+  context: suppliedContext, referencePrefix = '', sourceFiles: suppliedFiles } = {}) {
+  let sourceFiles;
+  if (suppliedFiles !== undefined) {
+    if (!(suppliedFiles instanceof Map)) throw new Error('sourceFiles must be an authenticated file Map');
+    sourceFiles = new Map([...suppliedFiles].map(([filename, bytes]) => {
+      if (typeof filename !== 'string' || path.isAbsolute(filename) || path.win32.isAbsolute(filename)
+          || filename.split('/').some(part => !part || part === '.' || part === '..'
+            || /[\\:\u0000-\u001f\u007f<>"|?*]/.test(part) || /[. ]$/.test(part)
+            || /^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(part))
+          || (!Buffer.isBuffer(bytes) && typeof bytes !== 'string')) {
+        throw new Error('sourceFiles contains an invalid relative path or passive file');
+      }
+      return [filename, Buffer.from(bytes)];
+    }));
+  }
+  if (sourceFiles ? !sourceFiles.has('PROJECT_CONTEXT.template.md') : !inspectFile(repoRoot, 'PROJECT_CONTEXT.template.md').stats) {
     throw new Error('PROJECT_CONTEXT.template.md: repository sentinel not found');
   }
-  const context = template ? null : loadProjectContext(repoRoot);
-  const bind = (text, filename) => template ? text : bindProjectContext(text, context, filename);
-  const { agents, skills } = loadComponents(repoRoot, sourceOverrides, bind);
+  if (referencePrefix && (path.isAbsolute(referencePrefix) || path.win32.isAbsolute(referencePrefix)
+      || referencePrefix.split('/').some(part => !part || part === '.' || part === '..' || /[\\:`\r\n]/.test(part)))) {
+    throw new Error('referencePrefix must be a safe project-relative path');
+  }
+  const libraryReferences = new Map();
+  function libraryPath(reference) {
+    const filename = reference.split('#')[0].replace(/\/$/, '');
+    if (libraryReferences.has(filename)) return libraryReferences.get(filename);
+    const parts = filename.split('/');
+    let exists = false;
+    if (!parts.some(part => !part || part === '.' || part === '..' || /[\\:\u0000-\u001f\u007f]/.test(part))) {
+      if (sourceOverrides.has(filename)) exists = true;
+      else if (sourceFiles) exists = sourceFiles.has(filename) || [...sourceFiles.keys()].some(key => key.startsWith(filename + '/'));
+      else {
+        let target = repoRoot;
+        exists = parts.every(part => {
+          target = path.join(target, part);
+          const stats = fs.lstatSync(target, { throwIfNoEntry: false });
+          return stats && !stats.isSymbolicLink() && (stats.isDirectory() || stats.isFile());
+        });
+      }
+    }
+    libraryReferences.set(filename, !!exists);
+    return exists;
+  }
+  let context = null;
+  if (!template) {
+    if (sourceFiles && suppliedContext === undefined) {
+      throw new Error('Authenticated source rendering requires explicit project context');
+    }
+    if (suppliedContext !== undefined) {
+      if (!suppliedContext || typeof suppliedContext !== 'object' || Array.isArray(suppliedContext)) {
+        throw new Error('context must be a validated project settings object');
+      }
+      const entries = Object.entries(suppliedContext);
+      if (entries.some(([key, value]) => !/^[A-Z][A-Z0-9_]*$/.test(key)
+          || typeof value !== 'string' || /[\u0000-\u001f\u007f]/.test(value))) {
+        throw new Error('context settings must contain literal string values');
+      }
+      context = parseProjectContext(entries.map(([key, value]) => `${key}: ${JSON.stringify(value)}`).join('\n'));
+    } else context = loadProjectContext(contextRoot);
+  }
+  const bind = (text, filename) => {
+    if (!referencePrefix) return template ? text : bindProjectContext(text, context, filename);
+    // Only known library namespaces are relocated. Project memory, application source,
+    // delivery documents and component-relative resource links keep their own meaning.
+    const relocated = text.replace(/`((?:agents|skills|adapters|orchestration|scripts)\/[^`\s]+|docs\/(?:process|qa)\/[^`\s]+)`/g,
+      (match, reference) => {
+        const componentResource = filename.startsWith('skills/')
+          && libraryPath(`${path.posix.dirname(filename)}/${reference}`);
+        return !componentResource && libraryPath(reference) ? `\`${referencePrefix}/${reference}\`` : match;
+      });
+    // Context-expanded paths belong to the project even when they happen to match
+    // a library filename; relocation must precede context interpolation.
+    return template ? relocated : bindProjectContext(relocated, context, filename);
+  };
+  const { agents, skills } = loadComponents(repoRoot, sourceOverrides, bind, sourceFiles);
   const orchestrator = agents.find(agent => agent.id === 'orchestrator');
   if (!orchestrator || (orchestrator.mode !== 'primary' && orchestrator.mode !== 'all')) {
     throw new Error('agents/orchestrator.md: required orchestrator must support primary mode');
   }
 
-  const promptFor = platform => corePrompt(orchestrator, agents, skills, platform);
+  const promptFor = platform => corePrompt(orchestrator, agents, skills, platform, referencePrefix);
   const files = new Map([
     ['CLAUDE.md', promptFor('Claude Code (CLI & Desktop)')],
     ['.cursorrules', promptFor('Cursor IDE AI (Composer & Chat)')],
     ['.windsurfrules', promptFor('Windsurf IDE (Cascade)')],
     ['.clinerules', promptFor('Cline / Roo Code')],
     ['.opencoderules', promptFor('OpenCode (legacy rules file)')],
-    ['adapters/opencode/AGENTS.md', '# OpenCode Project Guidance\n\nThe primary `orchestrator` profile carries the project workflow. Use native skills and search `adapters/component-catalog.json` for relevant source paths. Record TODO, evidence, and report outcomes.\n'],
+    ['adapters/opencode/AGENTS.md', '# OpenCode Project Guidance\n\nThe primary `orchestrator` profile carries the project workflow. Use native skills and search `' + (referencePrefix ? referencePrefix + '/' : '') + 'adapters/component-catalog.json` for relevant source paths. Record TODO, evidence, and report outcomes.\n'],
     ['CONVENTIONS.md', promptFor('Aider & Polyglot Coding Agents')],
     ['.aider.conf.yml', 'read: CONVENTIONS.md\nauto-commits: false\nattribute-author: false\n'],
     ['.continue/rules/universal-orchestrator.md', formatFrontmatter(
@@ -199,8 +287,8 @@ function buildAdapters(repoRoot, { template = false, sourceOverrides = new Map()
     })],
   ]);
   files.set('adapters/component-catalog.json', json({
-    agents: agents.map(({ id, filename, description, mode }) => ({ id, filename, description, mode })),
-    skills: skills.map(({ id, filename, description }) => ({ id, filename, description }))
+    agents: agents.map(({ id, filename, description, mode }) => ({ id, filename: referencePrefix ? referencePrefix + '/' + filename : filename, description, mode })),
+    skills: skills.map(({ id, filename, description }) => ({ id, filename: referencePrefix ? referencePrefix + '/' + filename : filename, description }))
   }));
   files.set('adapters/codex/AGENTS.md', promptFor('Codex'));
   for (const [filename, content] of mcpTemplates()) files.set(filename, content);
@@ -240,7 +328,7 @@ function buildAdapters(repoRoot, { template = false, sourceOverrides = new Map()
       if (value !== undefined) attributes[key] = value;
     }
     const markdown = formatFrontmatter(attributes, skill.body);
-    const resources = skillResources(repoRoot, `skills/${skill.id}`);
+    const resources = skillResources(repoRoot, `skills/${skill.id}`, sourceFiles);
     for (const base of ['.agents/skills', '.claude/skills']) {
       profiles.set(`${base}/${skill.id}/SKILL.md`, markdown);
       for (const [filename, content] of resources) {
@@ -248,6 +336,12 @@ function buildAdapters(repoRoot, { template = false, sourceOverrides = new Map()
       }
     }
   }
+  for (const [filename, contents] of profiles) files.set(filename, contents);
+  return { files, profiles };
+}
+
+function buildAdapters(repoRoot, options = {}) {
+  const { files, profiles } = buildArtifacts(repoRoot, options);
   const removals = planNativeProfiles(repoRoot, files, profiles);
   return { files, removals };
 }
@@ -292,4 +386,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { buildAdapters, checkAdapters };
+module.exports = { buildAdapters, buildArtifacts, checkAdapters };
