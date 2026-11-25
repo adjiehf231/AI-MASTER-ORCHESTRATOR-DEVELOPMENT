@@ -57,14 +57,25 @@ function environment(extra = {}) {
   return { ...env, ...extra };
 }
 function fixedTool(program, args, extra = {}, limit = MAX_METADATA_BYTES) {
-  const result = spawnSync(program, args, { env: environment(extra), encoding: 'utf8', timeout: 15000, maxBuffer: limit, windowsHide: true });
-  if (result.error || result.status !== 0) throw new Error('Required native metadata capability failed or is unavailable');
+  const timeout = 15_000;
+  const result = spawnSync(program, args, { env: environment(extra), encoding: 'utf8', timeout, maxBuffer: limit, windowsHide: true });
+  const failure = 'Required native metadata capability failed or is unavailable';
+  // Child output and spawn errors can contain paths, ACLs, or other private data.
+  if (result.error?.code === 'ETIMEDOUT') throw new Error(`${failure} (${path.basename(program)} timed out after ${timeout} ms)`);
+  if (result.error?.code === 'ENOENT') throw new Error(`${failure} (${path.basename(program)} executable missing)`);
+  if (result.error || result.status !== 0) throw new Error(failure);
   try { return JSON.parse(result.stdout.replace(/^\uFEFF/, '').trim()); } catch { throw new Error('Invalid native metadata response'); }
 }
 function powershell(script, env = {}, limit) {
   const executable = path.join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'WindowsPowerShell', 'v1.0', 'powershell.exe');
-  const prefix = '$ErrorActionPreference="Stop";[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new($false);';
-  return fixedTool(executable, ['-NoLogo', '-NoProfile', '-NonInteractive', '-EncodedCommand', Buffer.from(prefix + script, 'utf16le').toString('base64')], env, limit);
+  const modules = path.join(path.dirname(executable), 'Modules');
+  // Windows PowerShell can rebuild its module search path at startup. Restrict
+  // lookup again in the child before any cmdlet can load a user or shared module.
+  const prefix = '$ErrorActionPreference="Stop";'
+    + '$env:PSModulePath=[IO.Path]::Combine($PSHOME,"Modules");'
+    + '[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new($false);';
+  return fixedTool(executable, ['-NoLogo', '-NoProfile', '-NonInteractive', '-EncodedCommand', Buffer.from(prefix + script, 'utf16le').toString('base64')],
+    { ...env, PSModulePath: modules }, limit);
 }
 const PY_METADATA = 'import os,sys,json,base64\np=os.environ["ORCH_TARGET"]\ns=os.stat(p,follow_symlinks=False)\nx={n:base64.b64encode(os.getxattr(p,n,follow_symlinks=False)).decode("ascii") for n in sorted(os.listxattr(p,follow_symlinks=False))}\nprint(json.dumps({"platform":"posix","uid":s.st_uid,"gid":s.st_gid,"mode":s.st_mode&4095,"flags":getattr(s,"st_flags",0),"xattrs":x},sort_keys=True))';
 function nativeMetadata(target) {

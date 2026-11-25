@@ -57,6 +57,24 @@ test('private metadata readers reject linked directory ancestors', t => {
   assert.equal(fs.readFileSync(file, 'utf8'), contents);
 });
 
+test('Windows metadata launch errors identify the missing tool without exposing its path', { skip: process.platform !== 'win32' }, t => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'updater-native-error-'));
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+  const systemRoot = process.env.SystemRoot;
+  process.env.SystemRoot = path.join(directory, 'missing-system-root');
+  try {
+    assert.throws(() => storage.processIdentity(), error => {
+      assert.match(error.message, /powershell\.exe executable missing/);
+      assert.equal(error.message.includes(directory), false);
+      assert.equal(error.cause, undefined);
+      return true;
+    });
+  } finally {
+    if (systemRoot === undefined) delete process.env.SystemRoot;
+    else process.env.SystemRoot = systemRoot;
+  }
+});
+
 test('an existing Windows short store alias cannot overlap a workspace or source', { skip: process.platform !== 'win32' }, t => {
   const f = fixture(t);
   const alias = shortDirectoryAlias(f.store);
